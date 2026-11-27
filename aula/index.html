@@ -255,4 +255,10 @@ h1,h2,h3,button{font-family:var(--ui)}h1{font-weight:800;letter-spacing:-.048em}
 @media(max-width:650px){#sl-landing .hero{padding:24px 18px}#sl-landing .course-card{min-height:215px;padding:20px}#sl-landing .course-card small{font-size:13px}#sl-landing .hero p{font-size:15px}.toneonly .grid .field strong{font-size:22px}.panel{padding:12px}.sl-card{min-height:125px}.sl-card strong{font-size:18px}.sl-control output{font-size:13px}.metric strong{font-size:15px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<script>
+/* Navegación: volver siempre a la estructura nueva (Inicio → asignatura → unidad → partes) */
+goHome=function(){try{stop();stopOld()}catch(e){}location.href='../electroacustica/ud1/'};
+goCourse=function(c){try{stop();stopOld()}catch(e){}location.href='../electroacustica/ud1/#'+(c==='ces'?'ces3':'electro')};
+(function(){function chk(){var h=location.hash.slice(1).split('/');if(!h[1]){try{stop();stopOld()}catch(e){}location.replace('../electroacustica/ud1/'+(h[0]==='ces'?'#ces3':h[0]==='electro'?'#electro':''))}}window.addEventListener('hashchange',chk);chk();})();
+</script>
 </body></html>
