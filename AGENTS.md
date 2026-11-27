@@ -12,7 +12,7 @@ Proyecto docente: aprender escuchando, viendo y experimentando.
 - No introducir claves, datos de alumnos ni material sin derechos; mantener créditos y licencias de audio.
 
 ## Alcance e identidad
-- Conservar la portada atractiva y firma discreta del autor. Interior cálido, musical, estética rave sin sacrificar contraste ni legibilidad.
+- Identidad visual abierta a experimentación: la portada actual gusta al profesor y la estética rave es una referencia inicial, no una obligación. Se pueden proponer y probar cambios de tipografía, colores, interfaz, animaciones y portada en beta, preservando la autoría, la accesibilidad, la claridad didáctica y la funcionalidad. El profesor decide qué diseño se publica.
 - Organizar CES y Electroacústica por las unidades reales del profesor, únicamente contenidos impartidos o autorizados. No inventar la programación ni anticipar unidades.
 - Punto de partida deseado: SoundLab Aula (HTML con 19 laboratorios, pistas reales, circuitos y filtros básicos); confirmar su incorporación antes de tratarlo como código presente.
 - Prioridades: localización binaural con cabeza interactiva, visualizaciones de ondas con escala espacial fija y zoom, electricidad (serie/paralelo/mixtos) y filtros pasivos de primer orden con carga ideal.
