@@ -582,6 +582,17 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 #lab-reparto .rp-board .slot.over .rp-socketstatus{color:var(--bad)}
 #lab-reparto .rp-phaseguide .rp-limitbad{color:var(--bad)}
 #lab-reparto .rp-scheme .scheme{min-width:540px}
+#lab-reparto .rp-board #rPhases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#lab-reparto .rp-board #rPhases .phase-col{padding:8px;gap:6px;border-radius:10px}
+#lab-reparto .rp-ph-h{display:flex;align-items:center;gap:6px;font-size:14px;flex-wrap:wrap}#lab-reparto .rp-ph-h .dot{width:12px;height:12px;border-radius:50%;border:1px solid #ffffff55}
+#lab-reparto .rp-ph-cn{font-size:11px;color:var(--dim)}#lab-reparto .rp-ph-i{margin-left:auto;font:700 13px var(--mono);color:var(--accent)}#lab-reparto .rp-ph-i.bad,#lab-reparto .rp-ph-s.bad{color:var(--bad)}
+#lab-reparto .rp-ph-s{font-size:11px;color:var(--muted)}
+#lab-reparto .rp-sks{display:flex;gap:5px;align-items:stretch}
+#lab-reparto .rp-board .rp-sks .slot{flex:1 1 0;min-width:0;min-height:54px;padding:5px;gap:4px}
+#lab-reparto .rp-board .rp-sks .slot .chip{display:block;min-height:0;width:100%;padding:5px 6px;font-size:11px;line-height:1.25}
+#lab-reparto .rp-board .rp-sks .slot .chip .rp-miniature{display:none}#lab-reparto .rp-board .rp-sks .slot .chip small{font-size:10px;margin-top:2px}
+#lab-reparto .rp-free{font-size:10px;color:var(--dim)}
+@media(max-width:730px){#lab-reparto .rp-board #rPhases{grid-template-columns:1fr}}
 </style>
 <details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Cómo se hace un reparto de cargas</summary>
 <div class="in">
@@ -1468,13 +1479,13 @@ function rpBoard(){$('rMsg3').innerHTML='';const L=RL[rp.lvl];const placed=new S
  const totI=rp.loads.reduce((a,l)=>a+l.I,0),target=totI/3,maxBar=Math.max(target*1.6,...[0,1,2].map(p=>phaseI(p))),ac=L.acom||(rp.T<=32?32:63);
  const f=rpForecast(),entered=v=>isFinite(v)&&v>=0?fmt(v)+' A':'—';
  $('rpSummary').innerHTML=[['Suma prevista',entered(f.a),f.totalOK?'Correcta':'Paso 2 · '+(isFinite(f.a)?'revisar':'sin introducir')],['Objetivo previsto por fase',entered(f.b),f.phaseOK?'Correcto':'Paso 2 · '+(isFinite(f.b)?'revisar':'sin introducir')],['Ideal por Schuko',new Set(RL[rp.lvl].ph).size===1?entered(f.b/RL[rp.lvl].ph[0]):(isFinite(f.b)?'<span style="font-size:15px">'+RL[rp.lvl].ph.map((n,i)=>'L'+(i+1)+' '+fmt(f.b/n)).join(' · ')+' A</span>':entered(f.b)),'Lo que buscamos · máx. 16 A'],['Acometida',ac+' A','Límite por fase']].map(([label,value,note])=>'<div class="rp-stat"><span>'+label+'</span><b>'+value+'</b><small>'+note+'</small></div>').join('');
- $('rPhases').innerHTML=PHN.map(([n,c,cn],pi)=>{const I=phaseI(pi),W=phaseW(pi);
-  return `<div class="phase-col"><h4><span class="dot" style="background:${c}"></span>${n} <span style="font-size:12px;color:var(--dim);font-weight:600">(${cn})</span></h4>
-  <div class="ptot"><span>${W.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')} W</span><span style="color:var(--accent)">${fmt(I)+' A'}</span></div>
-  <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,W/(target*230*L.cos*1.6)*100)}%"></i><span class="tg" style="left:${100/1.6}%"></span></div>
-  <div class="rp-phaseguide"><b class="${I>ac+1e-9?'rp-limitbad':''}">${I>ac+1e-9?'Sobrecarga: '+fmt(I-ac)+' A por encima del límite':'Dentro del límite de '+ac+' A'}</b><br>Objetivo previsto: <b>${entered(f.b)}</b> · Ideal por Schuko: <b>${entered(f.b/L.ph[pi])}</b><br>${f.phaseOK?(Math.abs(I-target)<1e-6?'Objetivo alcanzado':I>target?'Sobran '+fmt(I-target)+' A':'Faltan '+fmt(target-I)+' A'):'Comprueba la previsión en el paso 2.'}</div>
-  ${rp.slots.filter(s=>s.ph===pi).map(s=>{const si=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0);const over=si>16+1e-9;
-   return `<div class="slot${over?' over':''}" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${rp.slots.indexOf(s)+1} de ${n}"><div class="sh"><span>SCHUKO S${rp.slots.indexOf(s)+1}</span><b>${fmt(si)+' / 16 A'}</b></div><span class="rp-socketstatus">${over?'Sobrecarga · +'+fmt(si-16)+' A':s.items.length?'Dentro del límite':'Libre'}</span>${s.items.map(id=>chipHTML(rp.loads.find(l=>l.id===id),true)).join('')}</div>`}).join('')}</div>`}).join('');
+ $('rPhases').innerHTML=PHN.map(([n,c,cn],pi)=>{const I=phaseI(pi),over=I>ac+1e-9;
+  const st=over?'Pasa de '+ac+' A: sobran '+fmt(I-ac)+' A':f.phaseOK?(Math.abs(I-target)<1e-6?'Objetivo '+fmt(target)+' A ✓':I>target?'Objetivo '+fmt(target)+' A · sobran '+fmt(I-target)+' A':'Objetivo '+fmt(target)+' A · faltan '+fmt(target-I)+' A'):'Completa la previsión (paso 2)';
+  return `<div class="phase-col"><div class="rp-ph-h"><span class="dot" style="background:${c}"></span><b>${n}</b><span class="rp-ph-cn">${cn}</span><span class="rp-ph-i${over?' bad':''}">${fmt(I)} / ${ac} A</span></div>
+  <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,I/(target*1.6)*100)}%"></i><span class="tg" style="left:${100/1.6}%"></span></div>
+  <div class="rp-ph-s${over?' bad':''}">${st}</div>
+  <div class="rp-sks">${rp.slots.filter(s=>s.ph===pi).map(s=>{const si=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0);const ov=si>16+1e-9;
+   return `<div class="slot${ov?' over':''}" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${rp.slots.indexOf(s)+1} de ${n}"><div class="sh"><span>S${rp.slots.indexOf(s)+1}</span><b>${fmt(si)}/16 A</b></div>${s.items.map(id=>chipHTML(rp.loads.find(l=>l.id===id),true)).join('')||'<span class="rp-free">Libre</span>'}</div>`}).join('')}</div></div>`}).join('');
  // eventos
  document.querySelectorAll('#lab-reparto .chip').forEach(ch=>{ch.onclick=e=>{e.stopPropagation();const id=ch.dataset.c;const inSlot=ch.closest('.slot');if(rp.sel===id){if(inSlot){rp.slots.forEach(s=>s.items=s.items.filter(x=>x!==id))}rp.sel=null}else rp.sel=id;rpBoard()};
   ch.ondragstart=e=>{e.dataTransfer.setData('text/plain',ch.dataset.c);rp.sel=ch.dataset.c}});
