@@ -399,8 +399,54 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 
 <!-- ================= CIRCUITOS ================= -->
 <section class="lab" id="lab-circuitos" aria-labelledby="ct">
-<div class="labhead"><span class="kicker">PARTE 01 · CÁLCULO</span><h2 id="ct">Circuitos serie, paralelo y mixtos</h2><p>Elige un nivel. Calcula la resistencia equivalente y después la tensión, la corriente y la potencia de cada elemento. Escribe tus resultados y pulsa «Comprobar».</p></div>
-<div class="panel"><div class="levels" id="levels" role="list"></div></div>
+<div class="labhead"><span class="kicker">PARTE 01 · CÁLCULO</span><h2 id="ct">Circuitos serie, paralelo y mixtos</h2><p>Comprende cómo funciona cada conexión, calcula sus magnitudes y practica con circuitos de dificultad progresiva.</p></div>
+<style>
+#lab-circuitos .cg-title{font-size:clamp(22px,3vw,30px);margin:0}
+#lab-circuitos .cg-nav{display:flex;flex-wrap:wrap;gap:8px}#lab-circuitos .cg-nav button{flex:1;min-width:120px}
+#lab-circuitos .cg-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#lab-circuitos .cg-panel{padding:14px;min-width:0;color:var(--text)}
+#lab-circuitos .cg-rule{background:var(--inset);border-left:3px solid var(--cg);padding:8px 11px;border-radius:7px;font-size:13px;font-weight:700;color:var(--text);margin:9px 0}
+#lab-circuitos .cg-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:9px 0}
+#lab-circuitos .cg-control{min-width:0;color:var(--text)}
+#lab-circuitos .cg-label{display:flex;justify-content:space-between;align-items:center;gap:5px;font-size:12px;color:var(--text)}
+#lab-circuitos .cg-label b{color:var(--cg);font:700 13px var(--mono);white-space:nowrap}
+#lab-circuitos .cg-control input{width:100%;height:14px;margin:6px 0 2px;accent-color:var(--cg)}
+#lab-circuitos .cg-visual{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,.9fr);gap:10px;align-items:center;margin-top:8px}
+#lab-circuitos .cg-svg{width:100%;height:auto;display:block}
+#lab-circuitos .cg-metergrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+#lab-circuitos .cg-meter{text-align:center;color:var(--cg);font-size:11px;min-width:0}
+#lab-circuitos .cg-meter b{font:700 12px var(--mono);white-space:nowrap}
+#lab-circuitos .cg-track{height:94px;max-width:37px;background:#293c4f;border:1px solid #40566b;border-radius:5px;position:relative;overflow:hidden;margin:6px auto}
+#lab-circuitos .cg-fill{position:absolute;bottom:0;left:0;right:0;background:var(--cg);transition:height .12s}
+#lab-circuitos .cg-segments{position:absolute;inset:0;background:repeating-linear-gradient(to top,transparent 0,transparent calc(10% - 1.5px),#142333 calc(10% - 1.5px),#142333 10%);pointer-events:none}
+#lab-circuitos .cg-muted{font-size:12px;color:var(--muted)}#lab-circuitos .cg-small{font-size:10px;color:var(--muted)}
+#lab-circuitos .cg-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:9px 0}
+#lab-circuitos .cg-stat{background:var(--inset);border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center;min-width:0}
+#lab-circuitos .cg-stat b{display:block;font:700 15px var(--mono);white-space:nowrap;margin-top:3px}
+#lab-circuitos .cg-formula{background:var(--inset);border-radius:8px;padding:9px;text-align:center;color:var(--text);font:600 12px/1.6 var(--mono)}
+#lab-circuitos .cg-flow{stroke-dasharray:3 13;animation:cgFlow var(--speed,1s) linear infinite}
+@keyframes cgFlow{to{stroke-dashoffset:-32}}
+#lab-circuitos .cg-zone{scroll-margin-top:100px;display:flex;flex-direction:column;gap:12px}
+#lab-circuitos .cg-config{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+#lab-circuitos .cg-config label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
+#lab-circuitos .cg-config select{width:100%;background:var(--inset);color:var(--text);border:1px solid var(--line2);border-radius:9px;padding:9px;font:inherit;color-scheme:dark}
+#lab-circuitos .cg-work{display:flex;flex-direction:column;gap:14px;scroll-margin-top:100px}
+#lab-circuitos .vir input{color:var(--text);min-width:43px;padding:0 6px}
+#lab-circuitos .vir td,#lab-circuitos .vir th{padding:0 4px}#lab-circuitos .cg-table{overflow-x:auto}
+#lab-circuitos .circ{max-height:510px}#lab-circuitos [hidden]{display:none!important}
+#lab-circuitos :focus-visible{outline:2px solid #36e2e8;outline-offset:3px}
+@media(max-width:1000px){#lab-circuitos .cg-visual{grid-template-columns:1fr}#lab-circuitos .cg-track{height:70px}}
+@media(max-width:650px){#lab-circuitos .cg-pair{grid-template-columns:1fr}#lab-circuitos .cg-config{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){#lab-circuitos .cg-flow{animation:none}#lab-circuitos .cg-fill{transition:none}}
+</style>
+<div class="cg-nav"><button class="btn" data-cg-go="cgExplore">01 · Explora</button><button class="btn" data-cg-go="cgExercises">02 · Ejercicios</button><button class="btn" data-cg-go="cgGenerator">03 · Generador infinito</button></div>
+<div class="cg-zone" id="cgExplore"><div class="row" style="justify-content:space-between"><h3 class="cg-title">Comprende y experimenta</h3><button class="btn ghost" id="cgPause" aria-pressed="false">Pausar animaciones</button></div><div class="cg-pair" id="cgDemos"></div>
+<details class="how"><summary>Las fórmulas</summary><div style="padding:0 18px 16px"><div class="cg-pair"><div><h3>Serie</h3><div class="cg-formula">Rₜ = R₁ + R₂ + …<br>Iₜ = I₁ = I₂ = …<br>Vₜ = V₁ + V₂ + …</div></div><div><h3>Paralelo</h3><div class="cg-formula">1/Rₜ = 1/R₁ + 1/R₂ + …<br>Vₜ = V₁ = V₂ = …<br>Iₜ = I₁ + I₂ + …</div></div></div><p class="cg-formula" style="margin-top:8px">V = I · R &nbsp; | &nbsp; P = V · I &nbsp; | &nbsp; Pₜ = P₁ + P₂ + …</p></div></details>
+<details class="how"><summary>¿Por qué ocurre esto?</summary><div style="padding:0 18px 16px;color:var(--text)"><p><b style="color:#36e2e8">Serie:</b> solo hay un camino para la corriente. La misma intensidad pasa por todas las resistencias; las caídas de tensión se suman.</p><p><b style="color:#ffb36b">Paralelo:</b> las ramas comparten los mismos dos nodos y la misma tensión. Las intensidades de las ramas se suman.</p><p><b style="color:#b7a5fa">Mixtos:</b> identifica y simplifica los grupos serie y paralelo hasta obtener la resistencia equivalente. Después recorre el camino inverso para calcular cada elemento.</p><p><b>Controles:</b> al variar R, se conserva la tensión de la fuente. Al variar V o I de un componente, se ajusta la fuente y se conservan las resistencias. Cada circuito tiene sus propios controles.</p></div></details><p class="cg-small">Modelo resistivo ideal. Flujo convencional cualitativo, no velocidad real de los electrones.</p></div>
+<div class="cg-zone" id="cgExercises"><div><h3 class="cg-title">EJERCICIOS</h3><p class="cg-muted">Elige un nivel y completa el cuadrante de resultados.</p></div><div class="panel"><div class="levels" id="levels" role="list"></div></div><div id="cgGuided"></div><div class="panel" id="cgResume" hidden><p>Estás en práctica libre. Puedes volver a tu último ejercicio guiado.</p><button class="btn" id="cgReturn">Volver a los niveles</button></div></div>
+<div class="cg-zone" id="cgGenerator"><div><span class="kicker">PRÁCTICA LIBRE</span><h3 class="cg-title">Generador infinito</h3><p class="cg-muted">Elige el tipo y la dificultad. Practica con nuevas estructuras y valores, con el mismo cuadrante y mapa de resolución.</p></div><div class="panel"><div class="cg-config">
+<div><label for="cgType">Tipo de circuito</label><select id="cgType"><option>Serie</option><option>Paralelo</option><option selected>Mixto</option><option>Aleatorio</option></select></div><div><label for="cgCount">Número de componentes</label><select id="cgCount"><option>2</option><option>3</option><option>4</option><option selected>5</option><option>6</option></select></div><div><label for="cgDifficulty">Dificultad</label><select id="cgDifficulty"><option selected>Variada</option><option>Básica</option><option>Intermedia</option><option>Avanzada</option></select></div><div><label for="cgLoad">Componentes</label><select id="cgLoad"><option selected>Resistencias</option><option>Altavoces</option></select></div>
+</div><div class="row" style="justify-content:space-between"><button class="btn primary" id="cgGenerate">Generar circuito ↗</button><span class="cg-muted" id="cgProgress">Circuitos resueltos: 0</span></div><p class="cg-small" id="cgVariety" aria-live="polite" style="margin-top:8px"></p><p class="cg-small">Altavoces: impedancia ideal constante de 8 Ω, tensión eficaz y potencia calculada como carga resistiva.</p></div><div id="cgFree"></div></div><div class="cg-work" id="cgWork">
 <div class="grid2">
 <div class="panel">
 <div class="row" style="justify-content:space-between;margin-bottom:8px"><h3 id="lvlTitle" style="margin:0"></h3><button class="btn ghost" id="newVar">Otros valores</button></div>
@@ -409,7 +455,7 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 </div>
 <div class="panel">
 <h3>Tus resultados</h3>
-<table class="vir"><thead><tr><th></th><th>V (V)</th><th>I (A)</th><th>R (Ω)</th><th>P (W)</th></tr></thead><tbody id="tbody"></tbody></table>
+<div class="cg-table"><table class="vir"><thead><tr><th></th><th>V (V)</th><th>I (A)</th><th>R (Ω)</th><th>P (W)</th></tr></thead><tbody id="tbody"></tbody></table></div>
 <div class="row" style="margin-top:12px"><button class="btn primary" id="check">Comprobar</button><button class="btn alt" id="showMap">Ver cómo se resuelve</button><button class="btn ghost" id="clear">Borrar</button></div>
 <div id="result"></div>
 </div>
@@ -421,6 +467,7 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 <svg class="circ" id="mapCirc" role="img" aria-label="Esquema del paso actual"></svg>
 <div><span class="phase" id="phase"></span><p class="why" id="why"></p><div class="formula" id="formula"></div>
 <div class="row" style="margin-top:12px"><button class="btn" id="prev">← Anterior</button><button class="btn primary" id="next">Siguiente →</button></div></div>
+</div>
 </div>
 </div>
 </section>
@@ -891,8 +938,16 @@ const LEVELS=[
  {name:'Mixto · 3',hint:'Serie, paralelo y serie.',src:'pila',vars:[[20,S(R(1,2),P(R(2,4),R(3,4)),R(4,6))],[24,S(R(1,3),P(R(2,4),R(3,4)),R(4,7))],[12,S(R(1,1),P(R(2,4),R(3,4)),R(4,3))]]},
  {name:'Mixto · 4',hint:'Una rama con dos en serie, en paralelo con otra.',src:'pila',vars:[[12,S(P(S(R(1,2),R(2,4)),R(3,6)),R(4,3))],[24,S(P(S(R(1,4),R(2,8)),R(3,12)),R(4,6))],[18,S(P(S(R(1,3),R(2,3)),R(3,6)),R(4,6))]]},
  {name:'Mixto · 5',hint:'Dos grupos en paralelo, en serie entre sí.',src:'pila',vars:[[12,S(P(R(1,4),R(2,4)),P(R(3,6),R(4,3)))],[24,S(P(R(1,6),R(2,6)),P(R(3,12),R(4,4)))],[18,S(P(R(1,6),R(2,6)),P(R(3,12),R(4,12)))]]},
- {name:'Altavoces',hint:'Un amplificador con varios altavoces de 8 Ω.',src:'amp',vars:[[16,P(S(Z(1,8),Z(2,8)),S(Z(3,8),Z(4,8)))],[20,S(P(Z(1,8),Z(2,8)),P(Z(3,8),Z(4,8)))],[24,S(Z(1,8),P(Z(2,8),Z(3,8)))]]},
- {name:'Reto',hint:'Cinco resistencias. Ve paso a paso.',src:'pila',vars:[[24,S(R(1,2),P(S(R(2,3),R(3,3)),R(4,6)),R(5,7))],[30,S(R(1,4),P(S(R(2,8),R(3,4)),R(4,6)),R(5,2))],[36,S(R(1,6),P(S(R(2,4),R(3,8)),R(4,12)),R(5,6))]]}
+ {name:'Altavoces',hint:'Cinco y seis altavoces ideales de 8 Ω.',src:'amp',vars:[[24,P(S(Z(1,8),Z(2,8),Z(3,8)),S(Z(4,8),Z(5,8),Z(6,8)))],[24,S(P(Z(1,8),Z(2,8),Z(3,8)),P(Z(4,8),Z(5,8),Z(6,8)))],[24,P(S(Z(1,8),Z(2,8)),S(Z(3,8),Z(4,8),Z(5,8)))],[24,S(P(Z(1,8),Z(2,8)),P(Z(3,8),Z(4,8),Z(5,8)))],[16,P(S(Z(1,8),Z(2,8)),S(Z(3,8),Z(4,8)),S(Z(5,8),Z(6,8)))],[24,S(P(Z(1,8),Z(2,8)),P(Z(3,8),Z(4,8)),P(Z(5,8),Z(6,8)))]]},
+ {name:'Reto',hint:'Cinco y seis resistencias; varios grupos anidados.',src:'pila',vars:[
+ [24,S(R(1,2),P(S(R(2,3),R(3,3)),R(4,6)),R(5,7))],
+ [30,P(S(R(1,4),P(R(2,8),R(3,4))),S(R(4,6),R(5,2)))],
+ [36,S(P(S(R(1,6),R(2,4)),R(3,8)),P(R(4,12),R(5,6)))],
+ [24,P(R(1,12),S(R(2,2),P(R(3,4),R(4,4)),R(5,8)))],
+ [30,S(R(1,2),P(S(R(2,4),P(R(3,6),R(4,3))),R(5,8)),R(6,6))],
+ [36,P(R(1,12),S(P(R(2,6),R(3,6)),P(R(4,4),R(5,8)),R(6,3)))],
+ [24,S(P(R(1,6),R(2,3)),P(S(R(3,2),R(4,4)),R(5,6)),R(6,12))],
+ [48,P(S(R(1,4),P(R(2,8),R(3,8))),S(R(4,6),P(R(5,12),R(6,6))))]]}
 ];
 let cur={lvl:0,var:0,tree:null,V:0,done:new Set(),steps:[],step:0};
 
@@ -916,7 +971,7 @@ function draw(n,col,L,x,y,o){ // y = línea de conexión
  if(n.t==='L'||col.has(n)){const eq=n.t!=='L';const c=hl?(o.hlColor||'#36e2e8'):(eq?'#9fd3ff':'#d8e8fd');let s='';
   s+=`<path d="M${x} ${y}H${x+EW/2-30}M${x+EW/2+30} ${y}H${x+EW}" stroke="#7d8aa6" stroke-width="2.5"/>`;
   if(n.spk&&!eq){s+=`<rect x="${x+EW/2-22}" y="${y-11}" width="14" height="22" rx="2" fill="#141f2e" stroke="${c}" stroke-width="2.5"/><path d="M${x+EW/2-8} ${y-11}L${x+EW/2+10} ${y-22}V${y+22}L${x+EW/2-8} ${y+11}Z" fill="#141f2e" stroke="${c}" stroke-width="2.5"/><path d="M${x+EW/2+10} ${y}H${x+EW/2+30}" stroke="#7d8aa6" stroke-width="2.5"/><path d="M${x+EW/2-30} ${y}H${x+EW/2-22}" stroke="#7d8aa6" stroke-width="2.5"/>`}
-  else s+=`<rect x="${x+EW/2-30}" y="${y-12}" width="60" height="24" rx="4" fill="${eq?'#1b2a44':'#141f2e'}" stroke="${c}" stroke-width="2.5" ${eq?'stroke-dasharray="6 4"':''}/>`;
+  else {s+=`<rect x="${x+EW/2-30}" y="${y-12}" width="60" height="24" rx="${eq?4:7}" fill="${eq?'#1b2a44':'url(#'+o.resId+')'}" stroke="${eq||hl?c:'#ecdbb6'}" stroke-width="${hl?3:1.5}" ${eq?'stroke-dasharray="6 4"':''}/>`;if(!eq)s+=`<path d="M${x+EW/2-21} ${y-11}v22M${x+EW/2+21} ${y-11}v22" stroke="#9d885e" stroke-width="3"/>`;}
   s+=`<text x="${x+EW/2}" y="${y-22}" text-anchor="middle" fill="${c}" font-size="14" font-weight="800" font-family="Manrope,sans-serif">${n.name}${n.spk&&!eq?'':''}</text>`;
   s+=`<text x="${x+EW/2}" y="${y+33}" text-anchor="middle" fill="#b4bfd2" font-size="13" font-family="JetBrains Mono,monospace">${fmt(n.v)} Ω</text>`;
   if(o.vals&&o.known.has(n))s+=`<text x="${x+EW/2}" y="${y+50}" text-anchor="middle" fill="#ff9f43" font-size="12" font-family="JetBrains Mono,monospace">${fmt(n.V)} V · ${fmt(n.I)} A</text>`;
@@ -929,23 +984,24 @@ function draw(n,col,L,x,y,o){ // y = línea de conexión
  n.k.forEach((c,i)=>{const k=L.ks[i];const cx=x+RAIL+(L.w-2*RAIL-k.w)/2;
   s+=`<path d="M${lx} ${mids[i]}H${cx}M${cx+k.w} ${mids[i]}H${rx}" stroke="#7d8aa6" stroke-width="2.5"/>`;s+=draw(c,col,k,cx,mids[i],o);
   s+=`<circle cx="${lx}" cy="${mids[i]}" r="3.5" fill="#7d8aa6"/><circle cx="${rx}" cy="${mids[i]}" r="3.5" fill="#7d8aa6"/>`});
- return s}
-function render(svg,tree,V,src,o){o=Object.assign({hl:new Set(),known:new Set(),vals:false},o||{});const col=o.col||new Set();
+ return s+`<circle cx="${lx}" cy="${y}" r="3.5" fill="#7d8aa6"/><circle cx="${rx}" cy="${y}" r="3.5" fill="#7d8aa6"/>`}
+function render(svg,tree,V,src,o){o=Object.assign({hl:new Set(),known:new Set(),vals:false},o||{});o.resId=svg.id+'cgRes';const col=o.col||new Set();
  const L=lay(tree,col);const left=110,pad=30;const y=pad+L.mid+20;const W=left+L.w+40;const bottom=pad+L.h+60;const H=bottom+30;
- let s=`<path d="M60 ${y}H${left}M${left+L.w} ${y}H${left+L.w+20}V${bottom}H60V${y}" fill="none" stroke="#7d8aa6" stroke-width="2.5"/>`;
+ let s=`<defs><linearGradient id="${svg.id}cgRes" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#eadbb9"/><stop offset=".45" stop-color="#d5c19a"/><stop offset="1" stop-color="#96815e"/></linearGradient><pattern id="${svg.id}cgGrid" width="17" height="17" patternUnits="userSpaceOnUse"><path d="M17 0H0V17" stroke="#1b3040" stroke-width=".6" fill="none"/></pattern></defs><rect width="100%" height="100%" fill="#0c1925"/><rect width="100%" height="100%" fill="url(#${svg.id}cgGrid)"/><path d="M60 ${y}H${left}M${left+L.w} ${y}H${left+L.w+20}V${bottom}H60V${y}" fill="none" stroke="#7d8aa6" stroke-width="2.5"/>`;
  const sy=(y+bottom)/2;
  if(src==='amp')s+=`<rect x="22" y="${sy-34}" width="76" height="68" rx="10" fill="#222737" stroke="#36e2e8" stroke-width="2.5"/><text x="60" y="${sy-8}" text-anchor="middle" fill="#36e2e8" font-size="12" font-weight="800" font-family="Manrope">AMPLI</text><text x="60" y="${sy+14}" text-anchor="middle" fill="#f1f3fc" font-size="15" font-weight="700" font-family="JetBrains Mono,monospace">${fmt(V)} V</text>`;
- else s+=`<rect x="34" y="${sy-30}" width="52" height="60" fill="#090e18"/><path d="M38 ${sy-8}H82M48 ${sy+8}H72" stroke="#36e2e8" stroke-width="4"/><text x="92" y="${sy-12}" fill="#36e2e8" font-size="13" font-weight="800">+</text><text x="20" y="${sy+44}" fill="#f1f3fc" font-size="15" font-weight="700" font-family="JetBrains Mono,monospace">${fmt(V)} V</text>`;
+ else s+=`<rect x="22" y="${sy-32}" width="76" height="64" rx="7" fill="#52636f" stroke="#8296a3"/><rect x="29" y="${sy-22}" width="62" height="27" rx="3" fill="#08171d"/><text x="60" y="${sy-3}" text-anchor="middle" fill="#ffb36b" font-size="15" font-weight="700" font-family="JetBrains Mono,monospace">${fmt(V)} V</text><circle cx="78" cy="${sy+19}" r="9" fill="#273b49" stroke="#899aa9"/><circle cx="38" cy="${sy+19}" r="3" fill="#68e7aa"/><circle cx="60" cy="${sy-32}" r="5" fill="#e4777e"/><circle cx="60" cy="${sy+32}" r="5" fill="#162431" stroke="#a1b3c2"/><text x="75" y="${sy-35}" fill="#ff9299" font-size="12">+</text><text x="75" y="${sy+44}" fill="#c7d7e5" font-size="12">−</text>`;
  if(o.vals&&o.known.has(tree))s+=`<text x="${left+L.w/2}" y="${bottom+22}" text-anchor="middle" fill="#ff9f43" font-size="13" font-family="JetBrains Mono,monospace">I total = ${fmt(tree.I)} A</text>`;
  s+=draw(tree,col,L,left,y,o);
  svg.setAttribute('viewBox',`0 0 ${Math.max(W,420)} ${H}`);svg.innerHTML=s}
 
 /* ---- niveles y tabla ---- */
-function lvlButtons(){$('levels').innerHTML=LEVELS.map((l,i)=>`<button class="lvl${cur.done.has(i)?' done':''}" role="listitem" data-i="${i}" aria-current="${i===cur.lvl}"><b>NIVEL ${i+1}</b><span>${l.name}</span><i>${l.hint}</i></button>`).join('');
+function lvlButtons(){$('levels').innerHTML=LEVELS.map((l,i)=>`<button class="lvl${cur.done.has(i)?' done':''}" role="listitem" data-i="${i}" aria-current="${!cur.random&&i===cur.lvl}"><b>NIVEL ${i+1}</b><span>${l.name}</span><i>${l.hint}</i></button>`).join('');
  document.querySelectorAll('.lvl').forEach(b=>b.onclick=()=>load(+b.dataset.i,0))}
-function load(i,v){cur.lvl=i;cur.var=v;const L=LEVELS[i];const [V,t]=L.vars[v];cur.V=V;cur.tree=prep(clone(t));solve(cur.tree,V,V/cur.tree.v);
- lvlButtons();$('lvlTitle').textContent=`Nivel ${i+1} · ${L.name}`;
- const ls=leaves(cur.tree);const what=L.src==='amp'?`Un amplificador entrega ${fmt(V)} V a ${ls.length} altavoces de 8 Ω conectados como en el esquema.`:`Una fuente de ${fmt(V)} V alimenta el circuito del esquema.`;
+function load(i,v,randomLevel=null){cur.random=!!randomLevel;cur.lvl=i;cur.var=v;const L=randomLevel||LEVELS[i];cur.src=L.src;
+ (cur.random?$('cgFree'):$('cgGuided')).appendChild($('cgWork'));$('cgResume').hidden=!cur.random;$('newVar').textContent=cur.random?'Otro circuito':'Otros valores';const [V,t]=L.vars[v];cur.V=V;cur.tree=prep(clone(t));solve(cur.tree,V,V/cur.tree.v);
+ lvlButtons();$('lvlTitle').textContent=cur.random?L.name:`Nivel ${i+1} · ${L.name}`;
+ const ls=leaves(cur.tree);const what=L.src==='amp'?`Un amplificador ideal entrega ${fmt(V)} V eficaces a ${ls.length} altavoces modelados como cargas resistivas de 8 Ω, conectados como en el esquema.`:`Una fuente de ${fmt(V)} V alimenta el circuito del esquema.`;
  $('statement').textContent=what+' Calcula la resistencia total y la tensión, la corriente y la potencia de cada elemento.';
  render($('circ'),cur.tree,V,L.src);
  $('tbody').innerHTML=ls.map(l=>`<tr><td>${l.name}${l.spk?' (altavoz)':''}</td><td><input inputmode="decimal" data-k="${l.id}:V" aria-label="Tensión ${l.name}"></td><td><input inputmode="decimal" data-k="${l.id}:I" aria-label="Corriente ${l.name}"></td><td><span class="given">${fmt(l.v)}</span></td><td><input inputmode="decimal" data-k="${l.id}:P" aria-label="Potencia ${l.name}"></td></tr>`).join('')+
@@ -953,12 +1009,12 @@ function load(i,v){cur.lvl=i;cur.var=v;const L=LEVELS[i];const [V,t]=L.vars[v];c
  $('result').innerHTML='';$('map').classList.remove('on');buildSteps()}
 function expected(k){const [id,q]=k.split(':');if(id==='T')return q==='R'?cur.tree.v:q==='I'?cur.tree.I:cur.tree.P;const l=leaves(cur.tree).find(x=>x.id===id);return l[q]}
 $('check').onclick=()=>{let ok=0,tot=0,empty=0,firstBad=null;document.querySelectorAll('#tbody input').forEach(inp=>{tot++;const v=parse(inp.value);inp.classList.remove('ok','bad');if(!isFinite(v)){empty++;return}if(near(v,expected(inp.dataset.k))){ok++;inp.classList.add('ok')}else{inp.classList.add('bad');if(!firstBad)firstBad=inp.dataset.k}});
- if(ok===tot){cur.done.add(cur.lvl);lvlButtons();$('result').innerHTML=`<p class="msg ok">¡Todo correcto! ${cur.lvl<LEVELS.length-1?'Pasa al siguiente nivel o prueba con otros valores.':'Has completado el reto.'}</p>`+(cur.lvl<LEVELS.length-1?`<div class="row" style="margin-top:8px"><button class="btn primary" id="nextLvl">Siguiente nivel →</button></div>`:'');if($('nextLvl'))$('nextLvl').onclick=()=>load(cur.lvl+1,0);return}
+ if(ok===tot){if(cur.random){if(!cgCredited){cgCredited=true;$('cgProgress').textContent='Circuitos resueltos: '+(++cgSolved)}$('result').innerHTML='<p class="msg ok">¡Todo correcto! Puedes generar otro circuito.</p>';return}cur.done.add(cur.lvl);lvlButtons();$('result').innerHTML=`<p class="msg ok">¡Todo correcto! ${cur.lvl<LEVELS.length-1?'Pasa al siguiente nivel o prueba con otros valores.':'Has completado el reto.'}</p>`+(cur.lvl<LEVELS.length-1?`<div class="row" style="margin-top:8px"><button class="btn primary" id="nextLvl">Siguiente nivel →</button></div>`:'');if($('nextLvl'))$('nextLvl').onclick=()=>load(cur.lvl+1,0);return}
  let m=`<p class="msg ${ok?'info':'bad'}">${ok} de ${tot} casillas correctas${empty?` · ${empty} sin rellenar`:''}.</p>`;
  if(firstBad)m+=`<div class="row" style="margin-top:8px"><button class="btn alt" id="whereBad">Ver dónde está mi error</button></div>`;
  $('result').innerHTML=m;if(firstBad)$('whereBad').onclick=()=>{openMap(stepFor(firstBad))}};
 $('clear').onclick=()=>{document.querySelectorAll('#tbody input').forEach(i=>{i.value='';i.classList.remove('ok','bad')});$('result').innerHTML=''};
-$('newVar').onclick=()=>load(cur.lvl,(cur.var+1)%LEVELS[cur.lvl].vars.length);
+$('newVar').onclick=()=>cur.random?cgGenerate(false):load(cur.lvl,(cur.var+1)%LEVELS[cur.lvl].vars.length);
 
 /* ---- mapa de resolución: ida y vuelta ---- */
 function nm(n){return n.name}
@@ -986,13 +1042,70 @@ function buildSteps(){const t=cur.tree;const C=comps(t);const steps=[];const ls=
 function showStep(i){cur.step=i;const s=cur.steps[i];document.querySelectorAll('.step').forEach((b,j)=>b.setAttribute('aria-current',j===i));
  const ph={ida:'IDA · SIMPLIFICAR',vuelta:'VUELTA · CALCULAR',fin:'FINAL · POTENCIAS'}[s.ph];$('phase').className='phase '+s.ph;$('phase').textContent=ph;
  $('why').innerHTML=s.why;$('formula').textContent=s.f;
- render($('mapCirc'),cur.tree,cur.V,LEVELS[cur.lvl].src,{col:s.col,hl:s.hl,hlColor:s.ph==='ida'?'#36e2e8':s.ph==='vuelta'?'#ff9f43':'#eaf4f6',vals:s.ph!=='ida',known:s.known||new Set()});
+ render($('mapCirc'),cur.tree,cur.V,cur.src,{col:s.col,hl:s.hl,hlColor:s.ph==='ida'?'#36e2e8':s.ph==='vuelta'?'#ff9f43':'#eaf4f6',vals:s.ph!=='ida',known:s.known||new Set()});
  $('prev').disabled=i===0;$('next').disabled=i===cur.steps.length-1}
 function stepFor(k){const [id,q]=k.split(':');if(id==='T')return q==='R'?cur.steps.findIndex(s=>s.node===cur.tree&&s.ph==='ida'):cur.steps.findIndex(s=>s.total);if(q==='P')return cur.steps.length-1;
  return cur.steps.findIndex(s=>s.ph==='vuelta'&&s.node&&s.node.k&&s.node.k.some(x=>x.id===id))}
 function openMap(i){$('map').classList.add('on');showStep(Math.max(0,i));$('map').scrollIntoView({behavior:'smooth',block:'start'})}
 $('showMap').onclick=()=>openMap(0);$('prev').onclick=()=>showStep(cur.step-1);$('next').onclick=()=>showStep(cur.step+1);
 
+
+const cgMemo=new Map(),cgLeaf={t:'L',key:'L'},cgBags=new Map();
+function cgShapes(n,t){
+ const key=n+t;if(cgMemo.has(key))return cgMemo.get(key);
+ const result=new Map();
+ function visit(left,arr){
+ if(left===0){if(arr.length<2)return;const sorted=arr.slice().sort((a,b)=>a.key<b.key?-1:a.key>b.key?1:0);const key=t+'('+sorted.map(x=>x.key).join(',')+')';result.set(key,{t,k:sorted,key});return}
+ for(let size=1;size<=left;size++){if(size===n)continue;for(const x of size===1?[cgLeaf]:cgShapes(size,t==='S'?'P':'S'))visit(left-size,[...arr,x])}}
+ visit(n,[]);const a=[...result.values()];cgMemo.set(key,a);return a;
+}
+function cgAll(n){return [...cgShapes(n,'S'),...cgShapes(n,'P')]}
+function cgMixed(x){return x.k.some(q=>q.t!=='L')}
+function cgGroups(x){return x.t==='L'?0:1+x.k.reduce((a,q)=>a+cgGroups(q),0)}
+function cgDepth(x){return x.t==='L'?0:1+Math.max(...x.k.map(cgDepth))}
+function cgPick(a){return a[Math.floor(Math.random()*a.length)]}
+function cgShuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function cgPool(type,n,d){let pool=cgAll(n).filter(x=>type==='Mixto'?cgMixed(x):type==='Serie'?x.t==='S'&&!cgMixed(x):type==='Paralelo'?x.t==='P'&&!cgMixed(x):true);if(d==='Básica'){const a=pool.filter(x=>cgGroups(x)<=2);if(a.length)pool=a}if(d==='Intermedia'){const a=pool.filter(x=>cgGroups(x)>=2&&cgDepth(x)<=2);if(a.length)pool=a}if(d==='Avanzada'){const a=pool.filter(x=>cgDepth(x)>=3);if(a.length)pool=a}return pool}
+function cgNext(pool,key){let b=cgBags.get(key);if(!b||!b.remaining.length){const a=cgShuffle(pool);if(b&&a.length>1&&a[0].key===b.last)[a[0],a[1]]=[a[1],a[0]];b={remaining:a,last:b?.last||''};cgBags.set(key,b)}const sh=b.remaining.shift();b.last=sh.key;return {sh,seen:pool.length-b.remaining.length,total:pool.length}}
+function cgPopulate(sh,spk,d){let n=0;function walk(x){if(x.t==='L')return spk?Z(++n,8):R(++n,cgPick(d==='Básica'?[2,3,4,6,8,12]:[2,3,4,5,6,8,10,12,16,20]));return {t:x.t,k:cgShuffle(x.k).map(walk)}}return walk(sh)}
+function cgVoltage(t,d){if(d!=='Básica')return cgPick([12,18,24,30,36,48]);const q=prep(clone(t));let best=-1,V=12;for(const v of [6,8,10,12,16,18,20,24,30,36,48]){solve(q,v,v/q.v);const score=[q,...leaves(q)].flatMap(x=>[x.V,x.I]).reduce((a,x)=>a+(Math.abs(x-Math.round(x))<1e-8?2:Math.abs(2*x-Math.round(2*x))<1e-8?1:0),0);if(score>best){best=score;V=v}}return V}
+function cgDemoSolve(id,s){const {v,r1,r2}=s,series=id==='s',rt=series?r1+r2:1/(1/r1+1/r2),it=v/rt;return {v,r1,r2,rt,it,pt:v*it,v1:series?it*r1:v,v2:series?it*r2:v,i1:series?it:v/r1,i2:series?it:v/r2}}
+function cgDemoChange(id,s,k,x){if(k==='v'||k[0]==='r'){s[k]=x;return}const r=s['r'+k[1]],rt=s.r1+s.r2;s.v=Math.max(0,Math.min(48,k[0]==='v'?(id==='s'?x*rt/r:x):(id==='s'?x*rt:x*r)))}
+function cgDemoRange(id,q,k){return [k[0]==='r'?2:0,k[0]==='r'?24:k[0]==='i'?48/(id==='s'?q.rt:q['r'+k[1]]):k!=='v'&&id==='s'?48*q['r'+k[1]]/q.rt:48]}
+
+let cgLastGuided={lvl:0,variant:0,inputs:[]},cgSolved=0,cgCredited=false;
+function cgConfig(){const type=$('cgType').value,n0=$('cgCount');n0.options[0].disabled=type==='Mixto';if(type==='Mixto'&&n0.value==='2')n0.value='3';const n=+n0.value,d=$('cgDifficulty');d.options[3].disabled=n<4||type==='Serie'||type==='Paralelo';if(d.options[3].disabled&&d.value==='Avanzada')d.value='Variada'}
+function cgGenerate(scroll=true){cgConfig();if(!cur.random)cgLastGuided={lvl:cur.lvl,variant:cur.var,inputs:Array.from($('tbody').querySelectorAll('input')).map(x=>x.value)};const type=$('cgType').value,n=+$('cgCount').value,d=$('cgDifficulty').value,spk=$('cgLoad').value==='Altavoces',pool=cgPool(type,n,d),next=cgNext(pool,[type,n,d].join('|')),t=cgPopulate(next.sh,spk,d),V=cgVoltage(t,d);cgCredited=false;load(cur.lvl,0,{name:'Práctica libre · '+n+' componentes',src:spk?'amp':'pila',vars:[[V,t]]});$('cgVariety').textContent=next.total===1?'Una topología para esta selección · valores variables':next.seen+' de '+next.total+' estructuras en esta ronda · sin repetir hasta agotarlas';if(scroll)$('cgWork').scrollIntoView({behavior:'smooth',block:'start'})}
+$('cgGenerate').onclick=()=>cgGenerate();
+['cgType','cgCount','cgDifficulty','cgLoad'].forEach(id=>$(id).onchange=cgConfig);
+$('cgReturn').onclick=()=>{load(cgLastGuided.lvl,cgLastGuided.variant);$('tbody').querySelectorAll('input').forEach((el,i)=>el.value=cgLastGuided.inputs[i]||'');$('cgExercises').scrollIntoView({behavior:'smooth',block:'start'})};
+cgConfig();document.querySelectorAll('#lab-circuitos [data-cg-go]').forEach(b=>b.onclick=()=>$(b.dataset.cgGo).scrollIntoView({behavior:'smooth',block:'start'}));
+
+function cgInitDemo(){
+ const C={V:'#ffb36b',I:'#36e2e8',R:'#b7a5fa',P:'#ff858d'},states={s:{v:24,r1:4,r2:8},p:{v:24,r1:4,r2:8}};
+ let paused=false;
+ const slider=(id,k,label,c)=>`<div class="cg-control" style="--cg:${c}"><div class="cg-label"><label for="cg${id}${k}">${label}</label><b id="cg${id}${k}val"></b></div><input id="cg${id}${k}" type="range" step="any"></div>`;
+ $('cgDemos').innerHTML=['s','p'].map(id=>{const series=id==='s';return `<div class="panel cg-panel"><div class="row" style="justify-content:space-between"><div><span class="kicker">${series?'UN SOLO CAMINO':'VARIOS CAMINOS'}</span><h3 style="margin:3px 0;font-size:22px">${series?'Serie':'Paralelo'}</h3></div><button class="btn ghost" id="cg${id}reset">Reiniciar</button></div><div class="cg-rule" style="--cg:${series?C.I:C.V}">${series?'La intensidad es igual en todo el circuito.':'La tensión es igual en todas las ramas.'}</div>${slider(id,'v','Tensión de la fuente',C.V)}<div class="cg-visual"><svg class="cg-svg" id="cg${id}svg" viewBox="0 0 340 248" role="img" aria-label="Circuito ${series?'serie':'paralelo'}"></svg><div class="cg-metergrid" id="cg${id}meters"></div></div><div class="cg-stats">${[['rt','R total',C.R],['it','I total',C.I],['pt','P total',C.P]].map(([k,l,c])=>`<div class="cg-stat"><span class="cg-small">${l}</span><b id="cg${id}${k}" style="color:${c}"></b></div>`).join('')}</div><div class="cg-controls"><b style="color:${C.R}">RESISTENCIA 1</b><b style="color:${C.R}">RESISTENCIA 2</b>${slider(id,'r1','R₁ · Resistencia',C.R)}${slider(id,'r2','R₂ · Resistencia',C.R)}${slider(id,'v1','V₁ · Tensión',C.V)}${slider(id,'v2','V₂ · Tensión',C.V)}${slider(id,'i1','I₁ · Intensidad',C.I)}${slider(id,'i2','I₂ · Intensidad',C.I)}</div><div class="cg-formula">${series?'I₁ = I₂ = Iₜ · Vₜ = V₁ + V₂':'V₁ = V₂ = Vₜ · Iₜ = I₁ + I₂'}</div><p class="cg-muted" id="cg${id}info" style="min-height:34px;margin:7px 0 0">Modifica cualquier deslizador.</p></div>`}).join('');
+ const text=(x,y,t,c='#dce8f4',size=12)=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${c}" font-size="${size}" font-weight="700">${t}</text>`;
+ const wire=d=>`<path d="${d}" fill="none" stroke="#71869c" stroke-width="3.5" stroke-linejoin="round"/>`;
+ const flow=(d,i)=>i>0?`<path class="cg-flow" d="${d}" fill="none" stroke="#36e2e8" stroke-linecap="round" stroke-width="3.5" style="--speed:${1.8/Math.sqrt(Math.max(.01,i))}s;animation-play-state:${paused?'paused':'running'}"/>`:'';
+ const source=(x,y,v)=>`<rect x="${x-35}" y="${y-32}" width="70" height="64" rx="6" fill="#52636f" stroke="#8296a3"/><rect x="${x-29}" y="${y-21}" width="58" height="25" rx="3" fill="#08171d"/>${text(x,y-5,fmt(v)+' V',C.V,12)}<circle cx="${x+17}" cy="${y+17}" r="9" fill="#273b49" stroke="#899aa9"/><circle cx="${x-20}" cy="${y+17}" r="3" fill="#68e7aa"/><circle cx="${x}" cy="${y-32}" r="5" fill="#e4777e"/><circle cx="${x}" cy="${y+32}" r="5" fill="#162431" stroke="#a1b3c2"/>${text(x+12,y-38,'+','#ff9299',11)}${text(x+12,y+46,'−','#c7d7e5',11)}`;
+ function drawDemo(id){
+ const q=cgDemoSolve(id,states[id]),{v,r1,r2,rt,it,pt,v1,v2,i1,i2}=q;
+ for(const k of ['v','r1','r2','v1','v2','i1','i2']){const el=$('cg'+id+k),[min,max]=cgDemoRange(id,q,k),unit=k[0]==='r'?'Ω':k[0]==='i'?'A':'V';el.min=min;el.max=max;el.step=k[0]==='r'?'1':'any';el.value=q[k];el.setAttribute('aria-valuetext',fmt(q[k])+' '+unit);$('cg'+id+k+'val').textContent=fmt(q[k])+' '+unit}
+ for(const [k,u] of [['rt','Ω'],['it','A'],['pt','W']])$('cg'+id+k).textContent=fmt(q[k])+' '+u;
+ $('cg'+id+'meters').innerHTML=['v1','v2','i1','i2'].map(k=>{const c=k[0]==='v'?C.V:C.I,max=k[0]==='v'?48:24,u=k[0]==='v'?'V':'A';return `<div class="cg-meter" style="--cg:${c}"><b>${fmt(q[k])}</b><div class="cg-track"><div class="cg-fill" style="height:${100*q[k]/max}%"></div><div class="cg-segments"></div></div><strong>${k.toUpperCase()}</strong><div class="cg-small">${max} ${u}</div></div>`}).join('');
+ const bg=`<defs><linearGradient id="cgRes${id}" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#eadbb9"/><stop offset=".45" stop-color="#d5c19a"/><stop offset="1" stop-color="#96815e"/></linearGradient><pattern id="cgGrid${id}" width="17" height="17" patternUnits="userSpaceOnUse"><path d="M17 0H0V17" stroke="#1b3040" stroke-width=".6" fill="none"/></pattern></defs><rect x="3" y="5" width="334" height="238" rx="8" fill="#0c1925"/><rect x="3" y="5" width="334" height="238" rx="8" fill="url(#cgGrid${id})"/>`;
+ const rr=(x,y,n,r,vv,ii)=>`<rect x="${x-29}" y="${y-12}" width="58" height="24" rx="7" fill="url(#cgRes${id})" stroke="#ecdbb6"/><path d="M${x-21} ${y-11}v22M${x+21} ${y-11}v22" stroke="#9d885e" stroke-width="3"/>${text(x,y-22,'R'+n+' · '+fmt(r)+' Ω',C.R,12)}${text(x,y+29,fmt(vv)+' V',C.V,12)}${text(x,y+44,fmt(ii)+' A',C.I,12)}`;
+ if(id==='s'){const d='M48 98V61H110M168 61H225M283 61H315V217H48V162';$('cg'+id+'svg').innerHTML=bg+wire(d)+flow(d,it)+source(48,130,v)+rr(139,61,1,r1,v1,i1)+rr(254,61,2,r2,v2,i2)+text(200,192,'I₁ = I₂ = '+fmt(it)+' A',C.I,13)}
+ else{const a='M48 98V56H110',b='M110 56H169M227 56H301V164',c='M110 56V164H169M227 164H301',d='M301 164V230H48V162';$('cg'+id+'svg').innerHTML=bg+[a,b,c,d].map(wire).join('')+flow(a,it)+flow(b,i1)+flow(c,i2)+flow(d,it)+source(48,130,v)+rr(198,56,1,r1,v1,i1)+rr(198,164,2,r2,v2,i2)+'<circle cx="110" cy="56" r="4" fill="#36e2e8"/><circle cx="301" cy="164" r="4" fill="#36e2e8"/>'+text(253,120,'V₁ = V₂',C.V,12)}
+ }
+ for(const id of ['s','p']){
+ for(const k of ['v','r1','r2','v1','v2','i1','i2'])$('cg'+id+k).oninput=e=>{cgDemoChange(id,states[id],k,+e.target.value);$('cg'+id+'info').textContent=k==='v'?'Cambia la fuente, se mantienen R₁ y R₂.':k[0]==='r'?'Cambia la resistencia, se mantiene la fuente.':id==='s'?(k[0]==='i'?'I₁ e I₂ cambian juntas.':'Se ajusta la fuente y cambia el reparto de tensión.'):(k[0]==='v'?'V₁ y V₂ cambian juntas.':'Se ajusta la fuente y cambian las corrientes de las ramas.');drawDemo(id)};
+ $('cg'+id+'reset').onclick=()=>{states[id]={v:24,r1:4,r2:8};$('cg'+id+'info').textContent='Modifica cualquier deslizador.';drawDemo(id)};drawDemo(id)}
+ $('cgPause').onclick=()=>{paused=!paused;$('cgPause').textContent=paused?'Reanudar animaciones':'Pausar animaciones';$('cgPause').setAttribute('aria-pressed',String(paused));['s','p'].forEach(drawDemo)};
+}
+cgInitDemo();
 /* =================================================================
    POLÍMETRO (resolución por análisis nodal)
    ================================================================= */
