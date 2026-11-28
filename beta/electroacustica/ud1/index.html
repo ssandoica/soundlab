@@ -533,6 +533,20 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 #lab-reparto .rp-count{font:700 12px var(--mono);color:var(--accent)}
 @media(max-width:1050px){#lab-reparto .rp-board{grid-template-columns:1fr}#lab-reparto .rp-bank .tray{max-height:none;display:flex;flex-wrap:wrap}#lab-reparto .rp-bank .chip{width:auto;max-width:100%}}
 @media(max-width:730px){#lab-reparto .rp-calc{grid-template-columns:1fr}#lab-reparto .rp-board .phases{grid-template-columns:1fr}#lab-reparto .rp-table{max-height:390px}#lab-reparto .rp-worknav button{padding:10px}}
+
+#lab-reparto .rp-board{display:flex;flex-direction:column;gap:12px}
+#lab-reparto .rp-board>div{width:100%;box-sizing:border-box}
+#lab-reparto .rp-bank .tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(137px,1fr));gap:7px;max-height:205px;overflow:auto;padding:2px}
+#lab-reparto .rp-bank .chip,#lab-reparto .rp-board .slot .chip{display:grid;grid-template-columns:36px minmax(0,1fr);align-items:center;gap:7px;width:100%;max-width:none;min-height:48px}
+#lab-reparto .rp-chiptext{min-width:0;display:block;overflow-wrap:anywhere;line-height:1.2}
+#lab-reparto .rp-chiptext small{display:block;margin-top:3px;font-size:11px}
+#lab-reparto .rp-miniature{width:36px;height:36px;display:block;flex:none;pointer-events:none}
+#lab-reparto .rp-scheme{padding:0;margin:0;overflow:auto;background:#08141c;border-radius:14px}
+#lab-reparto .rp-scheme .scheme{margin:0;border:0;border-radius:0;min-width:620px}
+#lab-reparto .scheme .sk.hot .rp-hit{fill:#36e2e81b;stroke:#36e2e8;stroke-dasharray:4 3}
+#lab-reparto .scheme .sk:focus-visible .rp-hit{stroke:#36e2e8}
+#lab-reparto .rp-board .phase-col{padding:12px}
+@media(max-width:730px){#lab-reparto .rp-bank .tray{grid-template-columns:repeat(auto-fill,minmax(125px,1fr));max-height:225px}}
 </style>
 <details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Fundamentos y fórmulas · Cómo se hace un reparto de cargas</summary>
 <div class="in">
@@ -568,11 +582,11 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 <div class="rp-stagefooter"><button class="btn ghost" id="rpToBoard">Ir al reparto →</button></div></div></div></div>
 <div id="rpBoard" class="rp-stage" hidden><div class="panel">
 <div class="row" style="justify-content:space-between"><h3 style="margin:0;font-size:16px">3 · Reparte los equipos</h3><button class="btn ghost" id="rpToCalc">← Volver a los cálculos</button></div>
-<p class="rp-help">Selecciona un equipo y después un Schuko, o arrástralo a su base. Para devolver un equipo conectado, selecciónalo y vuelve a pulsarlo.</p>
-<div class="rp-board"><div class="rp-bank"><div class="row" style="justify-content:space-between"><h4 style="margin:0;font-size:14px">Equipos disponibles</h4><span class="rp-count" id="rpCount" aria-live="polite"></span></div><div class="tray" id="rTray" aria-label="Equipos sin conectar"></div></div><div class="phases" id="rPhases"></div></div>
+<p class="rp-help">Arrastra la miniatura de un equipo directamente sobre un Schuko del esquema o sobre su columna. También puedes pulsar el equipo y después la base. Para devolverlo, pulsa dos veces sobre el equipo conectado.</p>
+<div class="rp-board"><div class="rp-bank"><div class="row" style="justify-content:space-between"><h4 style="margin:0;font-size:14px">Equipos disponibles</h4><span class="rp-count" id="rpCount" aria-live="polite"></span></div><div class="tray" id="rTray" aria-label="Equipos sin conectar"></div></div><div class="rp-scheme" id="rpSchemeDetails"><svg class="scheme" id="rScheme" viewBox="0 0 960 350" role="group" aria-label="Cuadro interactivo: selecciona un Schuko para conectar un equipo"></svg></div><div class="phases" id="rPhases"></div></div>
 <div class="rp-stagefooter"><div class="row"><button class="btn primary" id="rCheck3">Comprobar reparto</button><button class="btn alt" id="rSol">Ver una solución</button></div><button class="btn ghost" id="rEmpty">Vaciar</button></div>
 <div id="rMsg3"></div>
-<details class="rp-scheme" id="rpSchemeDetails"><summary>Ver esquema del cuadro de distribución</summary><svg class="scheme" id="rScheme" viewBox="0 0 960 350" role="img" aria-label="Esquema del cuadro de distribución con las fases y sus bases Schuko"></svg></details>
+
 </div></div>
 </section>
 
@@ -1393,10 +1407,17 @@ document.querySelectorAll('#lab-reparto [data-rp-stage]').forEach(b=>b.onclick=(
 function rpDraw(full){const L=RL[rp.lvl];rpLevels();
  $('rTitle').textContent=`Nivel ${rp.lvl+1} · ${L.name}`;
  const nS=rp.slots.length;const ac=L.acom||(rp.T<=32?32:63);$('rStatement').textContent=`Acometida trifásica 3F + N + PE de 230/400 V y ${ac} A: ninguna fase puede superar ${ac} A. ${rp.loads.length} equipos monofásicos a 230 V. Hay ${nS} bases Schuko: ${L.ph.join(', ').replace(/, (\d)$/,' y $1')} en las fases L1, L2 y L3.${L.multi?' Puedes usar regletas: varios equipos en un mismo Schuko, sin pasar de 16 A.':' Un equipo por Schuko.'} Usa I = P / 230.`;
- if(full){rpStage('calc');$('rpSchemeDetails').open=false;$('rBody').innerHTML=rp.loads.map(l=>`<tr><td>${l.name}</td><td class="num">${l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}</td><td><input inputmode="decimal" data-l="${l.id}" aria-label="Corriente de ${l.name}"></td></tr>`).join('');
+ if(full){rpStage('calc');$('rBody').innerHTML=rp.loads.map(l=>`<tr><td>${l.name}</td><td class="num">${l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}</td><td><input inputmode="decimal" data-l="${l.id}" aria-label="Corriente de ${l.name}"></td></tr>`).join('');
   ['rMsg1','rMsg2','rMsg3'].forEach(x=>$(x).innerHTML='');$('rTot').value='';$('rPer').value='';$('rTot').className='';$('rPer').className=''}
  rpBoard()}
-function chipHTML(l,placed){const sel=rp.sel===l.id;return `<button class="chip" draggable="true" data-c="${l.id}" aria-pressed="${sel}">${l.name}<small>${l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')} W${rp.ok1?` · <span class="ia">${fmt(l.I)} A</span>`:''}</small></button>`}
+function rpMini(l){const n=l.name.toLowerCase();let body;
+ if(/subwoofer|caja|sidefill|monitor activo|line array/.test(n)&&!/etapa|amplificador/.test(n)) {const sub=/subwoofer/.test(n);body='<path d="M7 5L13 2H30L35 6V30L29 34H7Z" fill="#222e37" stroke="#71838e"/><path d="M29 5L35 6V30L29 34Z" fill="#101a22"/><rect x="7" y="5" width="22" height="29" rx="3" fill="#121b22" stroke="#536570"/>'+ (sub?'':'<path d="M11 8H25L22 14H14Z" fill="#788890" stroke="#283b47"/>')+'<circle cx="18" cy="'+(sub?19:23)+'" r="'+(sub?9:7)+'" fill="#344550" stroke="#83949e"/><circle cx="18" cy="'+(sub?19:23)+'" r="3" fill="#17242d"/><path d="M10 10H26M10 12H26M10 28H26M10 30H26" stroke="#8495a0" opacity=".25"/>'}
+ else if(/mesa|teclado/.test(n)){body='<path d="M5 8H32L37 29H2Z" fill="#283a46" stroke="#8195a3"/><path d="M8 11H29V16H8Z" fill="#11242b" stroke="#5b7f90"/><g stroke="#91a2ac" stroke-width="1"><path d="M8 19V26M13 19V26M18 19V26M23 19V26M28 19V26M33 19V26"/></g><g stroke="#36e2e8" stroke-width="2.5"><path d="M6 22H10M11 25H15M16 21H20M21 24H25M26 20H30"/></g>'}
+ else if(/ordenador|grabación/.test(n)){body='<rect x="6" y="5" width="27" height="19" rx="2" fill="#263d4c" stroke="#9eacb4"/><rect x="9" y="8" width="21" height="13" fill="#102b37"/><path d="M11 17l5-4 4 3 6-5" fill="none" stroke="#36e2e8"/><path d="M6 24H33L38 30H1Z" fill="#53636c" stroke="#98a6ae"/><path d="M12 27H28" stroke="#192830"/>'}
+ else if(/guitarra|bajo|batería/.test(n)){body='<rect x="5" y="7" width="30" height="26" rx="3" fill="#202c34" stroke="#74858f"/><rect x="8" y="10" width="24" height="5" rx="1" fill="#465660"/><circle cx="12" cy="12.5" r="1" fill="#36e2e8"/><rect x="9" y="17" width="22" height="13" rx="1" fill="#37434b" stroke="#101c23"/><path d="M10 20H30M10 23H30M10 26H30" stroke="#7d8b91" opacity=".4"/>'}
+ else{body='<rect x="3" y="8" width="34" height="24" rx="3" fill="#263740" stroke="#85959e"/><rect x="6" y="11" width="28" height="8" rx="1" fill="#15232d"/><rect x="8" y="13" width="13" height="4" rx="1" fill="#3ba7b0"/><circle cx="29" cy="15" r="2" fill="#b9c9d0"/><path d="M7 23H21M7 26H21M7 29H21" stroke="#8a9ba4" opacity=".5"/><circle cx="29" cy="26" r="4" fill="#4a5963" stroke="#a2b1b8"/>'}
+ return '<svg class="rp-miniature" viewBox="0 0 40 36" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'+body+'</svg>'}
+function chipHTML(l,placed){const sel=rp.sel===l.id;return '<button class="chip" draggable="true" data-c="'+l.id+'" aria-pressed="'+sel+'">'+rpMini(l)+'<span class="rp-chiptext">'+l.name+'<small>'+l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' W'+(rp.ok1?' · <span class="ia">'+fmt(l.I)+' A</span>':'')+'</small></span></button>'}
 function rpBoard(){const L=RL[rp.lvl];const placed=new Set(rp.slots.flatMap(s=>s.items));$('rpCount').textContent=(rp.loads.length-placed.size)+' / '+rp.loads.length;
  $('rTray').innerHTML=rp.loads.filter(l=>!placed.has(l.id)).map(l=>chipHTML(l)).join('')||'<span style="color:var(--dim);font-size:14px">Todos los equipos están conectados.</span>';
  const totI=rp.loads.reduce((a,l)=>a+l.I,0),target=totI/3,maxBar=Math.max(target*1.6,...[0,1,2].map(p=>phaseI(p)));
@@ -1426,7 +1447,7 @@ function rpScheme(){const L=RL[rp.lvl];const ac=L.acom||(rp.T<=32?32:63);const c
   g+=`<path d="M${xs[0]} 172H${xs[k-1]}" stroke="${PC[pi]}" stroke-width="5"/>`+(pi===1?`<path d="M${xs[0]} 172H${xs[k-1]}" stroke="#5c6670" stroke-width="1.5"/>`:'');
   sl.forEach((s,j)=>{n++;const x=xs[j];const I=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0),W=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).P,0);const over=I>16+1e-9;const has=s.items.length>0;
    const names=s.items.map(id=>rp.loads.find(l=>l.id===id).name).join(', ')||'vacío';
-   g+=`<g class="sk" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${n} de ${PHN[pi][0]}: ${names}"><title>S${n}: ${names}</title>`;
+   g+=`<g class="sk" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${n} de ${PHN[pi][0]}: ${names}"><title>S${n}: ${names}</title><rect class="rp-hit" x="${x-43}" y="186" width="86" height="120" rx="9" fill="transparent" stroke="transparent"/>`;
    g+=`<path d="M${x} 172V196" stroke="${PC[pi]}" stroke-width="4"/>${pi===1?`<path d="M${x} 172V196" stroke="#5c6670" stroke-width="1.2"/>`:''}`;
    g+=`<circle cx="${x}" cy="222" r="26" fill="#eaf4f6" stroke="${over?'#ff7a7a':has?'#36e2e8':'#5c6680'}" stroke-width="3"/><circle cx="${x-9}" cy="222" r="4" fill="#0b1a24"/><circle cx="${x+9}" cy="222" r="4" fill="#0b1a24"/><rect x="${x-4}" y="196" width="8" height="5" fill="#9aa3ad"/><rect x="${x-4}" y="243" width="8" height="5" fill="#9aa3ad"/>`;
    g+=`<text x="${x}" y="182" text-anchor="end" dx="-30" fill="#a9c6cc" font-size="11" font-weight="700">S${n}</text>`;
@@ -1437,7 +1458,7 @@ function rpScheme(){const L=RL[rp.lvl];const ac=L.acom||(rp.T<=32?32:63);const c
   g+=`<rect x="${cx-95}" y="312" width="190" height="32" rx="8" fill="#0b1a24" stroke="${W?col:'#3c4960'}" stroke-width="2"/><text x="${cx}" y="333" text-anchor="middle" fill="${W?col:'#7d8aa6'}" font-size="14" font-weight="800" font-family="JetBrains Mono,monospace">${PHN[pi][0]} · ${rp.ok1?fmt(I)+' A':W.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' W'}${rp.ok1?' / '+fmt(tg):''}</text>`});
  const svg=$('rScheme');svg.innerHTML=g;
  svg.querySelectorAll('.sk').forEach(el=>{const [pi,sk]=el.dataset.s.split('-').map(Number);const put=()=>{if(!rp.sel)return;rpPlace(rp.sel,pi,sk);rp.sel=null;rpBoard()};el.onclick=put;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();put()}};
-  el.ondragover=e=>e.preventDefault();el.ondrop=e=>{e.preventDefault();rp.sel=e.dataTransfer.getData('text/plain');put()}})}
+  el.ondragover=e=>{e.preventDefault();el.classList.add('hot')};el.ondragleave=e=>{if(!el.contains(e.relatedTarget))el.classList.remove('hot')};el.ondrop=e=>{e.preventDefault();el.classList.remove('hot');const id=e.dataTransfer.getData('text/plain');if(!rp.loads.some(l=>l.id===id))return;rp.sel=id;put()}})}
 function rpPlace(id,pi,sk){const L=RL[rp.lvl];const slot=rp.slots.find(s=>s.ph===pi&&s.sk===sk);const from=rp.slots.find(s=>s.items.includes(id));
  if(!L.multi&&slot.items.length&&slot.items[0]!==id){const other=slot.items[0];slot.items=[];if(from){from.items=from.items.filter(x=>x!==id);from.items.push(other)}}
  rp.slots.forEach(s=>s.items=s.items.filter(x=>x!==id));slot.items.push(id)}
