@@ -433,7 +433,10 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 #lab-circuitos .cg-work{display:flex;flex-direction:column;gap:14px;scroll-margin-top:100px}
 #lab-circuitos .vir input{color:var(--text);min-width:43px;padding:0 6px}
 #lab-circuitos .vir td,#lab-circuitos .vir th{padding:0 4px}#lab-circuitos .cg-table{overflow-x:auto}
-#lab-circuitos .circ{max-height:510px}#lab-circuitos [hidden]{display:none!important}
+#lab-circuitos .circ{max-height:510px;display:block;width:100%;height:auto;min-width:0}
+#lab-circuitos #cgWork>.grid2>.panel:first-child{display:flex;flex-direction:column;min-width:0}
+#lab-circuitos #circ{margin-block:auto;flex-shrink:0}
+#lab-circuitos #mapCirc{align-self:center;justify-self:center}#lab-circuitos [hidden]{display:none!important}
 #lab-circuitos :focus-visible{outline:2px solid #36e2e8;outline-offset:3px}
 @media(max-width:1000px){#lab-circuitos .cg-visual{grid-template-columns:1fr}#lab-circuitos .cg-track{height:70px}}
 @media(max-width:650px){#lab-circuitos .cg-pair{grid-template-columns:1fr}#lab-circuitos .cg-config{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -987,14 +990,17 @@ function draw(n,col,L,x,y,o){ // y = línea de conexión
   s+=`<circle cx="${lx}" cy="${mids[i]}" r="3.5" fill="#7d8aa6"/><circle cx="${rx}" cy="${mids[i]}" r="3.5" fill="#7d8aa6"/>`});
  return s+`<circle cx="${lx}" cy="${y}" r="3.5" fill="#7d8aa6"/><circle cx="${rx}" cy="${y}" r="3.5" fill="#7d8aa6"/>`}
 function render(svg,tree,V,src,o){o=Object.assign({hl:new Set(),known:new Set(),vals:false},o||{});o.resId=svg.id+'cgRes';const col=o.col||new Set();
- const L=lay(tree,col);const left=110,pad=30;const y=pad+L.mid+20;const W=left+L.w+40;const bottom=pad+L.h+60;const H=bottom+30;
- let s=`<defs><linearGradient id="${svg.id}cgRes" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#eadbb9"/><stop offset=".45" stop-color="#d5c19a"/><stop offset="1" stop-color="#96815e"/></linearGradient><pattern id="${svg.id}cgGrid" width="17" height="17" patternUnits="userSpaceOnUse"><path d="M17 0H0V17" stroke="#1b3040" stroke-width=".6" fill="none"/></pattern></defs><rect width="100%" height="100%" fill="#0c1925"/><rect width="100%" height="100%" fill="url(#${svg.id}cgGrid)"/><path d="M60 ${y}H${left}M${left+L.w} ${y}H${left+L.w+20}V${bottom}H60V${y}" fill="none" stroke="#7d8aa6" stroke-width="2.5"/>`;
+ const L=lay(tree,col);const left=110,pad=30;const y=pad+L.mid+20;const bottom=pad+L.h+60;
+ // Encuadre simétrico respecto a la geometría, también para los pasos colapsados.
+ const minX=20,maxX=left+L.w+22,minY=pad+20+EH/2-39,maxY=bottom+(o.vals&&o.known.has(tree)?27:2);
+ const W=Math.max(420,maxX-minX+48),H=maxY-minY+48,boxX=(minX+maxX-W)/2,boxY=(minY+maxY-H)/2;
+ let s=`<defs><linearGradient id="${svg.id}cgRes" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#eadbb9"/><stop offset=".45" stop-color="#d5c19a"/><stop offset="1" stop-color="#96815e"/></linearGradient><pattern id="${svg.id}cgGrid" width="17" height="17" patternUnits="userSpaceOnUse"><path d="M17 0H0V17" stroke="#1b3040" stroke-width=".6" fill="none"/></pattern></defs><rect x="${boxX}" y="${boxY}" width="${W}" height="${H}" fill="#0c1925"/><rect x="${boxX}" y="${boxY}" width="${W}" height="${H}" fill="url(#${svg.id}cgGrid)"/><path d="M60 ${y}H${left}M${left+L.w} ${y}H${left+L.w+20}V${bottom}H60V${y}" fill="none" stroke="#7d8aa6" stroke-width="2.5"/>`;
  const sy=(y+bottom)/2;
  if(src==='amp')s+=`<rect x="22" y="${sy-34}" width="76" height="68" rx="10" fill="#222737" stroke="#36e2e8" stroke-width="2.5"/><text x="60" y="${sy-8}" text-anchor="middle" fill="#36e2e8" font-size="12" font-weight="800" font-family="Manrope">AMPLI</text><text x="60" y="${sy+14}" text-anchor="middle" fill="#f1f3fc" font-size="15" font-weight="700" font-family="JetBrains Mono,monospace">${fmt(V)} V</text>`;
  else s+=`<rect x="22" y="${sy-32}" width="76" height="64" rx="7" fill="#52636f" stroke="#8296a3"/><rect x="29" y="${sy-22}" width="62" height="27" rx="3" fill="#08171d"/><text x="60" y="${sy-3}" text-anchor="middle" fill="#ffb36b" font-size="15" font-weight="700" font-family="JetBrains Mono,monospace">${fmt(V)} V</text><circle cx="78" cy="${sy+19}" r="9" fill="#273b49" stroke="#899aa9"/><circle cx="38" cy="${sy+19}" r="3" fill="#68e7aa"/><circle cx="60" cy="${sy-32}" r="5" fill="#e4777e"/><circle cx="60" cy="${sy+32}" r="5" fill="#162431" stroke="#a1b3c2"/><text x="75" y="${sy-35}" fill="#ff9299" font-size="12">+</text><text x="75" y="${sy+44}" fill="#c7d7e5" font-size="12">−</text>`;
  if(o.vals&&o.known.has(tree))s+=`<text x="${left+L.w/2}" y="${bottom+22}" text-anchor="middle" fill="#ff9f43" font-size="13" font-family="JetBrains Mono,monospace">I total = ${fmt(tree.I)} A</text>`;
  s+=draw(tree,col,L,left,y,o);
- svg.setAttribute('viewBox',`0 0 ${Math.max(W,420)} ${H}`);svg.innerHTML=s}
+ svg.setAttribute('viewBox',`${boxX} ${boxY} ${W} ${H}`);svg.setAttribute('preserveAspectRatio','xMidYMid meet');svg.innerHTML=s}
 
 /* ---- niveles y tabla ---- */
 function lvlButtons(){$('levels').innerHTML=LEVELS.map((l,i)=>`<button class="lvl${cur.done.has(i)?' done':''}" role="listitem" data-i="${i}" aria-current="${!cur.random&&i===cur.lvl}"><b>NIVEL ${i+1}</b><span>${l.name}</span><i>${l.hint}</i></button>`).join('');
