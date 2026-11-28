@@ -258,7 +258,7 @@ h1,h2,h3,button{font-family:var(--ui)}h1{font-weight:800;letter-spacing:-.048em}
 <script>
 /* Navegación: volver siempre a la estructura nueva (Inicio → asignatura → unidad → partes) */
 goHome=function(){try{stop();stopOld()}catch(e){}location.href='../electroacustica/ud1/'};
-goCourse=function(c){try{stop();stopOld()}catch(e){}location.href='../electroacustica/ud1/#'+(c==='ces'?'ces3':'electro')};
-(function(){function chk(){var h=location.hash.slice(1).split('/');if(!h[1]){try{stop();stopOld()}catch(e){}location.replace('../electroacustica/ud1/'+(h[0]==='ces'?'#ces3':h[0]==='electro'?'#electro':''))}}window.addEventListener('hashchange',chk);chk();})();
+goCourse=function(c){try{stop();stopOld()}catch(e){}location.href='../electroacustica/ud1/#'+(c==='ces'?'ces3':'ud2')};
+(function(){function chk(){var h=location.hash.slice(1).split('/');if(!h[1]){try{stop();stopOld()}catch(e){}location.replace('../electroacustica/ud1/'+(h[0]==='ces'?'#ces3':h[0]==='electro'?'#ud2':''))}}window.addEventListener('hashchange',chk);chk();})();
 </script>
 </body></html>
