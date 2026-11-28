@@ -1488,7 +1488,7 @@ function rpBoard(){$('rMsg3').innerHTML='';const L=RL[rp.lvl];const placed=new S
  $('rPhases').innerHTML=PHN.map(([n,c,cn],pi)=>{const I=phaseI(pi),over=I>ac+1e-9;
   const st=over?'Pasa de '+ac+' A: sobran '+fmt(I-ac)+' A':f.phaseOK?(Math.abs(I-target)<1e-6?'Objetivo '+fmt(target)+' A ✓':I>target?'Objetivo '+fmt(target)+' A · sobran '+fmt(I-target)+' A':'Objetivo '+fmt(target)+' A · faltan '+fmt(target-I)+' A'):'Completa la previsión (paso 2)';
   return `<div class="phase-col"><div class="rp-ph-h"><span class="dot" style="background:${c}"></span><b>${n}</b><span class="rp-ph-cn">${cn}</span><span class="rp-ph-i${over?' bad':''}">${fmt(I)} / ${ac} A</span></div>
-  <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,I/(target*1.6)*100)}%"></i><span class="tg" style="left:${100/1.6}%"></span></div>
+  <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,I/ac*100)}%;${over?'background:var(--bad)':''}"></i><span class="tg" style="left:${Math.min(100,target/ac*100)}%" title="Objetivo"></span></div>
   <div class="rp-ph-s${over?' bad':''}">${st}</div>
   <div class="rp-sks">${rp.slots.filter(s=>s.ph===pi).map(s=>{const si=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0);const ov=si>16+1e-9;
    return `<div class="slot${ov?' over':''}" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${rp.slots.indexOf(s)+1} de ${n}"><div class="sh"><span>S${rp.slots.indexOf(s)+1}</span><b>${fmt(si)}/16 A</b></div>${s.items.map(id=>chipHTML(rp.loads.find(l=>l.id===id),true)).join('')||'<span class="rp-free">Libre</span>'}</div>`}).join('')}</div></div>`}).join('');
