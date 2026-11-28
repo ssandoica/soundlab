@@ -998,7 +998,7 @@ document.querySelectorAll('.card[data-lab]').forEach(b=>b.onclick=()=>{location.
 /* ---------- acceso de los alumnos ----------
    En la web publicada solo se abren los laboratorios de SL_OPEN; el resto aparece «En preparación».
    En la vista previa (/beta/) y en local se ve todo. Para abrir un laboratorio, añade su clave aquí. */
-const SL_OPEN=['ohm','circuitos','polimetro','cuadro','colores','tierra'];
+const SL_OPEN=['ohm','circuitos','polimetro','cuadro','colores','tierra','ipik'];
 const SL_ALL=location.protocol==='file:'||/\/beta\//.test(location.pathname);
 const slOk=k=>SL_ALL||SL_OPEN.includes(k);
 function slGate(){if(SL_ALL)return;
