@@ -676,9 +676,66 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 #oh8 .oh-gauges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}#oh8 .oh-gauge{text-align:center;min-width:0}#oh8 .oh-gval{color:var(--c);font:700 18px var(--mono);white-space:nowrap}#oh8 .oh-track{height:110px;max-width:65px;margin:5px auto;position:relative;background:#253748;border:1px solid #3b5064;border-radius:4px;overflow:hidden}#oh8 .oh-fill{position:absolute;bottom:0;left:0;right:0;background:var(--c);transition:height .14s;border-radius:3px 3px 0 0}#oh8 .oh-seg{position:absolute;inset:0;background:repeating-linear-gradient(to top,transparent 0,transparent calc(10% - 1.5px),#142333 calc(10% - 1.5px),#142333 10%);pointer-events:none}#oh8 .oh-ref{position:absolute;left:0;right:0;height:2px;background:#fff}#oh8 .oh-name{color:var(--c);font-size:13px;font-weight:700}#oh8 .oh-delta{color:var(--c);font-size:12px;min-height:18px}
 #oh8 details{margin-top:12px;background:#142333;border:1px solid #2c3c4e;border-radius:10px;padding:12px;color:#edf3fa}#oh8 summary{cursor:pointer;font-weight:700;color:#edf3fa}#oh8 .oh-reason{border-top:1px solid #2c3c4e;padding:9px 0;color:#b4c6d8;font-size:13px}
 @media(max-width:650px){#oh8 .oh-layout{grid-template-columns:1fr}#oh8 .oh-gval{font-size:13px}#oh8 .oh-gauges{gap:4px}#oh8 .oh-name{font-size:11px}#oh8 .oh-sub{padding:10px}}@media(prefers-reduced-motion:reduce){#oh8 .oh-flow{animation:none}#oh8 .oh-fill{transition:none}}
+
+/* Vista compacta: controles, circuito y medidores juntos. Solo ley de Ohm. */
+#oh8{padding:14px}
+#oh8 .oh-mainhead h3{margin:0 0 2px}
+#oh8 .oh-lockbar{gap:9px}
+#oh8 .oh-lockbar strong{font-size:12px;color:#edf3fa}
+#oh8 .oh-layout{grid-template-columns:minmax(0,.86fr) minmax(0,1.55fr) minmax(0,1.08fr);gap:10px;margin-top:10px;align-items:stretch}
+#oh8 .oh-sub{padding:10px}
+#oh8 .oh-control{padding:5px 0}
+#oh8 .oh-head{font-size:12px}
+#oh8 .oh-value{font-size:15px}
+#oh8 input[type=range]{margin:5px 0 0}
+#oh8 .oh-control .oh-muted{font-size:10px}
+#oh8 .oh-meters{display:flex;flex-direction:column;justify-content:center;min-width:0}
+#oh8 .oh-meters .oh-row{gap:4px}
+#oh8 .oh-meters .oh-kicker{font-size:10px;letter-spacing:.7px}
+#oh8 .oh-gauges{gap:5px;margin-top:10px}
+#oh8 .oh-gval{font-size:clamp(11px,1.15vw,15px)}
+#oh8 .oh-gauge .oh-muted{font-size:10px}
+#oh8 .oh-track{height:115px;max-width:44px}
+#oh8 .oh-name{font-size:10px;line-height:1.2;overflow-wrap:anywhere;min-height:24px}
+#oh8 .oh-delta{font-size:10px;min-height:16px}
+#oh8 .oh-meters .oh-row:last-child .oh-muted{font-size:10px}
+#oh8 .oh-meters .btn{font-size:11px;padding:5px 8px;min-height:28px}
+#oh8 .oh-formulas{padding:7px;font-size:13px}
+#oh8 details{margin-top:8px;padding:8px 12px}
+body:has(#lab-ohm.on) .wrap{padding-top:12px}
+body:has(#lab-ohm.on) .crumbs{margin-bottom:8px}
+body:has(#lab-ohm.on) #udHero{padding:10px 18px;border-radius:16px}
+body:has(#lab-ohm.on) #udHero h1{font-size:23px;margin:3px 0 3px}
+body:has(#lab-ohm.on) #udHero p{font-size:12px;line-height:1.35;max-width:940px}
+body:has(#lab-ohm.on) #udHero .kicker{font-size:10px}
+#lab-ohm.on{gap:10px;margin-top:9px}
+#lab-ohm .labhead h2{font-size:26px;margin:2px 0}
+#lab-ohm .labhead p{font-size:13px}
+#lab-ohm .how>summary{padding:10px 16px}
+@media(min-width:900px) and (max-height:850px){
+#oh8 .oh-track{height:98px}
+#oh8 .oh-layout svg{max-height:220px}
+#oh8 .oh-sub{padding:9px}
+#oh8 .oh-control{padding:3px 0}
+#oh8 .oh-meters .oh-gauges{margin-top:6px}
+}
+@media(min-width:651px) and (max-width:899px){
+#oh8 .oh-layout{grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr)}
+#oh8 .oh-layout>div:first-child{grid-row:span 2}
+#oh8 .oh-track{height:83px}
+#oh8 .oh-gval{font-size:13px}
+}
+@media(max-width:650px){
+#oh8 .oh-layout{grid-template-columns:1fr}
+#oh8 .oh-layout>div:nth-child(2){grid-row:1}
+#oh8 .oh-track{height:95px}
+#oh8 .oh-gval{font-size:13px}
+#oh8 .oh-name{min-height:0}
+#oh8 .oh-lockbar{width:100%;justify-content:space-between}
+#oh8 .oh-mainhead{gap:10px}
+}
 </style>
-<h3>Explora</h3><div class="oh-muted">Modifica una magnitud y observa cómo responden las demás.</div>
-<div class="oh-row oh-sub" style="margin-top:12px"><div><strong>Mantener constante</strong><div class="oh-muted">Selecciona una magnitud.</div></div><div class="oh-locks" id="oh8locks" role="group" aria-label="Magnitud constante"></div></div>
+<div class="oh-row oh-mainhead"><div><h3>Explora</h3><div class="oh-muted">Modifica una magnitud y observa cómo responden las demás.</div></div><div class="oh-row oh-lockbar"><strong>Mantener constante</strong><div class="oh-locks" id="oh8locks" role="group" aria-label="Magnitud constante"></div></div></div>
 <div class="oh-layout"><div class="oh-sub"><div class="oh-kicker">CONTROLES</div><div id="oh8controls"></div></div>
 <div class="oh-sub" style="display:flex;flex-direction:column;justify-content:center">
 <svg viewBox="0 0 400 270" role="img" aria-label="Circuito simple con fuente de laboratorio y resistencia">
@@ -689,8 +746,8 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 <rect x="26" y="96" width="108" height="96" rx="6" fill="#060d14" opacity=".65"/><rect x="23" y="91" width="108" height="96" rx="6" fill="url(#oh8case)" stroke="#8195a3"/><path d="M23 97l8 -7h92l8 7" fill="#84919b" stroke="#8c9da9" stroke-width=".5"/><rect x="29" y="98" width="96" height="83" rx="3" fill="url(#oh8face)"/><text x="77" y="110" font-size="7.5" fill="#d9e3eb" text-anchor="middle" letter-spacing=".8">FUENTE CC</text><rect x="34" y="115" width="86" height="28" rx="3" fill="#091619" stroke="#627578"/><text x="77" y="135" text-anchor="middle" font-family="monospace" font-size="17" font-weight="700" fill="#ffb36b" id="oh8svgV">16 V</text><circle cx="100" cy="161" r="13" fill="#15222b" stroke="#8494a2" stroke-width="1.5"/><circle cx="100" cy="161" r="9" fill="#4a5b67"/><path d="M100 151V156" stroke="#e0e9ed" stroke-width="2" stroke-linecap="round"/><circle cx="43" cy="155" r="3" fill="#68e7aa"/><rect x="35" y="165" width="17" height="7" rx="2" fill="#0c1720" stroke="#788895" stroke-width=".6"/><circle cx="77" cy="91" r="6" fill="#b63743" stroke="#ff989f" stroke-width="1.6"/><text x="91" y="85" font-size="13" fill="#ff989f">+</text><circle cx="77" cy="187" r="6" fill="#121d28" stroke="#a1b3c2" stroke-width="1.5"/><text x="91" y="201" font-size="13" fill="#c6d6e5">−</text>
 <ellipse cx="275" cy="141" rx="55" ry="62" fill="url(#oh8heat)" opacity=".2" id="oh8halo"/><path d="M275 108V116M275 166V174" stroke="#c4d3df" stroke-width="6"/><rect x="258" y="120" width="40" height="50" rx="9" fill="#050c13" opacity=".6"/><path d="M262 116Q255 116 255 124V158Q255 166 262 166H288Q295 166 295 158V124Q295 116 288 116Z" fill="url(#oh8res)" stroke="#ebdab3" stroke-width="1.2"/><path d="M256 123H294M256 159H294" stroke="#a28a61" stroke-width="3"/><path d="M263 130V152" stroke="#f4e4c0" stroke-opacity=".6" stroke-width="2" stroke-linecap="round"/>
 <rect x="309" y="100" width="81" height="85" rx="7" fill="#142333" stroke="#33485c"/><text x="349.5" y="115" text-anchor="middle" fill="#b7a5fa" font-size="9" font-weight="700">RESISTENCIA</text><text id="oh8svgR" x="349.5" y="136" text-anchor="middle" fill="#d2c4ff" font-size="16" font-weight="700">8 Ω</text><path d="M319 145H380" stroke="#344659" stroke-width="1"/><text x="349.5" y="159" text-anchor="middle" fill="#ff9da4" font-size="9" font-weight="700">POTENCIA</text><text id="oh8svgP" x="349.5" y="177" text-anchor="middle" fill="#ff858d" font-size="16" font-weight="700">32 W</text><text x="200" y="248" text-anchor="middle" fill="#a7bacd" font-size="10">Sentido convencional de la corriente</text></svg>
-<div class="oh-formulas"><span style="color:#36e2e8">V = I · R</span><span style="color:#ff858d">P = V · I</span></div></div></div>
-<div class="oh-sub" style="margin-top:10px"><div class="oh-row"><div class="oh-kicker">OBSERVA LAS VARIACIONES</div><span class="oh-muted">Escalas fijas</span></div><div class="oh-gauges" id="oh8gauges"></div><div class="oh-row" style="margin-top:10px"><span class="oh-muted">Línea blanca: valor de referencia.</span><button class="btn ghost" id="oh8ref">Fijar referencia</button></div></div>
+<div class="oh-formulas"><span style="color:#36e2e8">V = I · R</span><span style="color:#ff858d">P = V · I</span></div></div>
+<div class="oh-sub oh-meters"><div class="oh-row"><div class="oh-kicker">OBSERVA LAS VARIACIONES</div><span class="oh-muted">Escalas fijas</span></div><div class="oh-gauges" id="oh8gauges"></div><div class="oh-row" style="margin-top:10px"><span class="oh-muted">Línea blanca: valor de referencia.</span><button class="btn ghost" id="oh8ref">Fijar referencia</button></div></div></div>
 <div class="oh-row" style="margin-top:10px"><span class="oh-muted">Circuito ideal. Animación cualitativa de corriente y potencia.</span><div class="row"><button class="btn ghost" id="oh8reset">Reiniciar</button><button class="btn ghost" id="oh8pause" aria-pressed="false">Pausar</button></div></div>
 <details><summary>¿Por qué suben o bajan las magnitudes?</summary><div id="oh8why" style="margin:12px 0;padding:12px;border-left:3px solid #36e2e8;background:#0b1722;border-radius:6px;color:#edf3fa"></div><div id="oh8reasons"></div></details>
 </div>
