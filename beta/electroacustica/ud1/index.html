@@ -382,7 +382,7 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 <summary><span class="pnum">03</span><span class="ptitle"><strong>Calcular la instalación de un evento</strong><span>Reparto de cargas, protección, cable y caída de tensión</span></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></summary>
 <div class="cards">
 <button class="card" data-lab="reparto"><span class="tag">CÁLCULO · 9 NIVELES · INFINITOS EJERCICIOS</span><strong>Reparto de cargas</strong><small>Calcula la corriente de cada equipo y repártelos entre las tres fases y sus Schukos, sin pasar de 16 A, siguiendo el esquema del cuadro.</small><span class="go">Practicar →</span></button>
-<button class="card" data-lab="linea"><span class="tag">CÁLCULO · 8 NIVELES · INFINITOS EJERCICIOS</span><strong>De la potencia al cable</strong><small>Potencia de cálculo, intensidad de la línea, calibre de la protección y manguera: I carga &lt; I protección &lt; I cable.</small><span class="go">Practicar →</span></button>
+<button class="card" data-lab="linea"><span class="tag">CÁLCULO · 8 NIVELES · INFINITOS EJERCICIOS</span><strong>Cálculo de líneas</strong><small>Potencia de cálculo, intensidad de la línea, calibre de la protección y manguera: I carga &lt; I protección &lt; I cable.</small><span class="go">Practicar →</span></button>
 <button class="card" data-lab="caida"><span class="tag">CÁLCULO · EXPLORA + 5 NIVELES</span><strong>Caída de tensión</strong><small>La FOH está lejos del cuadro: prueba secciones hasta que la caída no pase del 3 %. Con un modo para explorar cómo influyen la longitud, la sección y la potencia.</small><span class="go">Practicar →</span></button>
 <button class="card" data-lab="reto"><span class="tag">RETO FINAL · 4 PASOS · INFINITOS EVENTOS</span><strong>Monta el evento</strong><small>Un caso completo: corriente de cada equipo, reparto en el cuadro, línea general con protección y manguera, y caída de tensión.</small><span class="go">Practicar →</span></button>
 </div>
@@ -645,37 +645,63 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 
 <!-- ================= LÍNEA ================= -->
 <section class="lab" id="lab-linea" aria-labelledby="lt">
-<div class="labhead"><span class="kicker">PARTE 03 · CÁLCULO</span><h2 id="lt">De la potencia al cable</h2><p>Calcula la línea que alimenta los equipos: potencia de cálculo, intensidad, protección y manguera. Cada paso usa el resultado del anterior.</p></div>
-<div class="panel"><div class="levels" id="llevels" role="list"></div></div>
-<details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Cómo se calcula una línea</summary>
+<div class="labhead"><span class="kicker">PARTE 03 · CÁLCULO</span><h2 id="lt">Cálculo de líneas</h2><p>Dimensiona la alimentación de un montaje de sonido: calcula la demanda, determina la intensidad y selecciona la protección y la manguera.</p></div>
+<style>
+#lab-linea .ln-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+#lab-linea .ln-nav button{padding:10px 12px;border:1px solid var(--line2);border-radius:11px;background:var(--inset);text-align:left;font-weight:700;min-width:0}
+#lab-linea .ln-nav button small{display:block;font:600 11px var(--mono);color:var(--muted);margin-bottom:4px}
+#lab-linea .ln-nav button[aria-pressed=true]{border-color:var(--accent);background:#173942;color:var(--accent)}
+#lab-linea .ln-stage[hidden]{display:none!important}
+#lab-linea .ln-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:14px;align-items:start}
+#lab-linea .ln-layout>.panel{min-width:0}
+#lab-linea .ln-equip{max-height:300px;overflow:auto}
+#lab-linea .ln-facts{grid-template-columns:repeat(4,minmax(0,1fr));margin:12px 0 0}
+#lab-linea .ln-facts .fact{min-width:0;padding:9px 10px}
+#lab-linea .ln-facts .fact b{font-size:13px;overflow-wrap:anywhere}
+#lab-linea .ln-stage .lstep{grid-template-columns:32px minmax(0,1fr);gap:9px;padding:12px}
+#lab-linea .ln-stage .lnum{width:30px;height:30px;font-size:15px}
+#lab-linea .ln-stage .lstep .q{font-size:13px}
+#lab-linea .ln-stage .mini input{max-width:100%}
+#lab-linea .ln-ref{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#lab-linea .ln-ref .box2{min-width:0}
+#lab-linea .ln-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+#lab-linea .ln-summary .fact{min-width:0;padding:10px}
+#lab-linea .ln-summary .fact b{font-size:clamp(15px,2vw,20px);color:var(--accent)}
+#lab-linea .ln-diagram{width:100%;height:auto;display:block;background:var(--inset);border:1px solid var(--line);border-radius:12px}
+#lab-linea .ln-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+#lab-linea .ln-note{color:var(--muted);font-size:12px;line-height:1.5;margin:8px 0}
+#lab-linea .ln-checks{list-style:none;padding:10px 12px;margin:8px 0 0;border:1px solid var(--line);border-radius:10px;background:var(--inset);display:grid;gap:6px;font-size:13px}
+#lab-linea .ln-checks li span{display:inline-block;width:20px;font-weight:800;color:var(--ok)}
+#lab-linea .ln-checks li.bad span{color:var(--bad)}#lab-linea .ln-checks li.warn span{color:var(--warn)}
+#lab-linea .chain{gap:7px;padding:10px}#lab-linea .chain .ck{min-width:100px;flex:1;padding:8px}#lab-linea .chain .ck b{font-size:18px}
+#lab-linea .ln-guide{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:10px}
+#lab-linea .ln-guide>div{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--inset);font-size:12px}
+#lab-linea .ln-guide b{display:block;color:var(--accent);font:700 12px var(--mono);margin-bottom:4px}
+@media(max-width:850px){#lab-linea .ln-layout{grid-template-columns:1fr}#lab-linea .ln-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){#lab-linea .ln-nav button{padding:8px;font-size:11px}#lab-linea .ln-ref{grid-template-columns:1fr}#lab-linea .ln-guide{grid-template-columns:repeat(2,minmax(0,1fr))}#lab-linea .chain .ck{min-width:76px}}
+</style>
+<details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Fundamentos y fórmulas · Cómo se calcula una línea</summary>
 <div class="in">
-<div class="box2"><h4>Paso 1 · Potencia de cálculo</h4><p style="margin:0 0 6px">No todos los equipos funcionan a la vez a tope. La potencia instalada (la suma de todos) se multiplica por el factor de simultaneidad:</p><p class="f" style="margin:0 0 6px">Pc = P instalada × Fs</p><p style="margin:0">En sonido se toma <b>Fs = 0,8</b>.</p></div>
-<div class="box2"><h4>Paso 2 · Intensidad de la línea</h4><p style="margin:0 0 4px">Monofásica (fase + neutro, 230 V):</p><p class="f" style="margin:0 0 8px">I = Pc / (230 · cos φ)</p><p style="margin:0 0 4px">Trifásica (3 fases + neutro, 400 V entre fases), corriente por cada fase:</p><p class="f" style="margin:0 0 6px">I = Pc / (√3 · 400 · cos φ)</p><p style="margin:0">Si la ficha técnica da el cos φ, se usa ese; si no, <b>cos φ = 0,8</b>.</p></div>
-<div class="box2"><h4>Potencia activa (W) y aparente (VA)</h4><p style="margin:0 0 6px"><b>Activa (W):</b> la que el equipo convierte en trabajo útil (sonido, luz, calor). <b>Aparente (VA):</b> la total que pide a la red (V × I): la útil más la que solo va y viene por el cable. Siempre VA ≥ W, y la corriente del cable sale de los VA.</p><p style="margin:0 0 4px">Con el cos φ en el denominador se pasa de W a VA dentro de la fórmula. Si el dato <b>ya viene en VA</b>, no se pone el cos φ:</p><p class="f" style="margin:0">I = VA / 230 · trifásica: I = VA / (√3 · 400)</p></div>
-<div class="box2"><h4>cos φ no es el factor de simultaneidad</h4><p style="margin:0">Los dos valen 0,8 a menudo, pero no son lo mismo. El factor de simultaneidad dice cuánta potencia se usa a la vez (paso 1). El cos φ es el factor de potencia: con transformadores, motores o fuentes de alimentación, la red tiene que entregar más corriente de la que corresponde a los vatios (paso 2).</p></div>
-<div class="box2"><h4>Paso 3 · Protección y manguera</h4><p class="f" style="margin:0 0 6px">I carga &lt; I protección &lt; I cable</p><p style="margin:0">La protección es el primer calibre normalizado <b>mayor</b> que la intensidad de la línea. La manguera es la de menor sección cuya intensidad admisible es <b>mayor</b> que la de la protección: así, si hay una sobrecarga, salta la protección antes de que se caliente el cable.</p></div>
+<div class="box2"><h4>1 · Potencia instalada y demanda</h4><p>Suma las potencias de entrada de los equipos. Aplica el factor de simultaneidad de la actividad.</p><p class="f">P instalada = Σ P equipos</p><p class="f">Pc = P instalada × Fs</p><p>En este laboratorio adoptamos Fs = 0,8 como hipótesis de ejercicio, no como valor universal.</p></div>
+<div class="box2"><h4>2 · Intensidad monofásica</h4><p>230 V entre fase y neutro. Con potencia activa:</p><p class="f">I = Pc / (230 · FP)</p><p>Con potencia aparente:</p><p class="f">I = Sc / 230</p></div>
+<div class="box2"><h4>3 · Intensidad trifásica</h4><p>400 V entre fases; carga equilibrada. Corriente por fase:</p><p class="f">I = Pc / (√3 · 400 · FP)</p><p>Con potencia aparente:</p><p class="f">I = Sc / (√3 · 400)</p></div>
+<div class="box2"><h4>W, VA y factor de potencia</h4><p>P es potencia activa (W); S es potencia aparente (VA). FP = P/S. En el modelo sinusoidal se identifica FP con cos φ. En cargas no lineales pueden diferir. Usamos el dato de ficha o 0,8 como hipótesis si falta. Si la ficha da VA, no se divide otra vez por FP.</p></div>
+<div class="box2"><h4>4 · Protección y sección</h4><p class="f">I carga ≤ I protección ≤ I admisible</p><p>En estos ejercicios buscamos el primer calibre estrictamente superior a la carga y la menor sección de la tabla que admite más que ese calibre. Es una selección didáctica conservadora.</p><p>La coordinación real también requiere comprobar las condiciones de disparo, cortocircuito y caída de tensión.</p></div>
+<div class="box2"><h4>5 · Tabla de intensidades admisibles</h4><p>Los valores de cobre/PVC son datos fijados para el ejercicio. En una instalación real dependen del tipo de cable, instalación, temperatura y agrupamiento. La longitud y la caída de tensión se estudiarán en el siguiente laboratorio.</p></div>
 </div></details>
-<div class="grid2">
-<div class="panel">
-<div class="row" style="justify-content:space-between;margin-bottom:6px"><h3 id="lTitle" style="margin:0"></h3><button class="btn ghost" id="lNew">Nuevo ejercicio</button></div>
-<p class="statement" id="lStatement"></p>
-<table class="data" id="lEquip"></table>
-<div class="facts" id="lFacts"></div>
+<div class="panel"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Cómo se hace</h3><span class="kicker">PROCEDIMIENTO</span></div>
+<div class="ln-guide"><div><b>01</b>Suma las potencias</div><div><b>02</b>Aplica simultaneidad</div><div><b>03</b>Calcula intensidad</div><div><b>04</b>Elige protección</div><div><b>05</b>Elige sección</div></div></div>
+<div class="labhead"><span class="kicker">PRÁCTICA</span><h3 style="margin:4px 0">EJERCICIOS</h3><p>Ocho niveles progresivos. Avanza libremente y comprueba cada etapa o el ejercicio completo.</p></div>
+<div class="panel"><div class="levels" id="llevels" role="list"></div></div>
+<div class="panel"><div class="row" style="justify-content:space-between"><h3 id="lTitle" style="margin:0"></h3><button class="btn ghost" id="lNew">Otro ejercicio</button></div><p class="statement" id="lStatement" style="margin:10px 0 0"></p><div class="facts ln-facts" id="lFacts"></div>
+<div class="ln-nav" role="group" aria-label="Etapas del cálculo"><button data-ln-stage="0" aria-controls="lnStage0" aria-pressed="true"><small>PASOS 1 Y 2</small>Potencias</button><button data-ln-stage="1" aria-controls="lnStage1" aria-pressed="false"><small>PASO 3</small>Intensidad</button><button data-ln-stage="2" aria-controls="lnStage2" aria-pressed="false"><small>PASOS 4 Y 5</small>Protección y cable</button></div></div>
+<div class="ln-layout">
+<div class="panel"><h3 style="font-size:16px">Equipos del montaje</h3><div class="ln-equip"><table class="data" id="lEquip"></table></div><p class="ln-note">Potencias de entrada de los equipos, no potencia acústica ni potencia de salida de amplificadores.</p></div>
+<div class="panel"><div id="lSteps"></div><div id="lnPartial" aria-live="polite"></div><div class="ln-foot"><button class="btn ghost" id="lnPrev">← Anterior</button><button class="btn primary" id="lnCheckPart">Comprobar etapa</button><button class="btn ghost" id="lnNext">Siguiente →</button></div></div>
 </div>
-<div class="panel">
-<h3 style="font-size:16px">Valores disponibles</h3>
-<p style="margin:0 0 8px;font-size:14px;color:var(--muted)">Calibres normalizados de protección (A):</p>
-<p class="f" id="lCal" style="margin:0 0 14px"></p>
-<p style="margin:0 0 6px;font-size:14px;color:var(--muted)">Mangueras de cobre aisladas en PVC (tabla del ejercicio):</p>
-<table class="data" id="lCab"></table>
-</div>
-</div>
-<div class="panel">
-<div class="lsteps" id="lSteps"></div>
-<div class="chain" id="lChain" style="margin-top:14px" aria-live="polite"></div>
-<div class="row" style="margin-top:14px"><button class="btn primary" id="lCheck">Comprobar</button><button class="btn alt" id="lSol">Ver la resolución</button><button class="btn ghost" id="lClear">Borrar</button></div>
-<div id="lMsg"></div>
-</div>
+<div class="panel"><h3 style="margin:0">Dimensionado de la línea</h3><div id="lnSummary" class="ln-summary" aria-live="polite"></div><svg id="lnDiagram" class="ln-diagram" viewBox="0 0 760 150" role="img" aria-label="Esquema de alimentación, protección, cable y equipos"></svg><div class="chain" id="lChain" style="margin-top:10px" aria-live="polite"></div>
+<div class="ln-ref" style="margin-top:12px"><div class="box2"><h4>Calibres disponibles (A)</h4><p class="f" id="lCal" style="margin:0"></p><p class="ln-note">Busca el primer calibre superior a la intensidad de cálculo.</p></div><div class="box2"><h4>Tabla de mangueras del ejercicio</h4><table class="data" id="lCab"></table></div></div>
+<div class="row" style="margin-top:14px"><button class="btn primary" id="lCheck">Verificar ejercicio completo</button><button class="btn alt" id="lSol">Ver resolución</button><button class="btn ghost" id="lClear">Borrar respuestas</button></div><div id="lMsg" aria-live="polite"></div></div>
 </section>
 
 
@@ -1081,7 +1107,7 @@ const parse=s=>{s=String(s).trim().replace(/\s/g,'').replace(',','.');if(s==='')
 const near=(a,b)=>isFinite(a)&&Math.abs(a-b)<=Math.max(0.011,Math.abs(b)*0.01);
 
 /* ---------- navegación ---------- */
-const labs={circuitos:'Circuitos serie, paralelo y mixtos',polimetro:'Polímetro virtual',reparto:'Reparto de cargas',linea:'De la potencia al cable',caida:'Caída de tensión',cuadro:'Cuadro eléctrico interactivo',colores:'Colores y orden de conexión',tierra:'Toma de tierra',ipik:'Descodificador IP / IK',ohm:'Ley de Ohm y potencia',reto:'Monta el evento',pasivos:'Resistencia, bobina y condensador',filtros:'Filtros de primer orden y crossovers',orden:'Filtros de orden superior',lpad:'Resistencia en serie, L-pad y Zobel'};
+const labs={circuitos:'Circuitos serie, paralelo y mixtos',polimetro:'Polímetro virtual',reparto:'Reparto de cargas',linea:'Cálculo de líneas',caida:'Caída de tensión',cuadro:'Cuadro eléctrico interactivo',colores:'Colores y orden de conexión',tierra:'Toma de tierra',ipik:'Descodificador IP / IK',ohm:'Ley de Ohm y potencia',reto:'Monta el evento',pasivos:'Resistencia, bobina y condensador',filtros:'Filtros de primer orden y crossovers',orden:'Filtros de orden superior',lpad:'Resistencia en serie, L-pad y Zobel'};
 function route(){const k=location.hash.slice(1);if(slGuard(k))return;const on=labs[k];const ev=k==='electro';const ud=k==='ud1';const cv=k==='ces';const c3=k==='ces3';const u2=k==='ud2';const home=!on&&!ev&&!ud&&!cv&&!c3&&!u2;$('ud2Index').classList.toggle('on',u2);$('cesView').classList.toggle('on',cv);$('cesIndex').classList.toggle('on',c3);
  $('home').classList.toggle('on',home);$('electroView').classList.toggle('on',ev);$('udHero').style.display=(on||ud)?'block':'none';$('crumbs').style.display=home?'none':'flex';
  $('index').style.display=ud?'flex':'none';
@@ -1566,7 +1592,7 @@ $('rNew').onclick=()=>{rpGen(rp.lvl);rpDraw(true)};
 rpGen(0);
 
 /* =================================================================
-   DE LA POTENCIA AL CABLE
+   CÁLCULO DE LÍNEAS
    ================================================================= */
 const fW=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 const CAL=[10,16,20,25,32,40,50,63];
@@ -1590,37 +1616,44 @@ function lnGen(i){const L=LL[i];for(let t=0;t<5000;t++){const tri=L.tri===null?M
   const cnt={};eq.forEach(e=>cnt[e.name]=(cnt[e.name]||0)+1);const k={};eq.forEach(e=>{if(cnt[e.name]>1){k[e.name]=(k[e.name]||0)+1;e.label=e.name+' '+k[e.name]}else e.label=e.name});
   Object.assign(ln,{lvl:i,eq,tri,pf,va,ficha:!va&&pf!==0.8,Pi,Pc,I,cal,cab:cab[0],ans:{cal:null,cab:null}});return}}
 const pfTxt=v=>String(v).replace('.',',');
-function lnDraw(full=true){const L=LL[ln.lvl];
+function lnDraw(full=false){const L=LL[ln.lvl];
  $('llevels').innerHTML=LL.map((l,i)=>`<button class="lvl${ln.done.has(i)?' done':''}" role="listitem" data-i="${i}" aria-current="${i===ln.lvl}"><b>NIVEL ${i+1}</b><span>${l.name}</span><i>${l.hint}</i></button>`).join('');
- $('llevels').querySelectorAll('.lvl').forEach(b=>b.onclick=()=>{lnGen(+b.dataset.i);lnDraw()});
+ $('llevels').querySelectorAll('.lvl').forEach(b=>b.onclick=()=>{lnGen(+b.dataset.i);lnDraw(true)});
  $('lTitle').textContent=`Nivel ${ln.lvl+1} · ${L.name}`;
  $('lStatement').innerHTML=`Una línea ${ln.tri?'trifásica (3 fases + neutro + tierra, 230/400 V)':'monofásica (fase + neutro + tierra, 230 V)'} alimenta estos equipos. ${ln.va?'La ficha técnica de los equipos da su <b>potencia aparente, en VA</b>.':ln.ficha?`La ficha técnica de los equipos indica un factor de potencia (cos φ) de ${pfTxt(ln.pf)}.`:'No hay ficha técnica del factor de potencia.'} Calcula la línea y elige protección y manguera.`;
  $('lEquip').innerHTML=ln.eq.map(e=>`<tr><td>${e.label}</td><td class="num">${fW(e.P)} ${ln.va?'VA':'W'}</td></tr>`).join('');
- $('lFacts').innerHTML=`<div class="fact"><span>Línea</span><b>${ln.tri?'Trifásica':'Monofásica'}</b></div><div class="fact"><span>Tensión</span><b>${ln.tri?'400 V entre fases':'230 V'}</b></div><div class="fact"><span>cos φ</span><b>${ln.va?'no se usa (VA)':ln.ficha?pfTxt(ln.pf)+' (ficha)':'sin dato'}</b></div><div class="fact"><span>Simultaneidad</span><b>sonido</b></div>`;
+ $('lFacts').innerHTML=`<div class="fact"><span>Línea</span><b>${ln.tri?'Trifásica':'Monofásica'}</b></div><div class="fact"><span>Tensión</span><b>${ln.tri?'400 V entre fases':'230 V'}</b></div><div class="fact"><span>FP (modelo cos φ)</span><b>${ln.va?'no se usa (VA)':ln.ficha?pfTxt(ln.pf)+' (ficha)':'sin dato'}</b></div><div class="fact"><span>Simultaneidad</span><b>0,8 (modelo)</b></div>`;
  $('lCal').textContent=CAL.join(' · ');
  $('lCab').innerHTML='<tr><td><b>Sección</b></td><td class="num"><b>I admisible</b></td></tr>'+CAB.map(([sq,a])=>`<tr><td>${pfTxt(sq)} mm²</td><td class="num">${a} A</td></tr>`).join('');
- if(full){$('lSteps').innerHTML=`
- <div class="lstep" id="ls1"><span class="lnum">1</span><div><h4>Potencia instalada</h4><p class="q">Suma la potencia de todos los equipos.</p><label class="mini"><span class="sr-only">Potencia instalada en W</span><input id="lPi" inputmode="decimal" placeholder="${ln.va?'VA':'W'}" aria-label="Potencia instalada en vatios"></label></div></div>
- <div class="lstep" id="ls2"><span class="lnum">2</span><div><h4>Potencia de cálculo</h4><p class="q">Pc = P instalada × factor de simultaneidad.</p><div class="mini"><input id="lPc" inputmode="decimal" placeholder="${ln.va?'VA':'W'}" aria-label="Potencia de cálculo en vatios"></div></div></div>
- <div class="lstep" id="ls3"><span class="lnum">3</span><div><h4>Intensidad de la línea</h4><p class="q">${ln.tri?'Trifásica: corriente por cada fase.':'Monofásica: toda la corriente por la fase.'} ${ln.va?'Los datos ya están en VA: piensa si hace falta el cos φ.':'Elige bien la fórmula y el cos φ.'}</p><div class="mini"><input id="lI" inputmode="decimal" placeholder="A" aria-label="Intensidad de la línea en amperios"></div></div></div>
- <div class="lstep" id="ls4"><span class="lnum">4</span><div><h4>Calibre de la protección</h4><p class="q">El primer calibre normalizado mayor que la intensidad.</p><div class="opts" id="lOptCal">${CAL.map(c=>`<button class="opt" data-v="${c}" aria-pressed="false">${c} A</button>`).join('')}</div></div></div>
- <div class="lstep" id="ls5"><span class="lnum">5</span><div><h4>Manguera</h4><p class="q">La menor sección cuya intensidad admisible sea mayor que la de la protección.</p><div class="opts" id="lOptCab">${CAB.map(([sq,a])=>`<button class="opt" data-v="${sq}" aria-pressed="false">${pfTxt(sq)} mm²</button>`).join('')}</div></div></div>`;
-  ['Cal','Cab'].forEach(k=>$('lOpt'+k).querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ln.ans[k.toLowerCase()]=+b.dataset.v;$('lOpt'+k).querySelectorAll('.opt').forEach(x=>{x.setAttribute('aria-pressed',x===b);x.classList.remove('badc')});lnChain()}));
-  $('lMsg').innerHTML=''}
+ if(full||!$('lPi')){ln.ans={cal:null,cab:null};ln.stage=0;$('lSteps').innerHTML=`
+ <div id="lnStage0" class="ln-stage lsteps"><div class="lstep" id="ls1"><span class="lnum">1</span><div><h4>Potencia instalada</h4><p class="q">Suma la potencia de todos los equipos.</p><label class="mini"><span class="sr-only">Potencia instalada</span><input id="lPi" inputmode="decimal" placeholder="${ln.va?'VA':'W'}" aria-label="Potencia instalada"></label></div></div>
+ <div class="lstep" id="ls2"><span class="lnum">2</span><div><h4>Potencia de cálculo</h4><p class="q">Pc = P instalada × factor de simultaneidad.</p><div class="mini"><input id="lPc" inputmode="decimal" placeholder="${ln.va?'VA':'W'}" aria-label="Potencia de cálculo"></div></div></div>
+ </div><div id="lnStage1" class="ln-stage lsteps" hidden><div class="lstep" id="ls3"><span class="lnum">3</span><div><h4>Intensidad de la línea</h4><p class="q">${ln.tri?'Trifásica: corriente por cada fase.':'Monofásica: toda la corriente por la fase.'} ${ln.va?'Los datos ya están en VA: piensa si hace falta el cos φ.':'Elige bien la fórmula y el cos φ.'}</p><div class="mini"><input id="lI" inputmode="decimal" placeholder="A" aria-label="Intensidad de la línea en amperios"></div></div></div>
+ </div><div id="lnStage2" class="ln-stage lsteps" hidden><div class="lstep" id="ls4"><span class="lnum">4</span><div><h4>Calibre de la protección</h4><p class="q">El primer calibre normalizado mayor que la intensidad.</p><div class="opts" id="lOptCal">${CAL.map(c=>`<button class="opt" data-v="${c}" aria-pressed="false">${c} A</button>`).join('')}</div></div></div>
+ <div class="lstep" id="ls5"><span class="lnum">5</span><div><h4>Manguera</h4><p class="q">La menor sección cuya intensidad admisible sea mayor que la de la protección.</p><div class="opts" id="lOptCab">${CAB.map(([sq,a])=>`<button class="opt" data-v="${sq}" aria-pressed="false">${pfTxt(sq)} mm²</button>`).join('')}</div></div></div></div>`;
+  ['Cal','Cab'].forEach(k=>$('lOpt'+k).querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ln.ans[k.toLowerCase()]=+b.dataset.v;$('ls'+(k==='Cal'?4:5)).classList.remove('ok','bad');if(k==='Cal')$('ls5').classList.remove('ok','bad');$('lOpt'+k).querySelectorAll('.opt').forEach(x=>{x.setAttribute('aria-pressed',x===b);x.classList.remove('badc')});$('lMsg').innerHTML='';$('lnPartial').innerHTML='';lnChain()}));
+  $('lMsg').innerHTML='';$('lnPartial').innerHTML='';['lPi','lPc','lI'].forEach(id=>$(id).oninput=()=>{const p=$(id).closest('.lstep');p.classList.remove('ok','bad');$('lMsg').innerHTML='';$('lnPartial').innerHTML='';lnChain()});lnStage(0)}
  lnChain()}
-function lnChain(res){const okI=res&&res.I,okC=res&&res.cal,okB=res&&res.cab;const cabA=ln.ans.cab!=null?CAB.find(c=>c[0]===ln.ans.cab)[1]:null;
- $('lChain').innerHTML=`<div class="ck ${okI?'on':''}"><span>I CARGA</span><b>${okI?fmt(ln.I)+' A':'?'}</b></div><span class="lt">&lt;</span><div class="ck ${okC?'on':''}"><span>I PROTECCIÓN</span><b>${ln.ans.cal!=null?ln.ans.cal+' A':'?'}</b></div><span class="lt">&lt;</span><div class="ck ${okB?'on':''}"><span>I CABLE</span><b>${cabA!=null?cabA+' A':'?'}</b><span>${ln.ans.cab!=null?pfTxt(ln.ans.cab)+' mm²':''}</span></div>`}
-$('lCheck').onclick=()=>{const r={};const set=(id,ok)=>{$(id).classList.remove('ok','bad');$(id).classList.add(ok?'ok':'bad')};
- const Pi=parse($('lPi').value),Pc=parse($('lPc').value),I=parse($('lI').value);
- r.Pi=near(Pi,ln.Pi);r.Pc=near(Pc,ln.Pc);r.I=isFinite(I)&&Math.abs(I-ln.I)<=Math.max(0.05,ln.I*0.01);r.cal=ln.ans.cal===ln.cal;r.cab=ln.ans.cab===ln.cab;
- set('ls1',r.Pi);set('ls2',r.Pc);set('ls3',r.I);set('ls4',r.cal);set('ls5',r.cab);
- if(ln.ans.cal!=null&&!r.cal)$('lOptCal').querySelector(`[data-v="${ln.ans.cal}"]`).classList.add('badc');if(ln.ans.cab!=null&&!r.cab)$('lOptCab').querySelector(`[data-v="${ln.ans.cab}"]`).classList.add('badc');
- lnChain(r);const n=Object.values(r).filter(Boolean).length;
- if(n===5){ln.done.add(ln.lvl);$('lMsg').innerHTML=`<p class="msg ok">¡Línea bien calculada! ${fmt(ln.I)} A &lt; ${ln.cal} A &lt; ${CAB.find(c=>c[0]===ln.cab)[1]} A (${pfTxt(ln.cab)} mm²).</p><div class="row" style="margin-top:8px"><button class="btn" id="lAgain">Otro ejercicio de este nivel</button>${ln.lvl<LL.length-1?'<button class="btn primary" id="lNext">Siguiente nivel →</button>':''}</div>`;$('lAgain').onclick=()=>{lnGen(ln.lvl);lnDraw()};if($('lNext'))$('lNext').onclick=()=>{lnGen(ln.lvl+1);lnDraw()};$('llevels').querySelectorAll('.lvl')[ln.lvl].classList.add('done');return}
- const tips=[];if(!r.Pi)tips.push('Paso 1: suma todas las potencias de la tabla.');else if(!r.Pc)tips.push('Paso 2: multiplica la potencia instalada por el factor de simultaneidad de sonido (0,8).');else if(!r.I)tips.push(ln.va?'Paso 3: los datos ya son potencia aparente (VA): no se pone el cos φ. '+(ln.tri?'I = Pc / (√3 · 400).':'I = Pc / 230.'):ln.tri?'Paso 3: en trifásica se divide entre √3 · 400 · cos φ.':'Paso 3: en monofásica se divide entre 230 · cos φ.'+(ln.ficha?' Usa el cos φ de la ficha.':' Sin ficha, cos φ = 0,8.'));
- else if(!r.cal)tips.push(ln.ans.cal!=null&&ln.ans.cal<ln.I?'Paso 4: ese calibre es menor que la intensidad: saltaría siempre.':'Paso 4: elige el primer calibre mayor que la intensidad, no uno más grande.');
- else if(!r.cab){const a=ln.ans.cab!=null?CAB.find(c=>c[0]===ln.ans.cab)[1]:0;tips.push(a&&a<=ln.cal?'Paso 5: esa manguera admite menos corriente que la protección: el cable se calentaría antes de que salte.':'Paso 5: busca la menor sección que admita más que la protección.')}
- $('lMsg').innerHTML=`<p class="msg ${n?'info':'bad'}">${n} de 5 pasos correctos. ${tips[0]||''}</p>`};
+function lnStage(n){ln.stage=Math.max(0,Math.min(2,n));[0,1,2].forEach(i=>{if($('lnStage'+i))$('lnStage'+i).hidden=i!==ln.stage});document.querySelectorAll('#lab-linea [data-ln-stage]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.lnStage===ln.stage)));$('lnPrev').disabled=ln.stage===0;$('lnNext').disabled=ln.stage===2;$('lnPartial').innerHTML=''}
+document.querySelectorAll('#lab-linea [data-ln-stage]').forEach(b=>b.onclick=()=>lnStage(+b.dataset.lnStage));$('lnPrev').onclick=()=>lnStage((ln.stage||0)-1);$('lnNext').onclick=()=>lnStage((ln.stage||0)+1);
+function lnAssess(Pi,Pc,I,cal,cab,model){const cabA=CAB.find(c=>c[0]===cab)?.[1];const calOK=CAL.includes(cal)&&cal>model.I,cabOK=!!cabA&&CAL.includes(cal)&&cabA>cal;return {Pi:near(Pi,model.Pi),Pc:near(Pc,model.Pc),I:isFinite(I)&&Math.abs(I-model.I)<=Math.max(.05,model.I*.01),cal:calOK,cab:cabOK,optimal:cal===model.cal&&cab===model.cab,cabA}}
+function lnRead(){return lnAssess(parse($('lPi').value),parse($('lPc').value),parse($('lI').value),ln.ans.cal,ln.ans.cab,ln)}
+function lnChain(){const I=parse($('lI').value),Pi=parse($('lPi').value),Pc=parse($('lPc').value),u=ln.va?'VA':'W',cabA=CAB.find(c=>c[0]===ln.ans.cab)?.[1],v=lnRead(),show=(n,u)=>isFinite(n)&&n>=0?fmt(n)+' '+u:'—';
+ $('lnSummary').innerHTML=[['Instalada',show(Pi,u)],['De cálculo',show(Pc,u)],['Intensidad',show(I,'A')]].map(([k,x])=>'<div class="fact"><span>'+k+'</span><b>'+x+'</b></div>').join('');
+ $('lChain').innerHTML='<div class="ck '+(v.I?'on':'')+'"><span>I CARGA</span><b>'+show(I,'A')+'</b></div><span class="lt">≤</span><div class="ck '+(v.cal?'on':'')+'"><span>I PROTECCIÓN</span><b>'+show(ln.ans.cal??NaN,'A')+'</b></div><span class="lt">≤</span><div class="ck '+(v.cab?'on':'')+'"><span>I ADMISIBLE</span><b>'+show(cabA??NaN,'A')+'</b><span>'+(ln.ans.cab!=null?pfTxt(ln.ans.cab)+' mm²':'')+'</span></div>';
+ const colors=ln.tri?['#a0603a','#171b20','#9ca3af','#3478db','#75b44e']:['#a0603a','#3478db','#75b44e'];const wires=colors.map((color,i)=>{const y=59+i*8,pe=i===colors.length-1,neutral=i===colors.length-2;const d=pe?'M146 '+y+' H196 V117 H340 V'+y+' H615':neutral?'M146 '+y+' H225 M313 '+y+' H615':'M146 '+y+' H225 M313 '+y+' H615';return '<path d="'+d+'" stroke="'+(color==='#171b20'?'#727f8a':color)+'" stroke-width="6" fill="none"/><path d="'+d+'" stroke="'+color+'" stroke-width="3.5" fill="none"/>'+(pe?'<path d="'+d+'" stroke="#e5d43d" stroke-width="2" stroke-dasharray="6 5" fill="none"/>':'')}).join('');
+ $('lnDiagram').innerHTML='<defs><linearGradient id="lnMetal" x2="0" y2="1"><stop stop-color="#637580"/><stop offset="1" stop-color="#1b2933"/></linearGradient></defs><rect width="760" height="150" rx="12" fill="#0b1821"/><text x="20" y="23" fill="#a9c6cc" font-size="12" font-weight="700">ESQUEMA DE LA LÍNEA · '+(ln.tri?'TRIFÁSICA':'MONOFÁSICA')+'</text>'+wires+'<rect x="24" y="45" width="122" height="65" rx="8" fill="url(#lnMetal)" stroke="#8195a3"/><rect x="33" y="53" width="104" height="49" rx="5" fill="#15232c"/><text x="85" y="73" text-anchor="middle" fill="#edf5f6" font-size="13" font-weight="700">'+(ln.tri?'230/400 V':'230 V')+'</text><text x="85" y="90" text-anchor="middle" fill="#a9c6cc" font-size="11">'+(ln.tri?'3F + N + PE':'F + N + PE')+'</text><rect x="225" y="45" width="88" height="65" rx="6" fill="#b3bec3" stroke="#667984"/><rect x="245" y="57" width="48" height="24" rx="4" fill="#23333e"/><rect x="253" y="59" width="32" height="9" rx="2" fill="#8297a4"/><text x="269" y="97" text-anchor="middle" fill="#1a2934" font-size="12" font-weight="800">'+show(ln.ans.cal??NaN,'A')+'</text><rect x="615" y="45" width="122" height="65" rx="7" fill="url(#lnMetal)" stroke="#8195a3"/><rect x="624" y="53" width="104" height="22" rx="3" fill="#192832"/><rect x="630" y="59" width="42" height="8" rx="2" fill="#247a83"/><circle cx="713" cy="64" r="4" fill="#36e2e8"/><rect x="624" y="80" width="104" height="20" rx="3" fill="#14222b"/><path d="M632 86H688M632 91H688M632 96H688" stroke="#5b717f"/><text x="85" y="130" text-anchor="middle" fill="#a9c6cc" font-size="12">Alimentación</text><text x="269" y="130" text-anchor="middle" fill="#a9c6cc" font-size="12">Protección</text><text x="464" y="46" text-anchor="middle" fill="#36e2e8" font-size="13" font-weight="700">'+(ln.ans.cab==null?'Sección pendiente':pfTxt(ln.ans.cab)+' mm²')+'</text><text x="464" y="130" text-anchor="middle" fill="#a9c6cc" font-size="12">Manguera '+(ln.tri?'5 conductores':'3 conductores')+'</text><text x="676" y="130" text-anchor="middle" fill="#a9c6cc" font-size="12">Equipos</text>';
+}
+function lnChecks(part){const v=lnRead(),rows=[['Pi','Potencia instalada','Suma los datos de entrada de los equipos.'],['Pc','Potencia de cálculo','Multiplica la potencia instalada por 0,8.'],['I','Intensidad',ln.va?(ln.tri?'Divide los VA de cálculo entre √3 · 400.':'Divide los VA de cálculo entre 230.'):(ln.tri?'Divide Pc entre √3 · 400 · FP.':'Divide Pc entre 230 · FP.')],['cal','Protección',ln.ans.cal==null?'Selecciona un calibre.':ln.ans.cal<=ln.I?'El calibre no supera la intensidad de cálculo.':'Calibre admisible en el modelo.'],['cab','Manguera',ln.ans.cab==null?'Selecciona una sección.':ln.ans.cal==null?'Selecciona primero una protección.':'La intensidad admisible debe superar el calibre seleccionado.']];
+ const indices=part==null?[0,1,2,3,4]:[[0,1],[2],[3,4]][part];indices.forEach(i=>{const el=$('ls'+(i+1));el.classList.toggle('ok',v[rows[i][0]]);el.classList.toggle('bad',!v[rows[i][0]])});const n=indices.filter(i=>v[rows[i][0]]).length;
+ const detail='<ul class="ln-checks">'+indices.map(i=>{const [key,label,tip]=rows[i];const ok=v[key];return '<li class="'+(ok?'ok':'bad')+'"><span aria-hidden="true">'+(ok?'✓':'×')+'</span><b>'+label+':</b> '+(ok?'Correcto.':tip)+'</li>'}).join('')+'</ul>';
+ const all=n===indices.length;if(part!=null){$('lnPartial').innerHTML='<p class="msg '+(all?'ok':'info')+'">'+n+' / '+indices.length+' comprobaciones correctas.</p>'+detail;lnChain();return}
+ let title=all?(v.optimal?'¡Línea bien dimensionada! Selección mínima según el modelo.':'Los valores cumplen el criterio de intensidad, pero la selección está sobredimensionada respecto a la mínima del ejercicio.'):'Revisa las comprobaciones: '+n+' de 5 correctas.';
+ $('lMsg').innerHTML='<p class="msg '+(all&&v.optimal?'ok':all?'info':'bad')+'">'+title+'</p>'+detail+(all&&!v.optimal?'<p class="ln-note">Busca el menor calibre y la menor sección que cumplan. Una sección mayor puede ser necesaria por caída de tensión u otras condiciones reales.</p>':'');
+ if(all&&v.optimal){ln.done.add(ln.lvl);$('llevels').querySelectorAll('.lvl')[ln.lvl].classList.add('done');$('lMsg').insertAdjacentHTML('beforeend','<div class="row" style="margin-top:8px"><button class="btn" id="lAgain">Otro ejercicio de este nivel</button>'+(ln.lvl<LL.length-1?'<button class="btn primary" id="lNext">Siguiente nivel →</button>':'')+'</div>');$('lAgain').onclick=()=>{lnGen(ln.lvl);lnDraw(true)};if($('lNext'))$('lNext').onclick=()=>{lnGen(ln.lvl+1);lnDraw(true)}}
+ lnChain();
+}
+$('lnCheckPart').onclick=()=>lnChecks(ln.stage||0);$('lCheck').onclick=()=>lnChecks(null);
 $('lSol').onclick=()=>{const v=ln.va?(ln.tri?'√3 · 400':'230'):ln.tri?'√3 · 400 · '+pfTxt(ln.pf):'230 · '+pfTxt(ln.pf);const den=ln.tri?Math.sqrt(3)*400*ln.pf:230*ln.pf;const u=ln.va?'VA':'W';const ca=CAB.find(c=>c[0]===ln.cab)[1];
  $('lMsg').innerHTML=`<div class="formula">1. P instalada = ${ln.eq.map(e=>fW(e.P)).join(' + ')} = ${fW(ln.Pi)} ${u}
 2. Pc = ${fW(ln.Pi)} × 0,8 = ${fW(ln.Pc)} ${u}
@@ -1629,7 +1662,7 @@ $('lSol').onclick=()=>{const v=ln.va?(ln.tri?'√3 · 400':'230'):ln.tri?'√3 �
 5. Manguera: debe admitir más de ${ln.cal} A → ${pfTxt(ln.cab)} mm² (${ca} A)${CAB[CAB.findIndex(c=>c[0]===ln.cab)-1]?`; la de ${pfTxt(CAB[CAB.findIndex(c=>c[0]===ln.cab)-1][0])} mm² (${CAB[CAB.findIndex(c=>c[0]===ln.cab)-1][1]} A) no llega`:''}
 
 Cadena: ${fmt(ln.I)} A < ${ln.cal} A < ${ca} A ✓</div>`};
-$('lClear').onclick=()=>lnDraw(true);$('lNew').onclick=()=>{lnGen(ln.lvl);lnDraw()};
+$('lClear').onclick=()=>lnDraw(true);$('lNew').onclick=()=>{lnGen(ln.lvl);lnDraw(true)};
 lnGen(0);
 
 /* =================================================================
