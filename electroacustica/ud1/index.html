@@ -204,6 +204,7 @@ table.data{width:100%;border-collapse:collapse;font-size:14px}table.data td{padd
 .ud{position:relative;text-align:left;display:flex;flex-direction:column;gap:8px;min-height:150px;padding:18px 20px;border-radius:16px;border:1px solid #4d526f;border-left:4px solid #b4a9ff;background:linear-gradient(145deg,#26213d,#181d2b);color:var(--text)}
 .ud:hover:not(:disabled){border-color:#b4a9ff;box-shadow:0 6px 24px #0004}
 .ud:disabled{opacity:.55;cursor:default;border-left-color:#4d526f}
+.card.soon{opacity:.5;cursor:not-allowed;filter:grayscale(.5)}.card.soon:hover{transform:none;box-shadow:none}.card.soon .go{color:var(--dim)}.course:disabled{opacity:.55;cursor:default;filter:grayscale(.5)}.soonb{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:99px;border:1px solid #4d5d6c;color:var(--dim);font:700 11px var(--mono);vertical-align:middle}
 .ud .c{font:700 12px var(--mono);color:#b4a9ff;letter-spacing:.1em}.ud strong{font-size:20px;line-height:1.2;letter-spacing:-.02em}.ud small{color:var(--muted);font-size:13px}
 .ud .st{margin-top:auto;font-size:13px;font-weight:800;color:#c6bbff}
 /* reparto */
@@ -363,7 +364,7 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 <summary><span class="pnum">01</span><span class="ptitle"><strong>Fundamentos de los circuitos</strong><span>Ley de Ohm, circuitos y medida</span></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></summary>
 <div class="cards">
 <button class="card" data-lab="ohm"><span class="tag">CÁLCULO · EXPLORA + 5 NIVELES</span><strong>Ley de Ohm y potencia</strong><small>Mueve la tensión y la resistencia y observa la corriente y la potencia. Ejercicios de V, I, R, P y energía con altavoces y equipos.</small><span class="go">Practicar →</span></button>
-<button class="card" data-lab="circuitos"><span class="tag">CÁLCULO · 11 NIVELES</span><strong>Circuitos serie, paralelo y mixtos</strong><small>Del circuito más simple al de varios altavoces. Rellena la tabla V, I, R, P y comprueba. Mapa de resolución de ida y vuelta.</small><span class="go">Practicar →</span></button>
+<button class="card" data-lab="circuitos"><span class="tag">CÁLCULO · 10 NIVELES</span><strong>Circuitos serie, paralelo y mixtos</strong><small>Del circuito más simple a los mixtos con varios grupos. Rellena la tabla V, I, R, P y comprueba. Mapa de resolución de ida y vuelta.</small><span class="go">Practicar →</span></button>
 <a class="card" href="polimetro.html" style="text-decoration:none"><span class="tag">MEDIDA · PUNTAS Y PINZA · PRÁCTICA GUIADA</span><strong>Polímetro virtual</strong><small>Conoce el instrumento, mide en Schuko y CETAC, explora un distribuidor trifásico y localiza averías con puntas y pinza arrastrables.</small><span class="go">Practicar →</span></a>
 </div>
 </details>
@@ -926,7 +927,7 @@ const near=(a,b)=>isFinite(a)&&Math.abs(a-b)<=Math.max(0.011,Math.abs(b)*0.01);
 
 /* ---------- navegación ---------- */
 const labs={circuitos:'Circuitos serie, paralelo y mixtos',polimetro:'Polímetro virtual',reparto:'Reparto de cargas',linea:'De la potencia al cable',caida:'Caída de tensión',cuadro:'Cuadro eléctrico interactivo',colores:'Colores y orden de conexión',tierra:'Toma de tierra',ipik:'Descodificador IP / IK',ohm:'Ley de Ohm y potencia',reto:'Monta el evento',pasivos:'Resistencia, bobina y condensador',filtros:'Filtros de primer orden y crossovers',orden:'Filtros de orden superior',lpad:'Resistencia en serie, L-pad y Zobel'};
-function route(){const k=location.hash.slice(1);const on=labs[k];const ev=k==='electro';const ud=k==='ud1';const cv=k==='ces';const c3=k==='ces3';const u2=k==='ud2';const home=!on&&!ev&&!ud&&!cv&&!c3&&!u2;$('ud2Index').classList.toggle('on',u2);$('cesView').classList.toggle('on',cv);$('cesIndex').classList.toggle('on',c3);
+function route(){const k=location.hash.slice(1);if(slGuard(k))return;const on=labs[k];const ev=k==='electro';const ud=k==='ud1';const cv=k==='ces';const c3=k==='ces3';const u2=k==='ud2';const home=!on&&!ev&&!ud&&!cv&&!c3&&!u2;$('ud2Index').classList.toggle('on',u2);$('cesView').classList.toggle('on',cv);$('cesIndex').classList.toggle('on',c3);
  $('home').classList.toggle('on',home);$('electroView').classList.toggle('on',ev);$('udHero').style.display=(on||ud)?'block':'none';$('crumbs').style.display=home?'none':'flex';
  $('index').style.display=ud?'flex':'none';
  document.querySelectorAll('.lab').forEach(s=>s.classList.toggle('on',s.id==='lab-'+k));
@@ -938,6 +939,24 @@ function route(){const k=location.hash.slice(1);const on=labs[k];const ev=k==='e
 document.querySelectorAll('.ud[data-ud]').forEach(b=>b.onclick=()=>{location.hash=b.dataset.ud});
 $('toElectro').onclick=()=>{location.hash='electro'};$('toCes').onclick=()=>{location.hash='ces'};
 document.querySelectorAll('.card[data-lab]').forEach(b=>b.onclick=()=>{location.hash=b.dataset.lab});
+
+/* ---------- acceso de los alumnos ----------
+   En la web publicada solo se abren los laboratorios de SL_OPEN; el resto aparece «En preparación».
+   En la vista previa (/beta/) y en local se ve todo. Para abrir un laboratorio, añade su clave aquí. */
+const SL_OPEN=['ohm','circuitos','polimetro','cuadro'];
+const SL_ALL=location.protocol==='file:'||/\/beta\//.test(location.pathname);
+const slOk=k=>SL_ALL||SL_OPEN.includes(k);
+function slGate(){if(SL_ALL)return;
+ const soon=el=>{el.classList.add('soon');el.setAttribute('aria-disabled','true');el.tabIndex=-1;const g=el.querySelector('.go');if(g)g.textContent='En preparación';el.onclick=e=>{e.preventDefault();e.stopImmediatePropagation()};if(el.tagName==='A')el.removeAttribute('href');if(el.tagName==='BUTTON')el.disabled=true};
+ document.querySelectorAll('.card[data-lab]').forEach(b=>{if(!slOk(b.dataset.lab))soon(b)});
+ document.querySelectorAll('a.card[href]').forEach(a=>{if(a.getAttribute('href')!=='polimetro.html'||!slOk('polimetro'))soon(a)});
+ document.querySelectorAll('details.part').forEach(d=>{const cs=d.querySelectorAll('.card');if(cs.length&&[...cs].every(c=>c.classList.contains('soon')))d.querySelector('.ptitle strong').insertAdjacentHTML('beforeend','<span class="soonb">En preparación</span>')});
+ const off=(sel,txt)=>document.querySelectorAll(sel).forEach(b=>{b.disabled=true;const st=b.querySelector('.st,.cnt');if(st)st.textContent=txt;const lk=b.querySelector('.lk');if(lk)lk.style.display='none'});
+ off('.ud[data-ud=ud2]','En preparación');off('.ud[data-ud=ces3]','En preparación');off('#toCes','En preparación');
+ const u1=document.querySelector('.ud[data-ud=ud1] .st');if(u1)u1.textContent=SL_OPEN.length+' laboratorios abiertos · Entrar →';
+ const ec=document.querySelector('#toElectro .cnt');if(ec)ec.textContent='6 unidades didácticas · UD1 disponible'}
+function slGuard(k){if(SL_ALL)return false;if(labs[k]&&!slOk(k)){location.replace('#ud1');return true}if(k==='ud2'){location.replace('#electro');return true}if(k==='ces'||k==='ces3'){location.replace('#');return true}return false}
+slGate();
 window.addEventListener('hashchange',route);
 
 /* =================================================================
