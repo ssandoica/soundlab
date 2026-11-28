@@ -593,6 +593,12 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 #lab-reparto .rp-board .rp-sks .slot .chip .rp-miniature{display:none}#lab-reparto .rp-board .rp-sks .slot .chip small{font-size:10px;margin-top:2px}
 #lab-reparto .rp-free{font-size:10px;color:var(--dim)}
 @media(max-width:730px){#lab-reparto .rp-board #rPhases{grid-template-columns:1fr}}
+#lab-reparto .rp-board{display:flex!important;flex-direction:column;gap:10px}
+#lab-reparto .rp-board>.rp-bank{padding:10px 12px}
+#lab-reparto .rp-board .rp-bank .tray{display:flex!important;flex-wrap:wrap;gap:6px;max-height:none;margin-top:6px;padding:0}
+#lab-reparto .rp-board .rp-bank .tray .chip{width:auto;max-width:250px;min-height:44px}
+#lab-reparto .rp-board .rp-scheme{max-width:none;width:100%;justify-self:stretch}
+#lab-reparto .rp-board .rp-scheme .scheme{width:100%;min-width:0}
 </style>
 <details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Cómo se hace un reparto de cargas</summary>
 <div class="in">
