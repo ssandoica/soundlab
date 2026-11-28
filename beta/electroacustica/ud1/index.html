@@ -1535,7 +1535,7 @@ const CQ_TASKS=[[
  'Aplica una fuga de <b>30 mA o más</b>: ¿qué salta y qué circuitos se apagan?',
  'Aplica <b>Contacto L–N sin fuga</b> (una persona entre fase y neutro): ¿salta algo?',
  'Pulsa el botón amarillo <b>T</b> del diferencial.',
- 'Después de un disparo, <b>rearma</b>: retira la avería y deja los tres circuitos alimentados.']];
+ 'Después de un disparo, <b>rearma</b>: corrige la avería y deja los tres circuitos alimentados, sin sobrecargas.']];
 const cqDone=[new Set(),null,new Set()];let cqHadTrip=false;
 function cqTasksRender(k){const el=$('cqTasks'+k);if(!el)return;const html=CQ_TASKS[k].map((t,i)=>`<div class="cqtask${cqDone[k].has(i)?' done':''}"><span class="n">${cqDone[k].has(i)?'✓':i+1}</span><span>${t}</span></div>`).join('');if(el.dataset.h!==html){el.innerHTML=html;el.dataset.h=html}$('cqTasksN'+k).textContent=cqDone[k].size===CQ_TASKS[k].length?'¡Todo comprobado!':cqDone[k].size+' / '+CQ_TASKS[k].length}
 function cqSimHit(id,why,snap){cqHadTrip=true;const d=cqDone[2];
@@ -1637,11 +1637,12 @@ function cqStop(){if(cqTimer!==null){clearInterval(cqTimer);cqTimer=null}}
 function cqStart(){if(cqTimer!==null||cqPage!==2||location.hash!=='#cuadro'||document.hidden)return;cqTimer=setInterval(cqDoStep,100)}
 function cqPaintHeat(){$('cqSimSvg').querySelectorAll('[data-cqheat]').forEach(r=>{let i=+r.dataset.cqheat;r.setAttribute('width',String(+r.dataset.full*cqState.heat[i]));r.setAttribute('fill',cqState.heat[i]>.8?'#ef6a49':'#ffb35d')})}
 function cqRenderBoard(id,st,opts){const el=$(id),mobile=matchMedia('(max-width: 700px)').matches;el.setAttribute('viewBox',mobile?'0 0 360 620':'0 0 900 410');el.innerHTML=cqBoard(st,{...opts,mobile})}
+function cqRearmOK(st,m=cqSample(st)){return st.fault.type==='none'&&m.live.every(Boolean)&&m.total<=40&&m.amps.every((a,i)=>a<=[16,16,20][i])}
 function cqRenderSim(){
  const st=cqState,m=cqSample(st);cqRenderBoard('cqSimSvg',st,{prefix:'cqS',heat:true});$('cqTotal').textContent=cqNum(m.total)+' A';$('cqDelta').textContent=cqNum(m.delta)+' mA';$('cqLive').textContent=m.live.filter(Boolean).length+' / 3';
- for(let i=0;i<3;i++)$('cqLoadV'+i).textContent=st.load[i]+' A';cqPaintHeat();if(cqHadTrip&&st.fault.type==='none'&&m.live.every(Boolean)&&['iga','dif','C1','C2','C3'].every(k=>st.p[k]==='on'))cqDone[2].add(7);cqTasksRender(2);
+ for(let i=0;i<3;i++)$('cqLoadV'+i).textContent=st.load[i]+' A';cqPaintHeat();if(cqHadTrip&&cqRearmOK(st,m))cqDone[2].add(7);cqTasksRender(2);
  $('cqSimLog').innerHTML=st.events.length?st.events.slice(0,16).map(e=>`<p><time>${Math.round(e.t)} s</time> · ${e.text}</p>`).join(''):'<p>Sin incidencias. Modifica los consumos y observa el cuadro.</p>';
- const p=Object.entries(st.p).filter(x=>x[1]==='trip').map(x=>x[0]);$('cqSimMsg').textContent=p.length?'Protección disparada: '+p.join(', ')+'. Corrige el defecto virtual, baja la palanca a OFF y vuelve a ON.':st.fault.type==='touch'?'Contacto fase-neutro sin fuga: hay riesgo aunque no salte ninguna protección.':m.total>40||m.amps.some((a,i)=>a>[16,16,20][i])?'Sobrecarga: observa la barra de calentamiento.':'Pulsa una palanca o el botón amarillo T del diferencial.';
+ const p=Object.entries(st.p).filter(x=>x[1]==='trip').map(x=>cqName(x[0]));$('cqSimMsg').textContent=p.length?'Protección disparada: '+p.join(', ')+'. Corrige el defecto virtual, baja la palanca a OFF y vuelve a ON.':st.fault.type==='touch'?'Contacto fase-neutro sin fuga: hay riesgo aunque no salte ninguna protección.':m.total>40||m.amps.some((a,i)=>a>[16,16,20][i])?'Sobrecarga: observa la barra de calentamiento.':'Pulsa una palanca o el botón amarillo T del diferencial.';
 }
 function cqDoStep(){if(cqAdvance(cqState,.1)){cqClickSound();cqRenderSim()}else cqPaintHeat()}
 function cqExploreRender(){
@@ -1896,23 +1897,23 @@ function mgGen(i){
   if(v===1)return{st:`El magnetotérmico que protege ${lugar} dispara de forma magnética a partir de ${fW(Icc)} A, con Icc = ${k} · In. ¿De cuántos amperios es el magnetotérmico?`,a:[['In','A',In]],sol:`Icc = ${k} · In → In = Icc / ${k} = ${fW(Icc)} / ${k} = ${In} A`,tip:'Despeja In: divide la corriente de disparo magnético entre k.'};
   return{st:`Un magnetotérmico de ${In} A protege ${lugar} y su disparo magnético empieza en ${fW(Icc)} A. ¿Cuánto vale k en Icc = k · In?`,a:[['k','sin unidades',k]],sol:`Icc = k · In → k = Icc / In = ${fW(Icc)} / ${In} = ${k}`,tip:'Despeja k: divide la corriente de disparo magnético entre In.'}}
  if(i===1){const In=rnd([10,16,20,25,32]),k=rnd([5,10]),Icc=k*In,v=ri(0,3);let st,ans,why;
-  if(v===0){const I=Math.random()<.4?ri(Math.max(1,In-8),In-1):ri(In+2,In+12),P=230*I;ans=I<In?'no':'term';
-   st=`Un magnetotérmico de ${In} A (Icc = ${k} · In) protege ${lugar}. Se conectan equipos que suman ${fW(P)} W. ¿Qué ocurre?`;
-   why=`I = P / 230 = ${fW(P)} / 230 = ${I} A. ${I<In?`${I} A es menos que ${In} A: el magnetotérmico aguanta.`:`${I} A es más que ${In} A pero menos que ${fW(Icc)} A (disparo magnético): es una sobrecarga, salta la parte térmica al cabo de un rato.`} El diferencial no salta porque no hay fuga.`}
-  else if(v===1){const I=Math.random()<.5?ri(In+2,Math.min(Icc-5,2*In)):ri(Icc+5,Icc+300);ans=I>Icc?'mag':'term';
+  if(v===0){const I=Math.random()<.4?ri(Math.max(1,In-8),In-1):ri(In+2,In+12),P=230*I;ans=I<=In?'no':'term';
+   st=`Un magnetotérmico de ${In} A (Icc = ${k} · In) protege ${lugar}. Se conectan equipos que suman ${fW(P)} W (230 V, factor de potencia = 1). ¿Qué ocurre?`;
+   why=`I = P / 230 = ${fW(P)} / 230 = ${I} A. ${I<=In?`${I} A no supera los ${In} A del calibre: el magnetotérmico aguanta.`:`${I} A es más que ${In} A pero menos que ${fW(Icc)} A (disparo magnético): es una sobrecarga, salta la parte térmica al cabo de un rato.`} El diferencial no salta porque no hay fuga.`}
+  else if(v===1){const I=Math.random()<.5?ri(In+2,Math.min(Icc-5,2*In)):ri(Icc+5,Icc+300);ans=I>=Icc?'mag':'term';
    st=`Por ${lugar}, protegido con un magnetotérmico de ${In} A (Icc = ${k} · In), circula de pronto una corriente de ${fW(I)} A entre fase y neutro. ¿Qué ocurre?`;
-   why=`Disparo magnético: ${k} · ${In} = ${fW(Icc)} A. ${I>Icc?`${fW(I)} A supera ${fW(Icc)} A: es un cortocircuito y salta la parte magnética al instante.`:`${fW(I)} A supera los ${In} A del calibre, pero no llega a ${fW(Icc)} A: actúa la parte térmica, al cabo de un rato.`} El diferencial no salta: la corriente vuelve por el neutro.`}
+   why=`Disparo magnético: ${k} · ${In} = ${fW(Icc)} A. ${I>=Icc?`${fW(I)} A alcanza o supera ${fW(Icc)} A: es un cortocircuito y salta la parte magnética al instante.`:`${fW(I)} A supera los ${In} A del calibre, pero no llega a ${fW(Icc)} A: actúa la parte térmica, al cabo de un rato.`} El diferencial no salta: la corriente vuelve por el neutro.`}
   else if(v===2){const mA=rnd([5,10,15,20,25,35,40,50,60,80,100,150]);ans=mA>=30?'dif':'no';
    st=`En ${lugar} un equipo tiene un defecto de aislamiento y se escapan ${mA} mA a tierra por su chasis. El cuadro tiene un diferencial de 40 A / 30 mA. ¿Qué ocurre?`;
    why=mA>=30?`${mA} mA es igual o mayor que 30 mA: salta el diferencial y se apagan todos los circuitos que cuelgan de él. El magnetotérmico no nota una corriente tan pequeña.`:`${mA} mA es menos que 30 mA: en este modelo el diferencial no salta, y tampoco el magnetotérmico. Aun así, hay un defecto que hay que reparar.`}
   else{const n=ri(2,4),each=Array.from({length:n},()=>rnd([200,300,400,500,600,800,1000,1200,1500])),I0=each.reduce((x,y)=>x+y,0);const I=Math.max(1,Math.round(I0/230));const P=230*I;
-   const parts=[];let rest=P;for(let j=0;j<n-1;j++){const q=Math.max(230,Math.round(rest/(n-j)/10)*10+rnd([-100,0,100]));parts.push(q);rest-=q}parts.push(rest);
-   ans=I<In?'no':'term';st=`Un magnetotérmico de ${In} A (Icc = ${k} · In) protege ${lugar}. Se enchufan equipos de ${parts.map(fW).join(' W, ')} W. ¿Qué ocurre?`;
-   why=`P total = ${parts.map(fW).join(' + ')} = ${fW(P)} W. I = P / 230 = ${I} A. ${I<In?`Es menos que ${In} A: no salta nada.`:`Es más que ${In} A pero menos que ${fW(Icc)} A: sobrecarga, salta la parte térmica al cabo de un rato.`}`}
+   const parts=each.slice();parts[n-1]+=P-I0;
+   ans=I<=In?'no':'term';st=`Un magnetotérmico de ${In} A (Icc = ${k} · In) protege ${lugar}. Se enchufan equipos de ${parts.map(fW).join(' W, ')} W (230 V, factor de potencia = 1). ¿Qué ocurre?`;
+   why=`P total = ${parts.map(fW).join(' + ')} = ${fW(P)} W. I = P / 230 = ${I} A. ${I<=In?`No supera los ${In} A del calibre: no salta nada.`:`Es más que ${In} A pero menos que ${fW(Icc)} A: sobrecarga, salta la parte térmica al cabo de un rato.`}`}
   return{st,opts:Object.values(MG_ANS),ans:MG_ANS[ans],why}}
- if(i===2){const In=rnd([16,20,25,32,40,50]),D=MG_DIF.find(c=>c>=In);const w=new Set();[10,16,20,25,32].filter(c=>c<In).forEach(c=>w.add(c+' A y 30 mA'));w.add(D+' A y 300 mA');w.add(D+' A y 300 A');w.add(In+' A y 3 A');
+ if(i===2){const In=rnd([16,20,25,32,40,50]),D=MG_DIF.find(c=>c>=In);const w=new Set();MG_DIF.filter(c=>c!==D).forEach(c=>w.add(c+' A y 30 mA'));w.add(D+' A y 300 mA');w.add(D+' A y 3 A');
   const wrong=shuf([...w]).slice(0,3);
-  return{st:`${lugar[0].toUpperCase()+lugar.slice(1)} se protege con un magnetotérmico de ${In} A. Los diferenciales que hay en el almacén son de ${MG_DIF.join(', ')} A. ¿Qué diferencial pones en esta instalación eventual?`,opts:shuf([D+' A y 30 mA',...wrong]),ans:D+' A y 30 mA',why:`El calibre del diferencial tiene que ser igual o mayor que el del magnetotérmico: el primero que llega a ${In} A es el de ${D} A. En instalaciones eventuales la sensibilidad es de 30 mA.`}}
+  return{st:`${lugar[0].toUpperCase()+lugar.slice(1)} se protege con un magnetotérmico de ${In} A. Los diferenciales que hay en el almacén son de ${MG_DIF.join(', ')} A. ¿Qué diferencial de menor calibre cumple las condiciones de esta instalación eventual?`,opts:shuf([D+' A y 30 mA',...wrong]),ans:D+' A y 30 mA',why:`El calibre del diferencial tiene que ser igual o mayor que el del magnetotérmico: el menor disponible que no queda por debajo de ${In} A es el de ${D} A. En instalaciones eventuales la sensibilidad es de 30 mA.`}}
  return mcq(MG_Q)}
 
 /* =================================================================
