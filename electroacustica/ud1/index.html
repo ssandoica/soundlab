@@ -702,19 +702,41 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 
 <!-- ================= TIERRA ================= -->
 <section class="lab" id="lab-tierra" aria-labelledby="tit">
-<div class="labhead"><span class="kicker">PARTE 02 · SEGURIDAD</span><h2 id="tit">Toma de tierra</h2><p>Si una persona toca un chasis con un defecto, la corriente de fuga tiene dos caminos hacia el suelo: la toma de tierra y el cuerpo. Se reparte como en dos resistencias en paralelo.</p></div>
-<details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Cómo se reparte la corriente</summary><div class="in"><div class="box2"><h4>Dos caminos en paralelo</h4><p style="margin:0">La persona y la toma de tierra están en paralelo entre el chasis y el suelo. Por cada camino pasa más corriente cuanto menor es su resistencia.</p></div><div class="box2"><h4>¿Cuánto puede valer la tierra?</h4><p class="f" style="margin:0 0 6px">R tierra ≤ R persona / 20</p><p style="margin:0">Con R persona = 1.000 Ω, la toma de tierra no puede pasar de 50 Ω.</p></div><div class="box2"><h4>La relación</h4><p class="f" style="margin:0 0 6px">I tierra / I persona = R persona / R tierra</p><p style="margin:0">Con R persona = 1.000 Ω y una tierra de 20 Ω, por la tierra pasa 50 veces más corriente que por la persona.</p></div><div class="box2"><h4>Corriente por la persona</h4><p class="f" style="margin:0 0 6px">I persona = I fuga · R tierra / (R tierra + R persona)</p><p style="margin:0">Es el divisor de corriente de dos resistencias en paralelo. Cuanto mejor (más baja) es la tierra, menos corriente atraviesa el cuerpo.</p></div></div></details>
-<div class="panel"><h3>Explora</h3><div class="explore"><div>
-<div class="sl"><label for="tRt">Resistencia de la toma de tierra <b id="tRtv"></b></label><input id="tRt" type="range" min="5" max="500" step="5" value="20"></div>
+<div class="labhead"><span class="kicker">PARTE 02 · SEGURIDAD</span><h2 id="tit">Toma de tierra</h2><p>Descubre cómo el conductor de protección ofrece un camino a la corriente de defecto y cómo influye su resistencia cuando una persona toca un chasis metálico.</p></div>
+<style>
+#lab-tierra .ti-layout{display:grid;grid-template-columns:minmax(210px,.7fr) minmax(0,1.5fr);gap:14px;align-items:start}
+#lab-tierra .ti-controls{display:flex;flex-direction:column;gap:12px;min-width:0}#lab-tierra .ti-controls .sl{margin:0}#lab-tierra .ti-controls input[type=range]{width:100%;accent-color:var(--accent)}
+#lab-tierra .ti-switch{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--inset)}
+#lab-tierra .ti-switch button{min-width:85px;font-size:12px;padding:7px 9px}#lab-tierra .ti-switch button[aria-pressed=true]{color:var(--accent);border-color:var(--accent);background:#173942}
+#lab-tierra .ti-visual{min-width:0}#lab-tierra .ti-scene{width:100%;display:block;border:1px solid #344d60;border-radius:12px;background:#0a1823}
+#lab-tierra .ti-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:8px}#lab-tierra .ti-metric{background:#0d202d;border:1px solid #344d60;border-radius:9px;padding:9px;min-width:0}#lab-tierra .ti-metric small{display:block;color:var(--muted);font-size:11px}#lab-tierra .ti-metric strong{display:block;font:700 clamp(13px,2.1vw,21px) var(--mono);margin-top:4px;overflow-wrap:anywhere}
+#lab-tierra .ti-bar{display:flex;height:12px;border-radius:8px;overflow:hidden;background:#293b49;margin:9px 0 3px}#lab-tierra .ti-bar span{transition:width .16s}#lab-tierra .ti-note{font-size:12px;color:var(--muted);line-height:1.55}
+#lab-tierra .ti-flow{animation:tiFlow 1.15s linear infinite}@keyframes tiFlow{to{stroke-dashoffset:-34}}@media(prefers-reduced-motion:reduce){#lab-tierra .ti-flow{animation:none}}#lab-tierra.ti-paused .ti-flow{animation-play-state:paused}
+@media(max-width:750px){#lab-tierra .ti-layout{grid-template-columns:1fr}#lab-tierra .ti-controls{display:grid;grid-template-columns:1fr 1fr}#lab-tierra .ti-controls .sl{grid-column:1/-1}}@media(max-width:430px){#lab-tierra .ti-controls{display:flex}}
+</style>
+<details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Fundamentos y fórmulas</summary><div class="in">
+<div class="box2"><h4>Conductor de protección (PE)</h4><p>Conecta las masas metálicas al sistema de protección. La tierra y el diferencial forman parte de la protección eléctrica; ninguno garantiza por sí solo la seguridad.</p></div>
+<div class="box2"><h4>Dos caminos en paralelo</h4><p>En el modelo, la corriente de defecto total se fija y se reparte entre dos resistencias: la puesta a tierra y la persona.</p></div>
+<div class="box2"><h4>Divisor de corriente</h4><p class="f">I persona = I fuga · R tierra / (R tierra + R persona)</p><p class="f">I tierra = I fuga − I persona</p></div>
+<div class="box2"><h4>Relación de corrientes</h4><p class="f">I tierra / I persona = R persona / R tierra</p><p>Si se pide una relación de 20:1 como objetivo de cálculo, R tierra ≤ R persona / 20. No es un límite reglamentario ni un criterio de seguridad.</p></div></div></details>
+<h3 style="margin:18px 0 0">Comprende y experimenta</h3>
+<div class="panel guided-practice" id="tiGuide"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Qué tienes que comprobar</h3><span class="gp-score" id="tiGuideScore">0 / 5</span></div><p class="gp-note">Selecciona un reto para preparar la escena. Modifica los controles hasta completarlo.</p><div class="gp-list" id="tiGuideList"></div><p class="gp-feedback" id="tiGuideFeedback" aria-live="polite">Elige una prueba.</p><button class="btn ghost" id="tiGuideReset">Reiniciar retos</button></div>
+<div class="panel"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Banco de simulación · Rack de sonido</h3><div class="row"><button class="btn ghost" id="tiPause" aria-pressed="false">Pausar animación</button><button class="btn ghost" id="tiReset">Reiniciar</button></div></div>
+<p class="ti-note">Modelo de corriente de defecto impuesta, sin desconexión automática. Las corrientes se muestran antes de que actúe una protección. No representa una instalación real completa ni determina condiciones seguras de contacto.</p>
+<div class="ti-layout"><div class="ti-controls">
+<div class="ti-switch"><span>Defecto de aislamiento</span><button class="btn ghost" id="tiFault" aria-pressed="true">Activo</button></div>
+<div class="ti-switch"><span>Conductor PE</span><button class="btn ghost" id="tiEarth" aria-pressed="true">Conectado</button></div>
+<div class="ti-switch"><span>Contacto de la persona</span><button class="btn ghost" id="tiTouch" aria-pressed="true">Sí</button></div>
+<div class="sl"><label for="tRt">Resistencia de tierra <b id="tRtv"></b></label><input id="tRt" type="range" min="5" max="500" step="5" value="20"></div>
 <div class="sl"><label for="tRp">Resistencia de la persona <b id="tRpv"></b></label><input id="tRp" type="range" min="500" max="3000" step="100" value="1000"></div>
-<div class="sl"><label for="tIf">Corriente de fuga total <b id="tIfv"></b></label><input id="tIf" type="range" min="0.1" max="5" step="0.1" value="1"></div>
-</div><div style="display:flex;flex-direction:column;gap:10px">
-<svg class="scene2" id="tSvg" viewBox="0 0 520 220" role="img" aria-label="Chasis con defecto, persona y toma de tierra en paralelo"></svg>
-<div class="formula" id="tF" style="margin:0"></div></div></div></div>
-<div class="panel"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Ejercicios</h3><button class="btn ghost" id="tNew">Nuevo ejercicio</button></div>
-<p class="statement" id="tSt" style="margin-top:10px"></p>
-<div class="mini"><label for="tA1">I tierra / I persona (veces)<input id="tA1" inputmode="decimal"></label><label for="tA2">Corriente por la persona (mA)<input id="tA2" inputmode="decimal"></label><button class="btn primary" id="tCheck">Comprobar</button><button class="btn alt" id="tSol">Ver la resolución</button></div>
-<div id="tMsg"></div></div>
+<div class="sl"><label for="tIf">Corriente de defecto impuesta <b id="tIfv"></b></label><input id="tIf" type="range" min="0" max="1000" step="10" value="100"></div>
+</div><div class="ti-visual">
+<svg class="ti-scene" id="tSvg" viewBox="0 0 700 390" role="img" aria-label="Rack de sonido, persona, conductor de protección y electrodo de tierra"></svg>
+<div class="ti-metrics"><div class="ti-metric"><small>Por tierra</small><strong id="tiIt" style="color:#36e2e8">—</strong></div><div class="ti-metric"><small>Por la persona</small><strong id="tiIp" style="color:#ffb36b">—</strong></div><div class="ti-metric"><small>Relación tierra / persona</small><strong id="tiRatio">—</strong></div></div>
+<div class="ti-bar" aria-hidden="true"><span id="tiBarT" style="background:#36e2e8"></span><span id="tiBarP" style="background:#ff9f43"></span></div><div class="row" style="justify-content:space-between;font-size:12px;color:var(--muted)"><span id="tiPctT">—</span><span id="tiPctP">—</span></div>
+<p id="tiStatus" class="statement" style="margin:9px 0 0" role="status"></p><div class="formula" id="tF" style="margin-top:8px"></div>
+</div></div></div>
+<div class="labhead" style="margin-top:22px"><span class="kicker">PRÁCTICA</span><h3>EJERCICIOS</h3><p>Resuelve situaciones de sonido con dificultad progresiva. Genera nuevas variantes con «Otro ejercicio».</p></div>
 <div class="panel"><div class="levels" id="tmLv" role="list"></div></div>
 <div class="panel"><div class="row" style="justify-content:space-between"><h3 id="tmTitle" style="margin:0"></h3><button class="btn ghost" id="tmNew">Otro ejercicio</button></div>
 <p class="statement" id="tmSt" style="margin-top:10px"></p><div id="tmFig"></div><div class="mini" id="tmIn"></div>
@@ -1808,27 +1830,58 @@ $('coBoard').addEventListener('pointercancel',()=>{coDrag=null;coDraw()});
 document.querySelectorAll('[data-co-tab]').forEach(b=>b.onclick=()=>{coTab=b.dataset.coTab;coReset()});document.querySelectorAll('[data-co-mode]').forEach(b=>b.onclick=()=>{coMode=b.dataset.coMode;coIdOrder=[];coReset()});$('coTask').onchange=coReset;$('coReset').onclick=coReset;coReset();
 
 /* ================= TIERRA ================= */
-function tiSvg(Rt,Rp,If){const Ip=If*Rt/(Rt+Rp),It=If-Ip;const wp=Math.max(2,Math.min(14,Ip/If*40)),wt=Math.max(2,Math.min(14,It/If*14));
- return `<rect x="200" y="14" width="120" height="44" rx="8" fill="#222737" stroke="#ff9f43" stroke-width="2"/><text x="260" y="34" text-anchor="middle" fill="#eaf4f6" font-size="13" font-weight="800">CHASIS</text><text x="260" y="50" text-anchor="middle" fill="#a9c6cc" font-size="11">con defecto · ${fmt(If)} A</text>
- <path d="M240 58V90H120V150" fill="none" stroke="#36e2e8" stroke-width="${wt}"/><path d="M280 58V90H400V110" fill="none" stroke="#ff7a7a" stroke-width="${wp}"/>
- <rect x="90" y="150" width="60" height="26" rx="5" fill="#132a36" stroke="#36e2e8" stroke-width="2"/><text x="120" y="168" text-anchor="middle" fill="#eaf4f6" font-size="12" font-weight="700">${fmt(Rt,0)} Ω</text><text x="120" y="196" text-anchor="middle" fill="#36e2e8" font-size="13" font-weight="800">TIERRA · ${fmt(It)} A</text>
- <circle cx="400" cy="122" r="12" fill="none" stroke="#ff7a7a" stroke-width="2.5"/><path d="M400 134V160M400 142L384 152M400 142L416 152M400 160L388 180M400 160L412 180" stroke="#ff7a7a" stroke-width="2.5" fill="none"/>
- <text x="400" y="200" text-anchor="middle" fill="#ff9a9a" font-size="13" font-weight="800">PERSONA · ${fmt(Ip*1000,1)} mA</text><text x="460" y="150" fill="#a9c6cc" font-size="12">${fW(Rp)} Ω</text>
- <path d="M60 212H460" stroke="#5c6670" stroke-width="2" stroke-dasharray="6 6"/>`}
-function tiX(){const Rt=+$('tRt').value,Rp=+$('tRp').value,If=+$('tIf').value;$('tRtv').textContent=Rt+' Ω';$('tRpv').textContent=fW(Rp)+' Ω';$('tIfv').textContent=fmt(If)+' A';
- const Ip=If*Rt/(Rt+Rp);$('tSvg').innerHTML=tiSvg(Rt,Rp,If);$('tF').textContent=`I tierra / I persona = ${fW(Rp)} / ${Rt} = ${fmt(Rp/Rt)} veces\nI persona = ${fmt(If)} · ${Rt} / (${Rt} + ${fW(Rp)}) = ${fmt(Ip*1000,1)} mA`}
-['tRt','tRp','tIf'].forEach(id=>$(id).oninput=tiX);
-let ti={};
-function tiGen(){const Rt=rnd([5,10,20,25,40,50,80,100,200]),If=rnd([0.5,1,2,3]);ti={Rt,Rp:1000,If,r:1000/Rt,Ip:If*Rt/(Rt+1000)*1000};
- $('tSt').textContent=`Un amplificador tiene un defecto de aislamiento y por su chasis se fuga una corriente total de ${fmt(If)} A hacia el suelo. Un técnico lo toca (R persona = 1.000 Ω). La toma de tierra de la instalación mide ${Rt} Ω. ¿Cuántas veces más corriente va por la tierra que por la persona? ¿Cuánta corriente atraviesa a la persona?`;
- ['tA1','tA2'].forEach(x=>{$(x).value='';$(x).className=''});$('tMsg').innerHTML=''}
-$('tCheck').onclick=()=>{const a=parse($('tA1').value),b=parse($('tA2').value);const o1=near(a,ti.r),o2=isFinite(b)&&Math.abs(b-ti.Ip)<=Math.max(0.15,ti.Ip*0.015);$('tA1').className=o1?'ok':'bad';$('tA2').className=o2?'ok':'bad';
- $('tMsg').innerHTML=o1&&o2?'<p class="msg ok">¡Correcto!</p>':`<p class="msg bad">${!o1?'Para la relación, divide la resistencia de la persona entre la de la tierra. ':''}${!o2?'Para la corriente por la persona usa el divisor de corriente y pasa el resultado a mA (× 1.000).':''}</p>`};
-$('tSol').onclick=()=>{$('tMsg').innerHTML=`<div class="formula">I tierra / I persona = R persona / R tierra = 1.000 / ${ti.Rt} = ${fmt(ti.r)} veces
-I persona = I fuga · R tierra / (R tierra + R persona)
-          = ${fmt(ti.If)} · ${ti.Rt} / (${ti.Rt} + 1.000) = ${fmt(ti.Ip/1000,4)} A = ${fmt(ti.Ip,1)} mA</div>`};
-$('tNew').onclick=tiGen;
-function tiDraw(){tiX()}
+const tiInitial={earth:true,touch:true,fault:true,Rt:20,Rp:1000,If:100};
+let tiState={...tiInitial},tiPaused=false;
+function tiSolve(s){
+ const total=s.fault&&(s.earth||s.touch)?s.If:0;
+ const Ip=s.touch?(s.earth?total*s.Rt/(s.Rt+s.Rp):total):0;
+ return {...s,total,Ip,It:total-Ip,ratio:Ip>0?(total-Ip)/Ip:null};
+}
+const TI_GUIDE=[
+ {label:'Comprueba el efecto de desconectar el PE.',hint:'Con defecto y contacto activos, desconecta el PE en la simulación.',start:{},ok:s=>!s.earth&&s.touch&&s.fault&&s.If===100,result:'Sin PE, en este modelo toda la corriente de defecto impuesta pasa por la persona.'},
+ {label:'Reduce la resistencia de tierra.',hint:'Partimos de 200 Ω. Baja la resistencia de tierra a 20 Ω sin cambiar lo demás.',start:{Rt:200},ok:s=>s.Rt===20&&s.Rp===1000&&s.If===100&&s.earth&&s.touch&&s.fault,result:'La corriente por la persona baja de 16,67 a 1,96 mA en el modelo.'},
+ {label:'Aumenta la resistencia de tierra.',hint:'Partimos de 20 Ω. Aumenta la resistencia hasta 200 Ω.',start:{},ok:s=>s.Rt===200&&s.Rp===1000&&s.If===100&&s.earth&&s.touch&&s.fault,result:'Aumenta la parte de la corriente de defecto que circula por la persona.'},
+ {label:'Reduce la resistencia de la persona.',hint:'Con 100 Ω de tierra, reduce la resistencia de la persona de 1.000 a 500 Ω.',start:{Rt:100},ok:s=>s.Rt===100&&s.Rp===500&&s.If===100&&s.earth&&s.touch&&s.fault,result:'Una resistencia corporal menor aumenta la corriente que pasa por esa rama.'},
+ {label:'Obtén una relación de 20:1.',hint:'Mantén 1.000 Ω de resistencia de la persona y ajusta la tierra hasta obtener 20:1.',start:{Rt:100},ok:s=>s.Rt===50&&s.Rp===1000&&s.If===100&&s.earth&&s.touch&&s.fault,result:'1.000 / 50 = 20. Es una relación de corrientes de ejemplo, no una condición de seguridad.'}
+];
+const tiGuide=gpMake('ti',TI_GUIDE,t=>{tiState={...tiInitial,...t.start};tiDraw()});
+function tiSvg(s){
+ const {earth,touch,fault,Ip,It,total}=s,pct=total?Ip/total:0;
+ const flow=(d,col,v)=>v>0?'<path d="'+d+'" stroke="'+col+'" stroke-width="'+(2+8*v/total)+'" fill="none" stroke-linecap="round" opacity=".8"/><path class="ti-flow" d="'+d+'" stroke="#eaf7fa" stroke-width="2" fill="none" stroke-dasharray="4 13" opacity=".95"/>':'';
+ const vents=(x,y,n)=>Array.from({length:n},(_,i)=>'<rect x="'+(x+i*8)+'" y="'+y+'" width="4" height="16" rx="1" fill="#080f17"/>').join('');
+ const panel=(y,label)=>'<rect x="74" y="'+y+'" width="245" height="49" rx="3" fill="url(#tiFace)" stroke="#77848a"/><circle cx="84" cy="'+(y+7)+'" r="2" fill="#bbc3c8"/><circle cx="308" cy="'+(y+7)+'" r="2" fill="#bbc3c8"/>'+vents(95,y+17,10)+vents(232,y+17,8)+'<rect x="184" y="'+(y+10)+'" width="38" height="17" rx="2" fill="#101d26"/><circle cx="192" cy="'+(y+18)+'" r="2" fill="#36e2a8"/><circle cx="205" cy="'+(y+18)+'" r="2" fill="#36e2a8"/><text x="191" y="'+(y+40)+'" text-anchor="middle" fill="#b4bfd2" font-size="9">'+label+'</text>';
+ let h='<defs><linearGradient id="tiCase" x2="1" y2="1"><stop stop-color="#64747e"/><stop offset=".25" stop-color="#293b48"/><stop offset="1" stop-color="#101820"/></linearGradient><linearGradient id="tiFace" x2="0" y2="1"><stop stop-color="#56636e"/><stop offset=".17" stop-color="#384652"/><stop offset="1" stop-color="#1b2630"/></linearGradient><linearGradient id="tiCloth" x2="1" y2=".6"><stop stop-color="#405b70"/><stop offset="1" stop-color="#22394d"/></linearGradient><linearGradient id="tiSkin"><stop stop-color="#d1a183"/><stop offset="1" stop-color="#a9755d"/></linearGradient><linearGradient id="tiRod"><stop stop-color="#80502b"/><stop offset=".5" stop-color="#e2aa68"/><stop offset="1" stop-color="#81502b"/></linearGradient><pattern id="tiSoil" width="37" height="25" patternUnits="userSpaceOnUse"><rect width="37" height="25" fill="#302d29"/><path d="M4 5l4 2m12 10l5-3m8-9l2 3M5 22l3-1" stroke="#766753" opacity=".38"/></pattern></defs>';
+ h+='<rect width="700" height="390" fill="#0c1a25"/><path d="M0 292H700V390H0Z" fill="url(#tiSoil)"/><path d="M0 292H700" stroke="#7d776b" stroke-width="3"/><text x="22" y="25" fill="#9db0bf" font-size="11" letter-spacing="1.5">VISTA DEL MONTAJE · MODELO DIDÁCTICO</text>';
+ h+='<rect x="64" y="74" width="269" height="195" rx="8" fill="#080f17" opacity=".7" transform="translate(7 5)"/><rect x="61" y="63" width="273" height="198" rx="8" fill="url(#tiCase)" stroke="#82929e"/><rect x="69" y="74" width="255" height="174" rx="4" fill="#121d26"/>'+panel(79,'ETAPA DE POTENCIA')+panel(135,'AMPLIFICADOR')+panel(191,'PROCESADOR DSP')+'<rect x="75" y="261" width="42" height="12" rx="3" fill="#111a21"/><rect x="279" y="261" width="42" height="12" rx="3" fill="#111a21"/>';
+ h+='<text x="196" y="55" text-anchor="middle" font-size="13" fill="#e1e9ef" font-weight="700">RACK · CHASIS METÁLICO</text><path d="M12 108H60" stroke="#a5683f" stroke-width="8" fill="none"/><path d="M12 119H60" stroke="#287ccb" stroke-width="7" fill="none"/><text x="15" y="96" fill="#b4bfd2" font-size="10">L · N</text>';
+ if(fault)h+='<path d="M298 98l-11 20h12l-9 24 23-29h-13l9-15Z" fill="#ffb36b" stroke="#ffe0a7"/><text x="325" y="87" fill="#ffb36b" font-size="11">DEFECTO</text>';
+ else h+='<text x="326" y="87" fill="#88b3ab" font-size="11">SIN DEFECTO</text>';
+ const earthD='M91 240V280Q91 299 110 299H177V360';
+ h+='<circle cx="91" cy="240" r="5" fill="#d3b274" stroke="#171e23"/><path d="'+(earth?earthD:'M91 240V269 M91 284Q91 299 110 299H177V360')+'" stroke="#d7cc42" stroke-width="9" fill="none" stroke-linecap="round"/><path d="'+(earth?earthD:'M91 240V269 M91 284Q91 299 110 299H177V360')+'" stroke="#278846" stroke-width="5" stroke-dasharray="14 12" fill="none"/>';
+ h+='<rect x="172" y="308" width="10" height="59" rx="2" fill="url(#tiRod)"/><path d="M172 367l5 8 5-8" fill="#aa713d"/><path d="M155 367q22 11 44 0M141 374q36 12 72 0" stroke="#a2947c" opacity=".6" fill="none"/><text x="190" y="323" fill="#ded7c9" font-size="11">ELECTRODO</text><text x="190" y="341" fill="#36e2e8" font-size="13" font-weight="700">'+(earth?fmt(s.Rt,0)+' Ω':'PE abierto')+'</text>';
+ h+='<ellipse cx="505" cy="290" rx="49" ry="5" fill="#050e16" opacity=".7"/><path d="M479 194L475 252 462 281 485 283 501 249 508 219 516 253 531 281 554 280 537 241 532 194Z" fill="#324151" stroke="#607485" stroke-width="1.4"/><path d="M463 276q-8 9-16 11v5h40v-13M532 276v16h40v-5q-11-6-20-10" fill="#151d25" stroke="#59646c"/><path d="M481 111q24-9 44 0l17 25-11 65h-54l-9-67Z" fill="url(#tiCloth)" stroke="#607687" stroke-width="1.5"/><path d="M482 110l-13 25-20 23 '+(touch?'-91 -18 -8 16 101 26q9 3 15-6l29-30':'-36 33 12 13 40-30 20-29')+'" fill="url(#tiCloth)" stroke="#607687" stroke-width="1.5"/>';
+ if(touch)h+='<path d="M358 140l-13-6-11 5v11l17 6 8-2Z" fill="url(#tiSkin)" stroke="#9d705b"/>';
+ else h+='<path d="M416 184l-8 7 11 12 12-8-4-10Z" fill="url(#tiSkin)"/>';
+ h+='<path d="M525 116q19 0 24 20l5 49-16 4-9-39" fill="url(#tiCloth)" stroke="#607687"/><path d="M538 187l16-3 2 14-9 7-10-6Z" fill="url(#tiSkin)"/><rect x="493" y="96" width="22" height="18" rx="3" fill="url(#tiSkin)"/><path d="M485 66q0-24 20-24 25 0 25 26v14q-1 20-24 23-20-4-21-26Z" fill="url(#tiSkin)" stroke="#825c4c"/><path d="M484 72q-4-23 13-29 23-7 32 11l1 14-8-12-27 4-5 15Z" fill="#31343b"/><path d="M487 82l-5 0 5 5" fill="none" stroke="#8b604e"/><text x="505" y="31" text-anchor="middle" font-size="13" font-weight="700" fill="#e1e9ef">TÉCNICO</text><text x="588" y="148" fill="#ffb36b" font-size="13" font-weight="700">'+(touch?fmt(s.Rp,0)+' Ω':'Sin contacto')+'</text>';
+ if(earth)h+=flow(earthD,'#36e2e8',It);
+ if(touch)h+=flow('M332 145H359L452 166 480 142 504 151V204L489 251 476 289V313','#ff9f43',Ip);
+ h+='<rect x="351" y="335" width="321" height="36" rx="7" fill="#182532" stroke="#526372"/><text x="364" y="357" fill="#b4bfd2" font-size="12">Corriente de defecto en el modelo</text><text x="657" y="358" text-anchor="end" fill="#eaf4f6" font-size="15" font-weight="700">'+fmt(total,1)+' mA</text>';
+ return h;
+}
+function tiDraw(){
+ const s=tiSolve(tiState);
+ [['tRt','Rt','tRtv',' Ω'],['tRp','Rp','tRpv',' Ω'],['tIf','If','tIfv',' mA']].forEach(([id,k,out,u])=>{$(id).value=s[k];$(out).textContent=fmt(s[k],0)+u});
+ [['tiFault','fault','Activo','Inactivo'],['tiEarth','earth','Conectado','Abierto'],['tiTouch','touch','Sí','No']].forEach(([id,k,on,off])=>{$(id).textContent=s[k]?on:off;$(id).setAttribute('aria-pressed',String(s[k]))});
+ $('tRt').disabled=!s.earth;$('tRp').disabled=!s.touch;
+ $('tSvg').innerHTML=tiSvg(s);$('tiIt').textContent=fmt(s.It,2)+' mA';$('tiIp').textContent=fmt(s.Ip,2)+' mA';$('tiRatio').textContent=s.ratio===null?'—':fmt(s.ratio,2)+':1';
+ const tp=s.total?100*s.It/s.total:0,pp=s.total?100*s.Ip/s.total:0;$('tiBarT').style.width=tp+'%';$('tiBarP').style.width=pp+'%';$('tiPctT').textContent=fmt(tp,1)+' % · Tierra';$('tiPctP').textContent='Persona · '+fmt(pp,1)+' %';
+ $('tiStatus').textContent=!s.fault?'Sin defecto de aislamiento: no hay corriente de defecto en el modelo.':!s.earth&&!s.touch?'No hay camino cerrado en el modelo. El chasis podría estar a tensión peligrosa.':!s.touch?'Sin contacto, no hay corriente por la persona.':!s.earth?'Sin PE: toda la corriente de defecto impuesta circula por la persona.':s.total===0?'Corriente de defecto impuesta igual a cero.':'La corriente se reparte entre ambos caminos. Una toma de tierra de menor resistencia reduce la fracción que atraviesa a la persona, sin garantizar su seguridad.';
+ $('tF').textContent=s.earth&&s.touch?'I persona = '+fmt(s.total,1)+' × '+s.Rt+' / ('+s.Rt+' + '+s.Rp+') = '+fmt(s.Ip,2)+' mA\nI tierra = '+fmt(s.total,1)+' − '+fmt(s.Ip,2)+' = '+fmt(s.It,2)+' mA':'I fuga = I tierra + I persona = '+fmt(s.total,2)+' mA';
+}
+[['tRt','Rt'],['tRp','Rp'],['tIf','If']].forEach(([id,k])=>$(id).oninput=()=>{tiState[k]=+$(id).value;tiDraw();tiGuide.check(tiSolve(tiState))});
+[['tiFault','fault'],['tiEarth','earth'],['tiTouch','touch']].forEach(([id,k])=>$(id).onclick=()=>{tiState[k]=!tiState[k];tiDraw();tiGuide.check(tiSolve(tiState))});
+$('tiReset').onclick=()=>{tiGuide.clear();tiState={...tiInitial};tiDraw()};
+$('tiPause').onclick=()=>{tiPaused=!tiPaused;$('lab-tierra').classList.toggle('ti-paused',tiPaused);$('tiPause').textContent=tiPaused?'Reanudar animación':'Pausar animación';$('tiPause').setAttribute('aria-pressed',String(tiPaused))};
 
 /* ================= IP / IK ================= */
 const IP1=[['0','Sin protección'],['1','Contra sólidos de más de 50 mm (acceso con la mano)'],['2','Contra sólidos de más de 12,5 mm (acceso con un dedo)'],['3','Contra sólidos de más de 2,5 mm (acceso con una herramienta)'],['4','Contra sólidos de más de 1 mm (acceso con un alambre)'],['5','Protegido contra el polvo: puede entrar algo, pero no en cantidad perjudicial'],['6','Estanco al polvo: no entra polvo']];
@@ -1848,7 +1901,6 @@ function ipGen(){const t=rnd(['ip1','ip2','ik','cmp']);let q,opts,ans;
  $('ipOpts').querySelectorAll('.qopt').forEach(b=>b.onclick=()=>{if(ipq.cur.answered)return;ipq.cur.answered=true;ipq.n++;const ok=b.textContent===ipq.cur.ans;if(ok)ipq.ok++;b.classList.add(ok?'ok':'bad');$('ipOpts').querySelectorAll('.qopt').forEach(x=>{if(x.textContent===ipq.cur.ans)x.classList.add('ok')});$('ipScore').textContent=`Aciertos: ${ipq.ok} / ${ipq.n}`;$('ipMsg').innerHTML=`<p class="msg ${ok?'ok':'bad'}">${ok?'¡Correcto!':'La respuesta correcta está marcada.'}</p>`})}
 $('ipNext').onclick=ipGen;
 function ipDraw(){if(!$('ip1').options.length){$('ip1').innerHTML=IP1.map(([c])=>`<option value="${c}">${c}</option>`).join('');$('ip2').innerHTML=IP2.map(([c])=>`<option value="${c}">${c}</option>`).join('');$('ik').innerHTML=IKS.map(([c],i)=>`<option value="${i}">IK${c}</option>`).join('');$('ip1').value='5';$('ip2').value='4';$('ik').value='8';['ip1','ip2','ik'].forEach(x=>$(x).onchange=ipShow)}ipShow();if(!ipq.cur)ipGen()}
-tiGen();
 
 /* ================= LEY DE OHM ================= */
 function ohSolve(s,lock,key,x){let {V,I,R,P}={[lock]:s[lock],[key]:x};if(V!==undefined&&I!==undefined){R=V/I;P=V*I}else if(V!==undefined&&R!==undefined){I=V/R;P=V*I}else if(V!==undefined&&P!==undefined){I=P/V;R=V/I}else if(I!==undefined&&R!==undefined){V=I*R;P=V*I}else if(I!==undefined&&P!==undefined){V=P/I;R=V/I}else{I=Math.sqrt(P/R);V=I*R}return{V,I,R,P}}
@@ -1962,18 +2014,22 @@ rtGen();
 /* =================================================================
    TIERRA: RESISTENCIA MÁXIMA
    ================================================================= */
-const TML=[{name:'Tierra máxima',hint:'R tierra ≤ R persona / 20'},{name:'¿Es suficiente?',hint:'Compara con el máximo.'},{name:'Conceptos',hint:'Tierra, persona y diferencial.'}];
+const TML=[{name:'Conceptos fundamentales',hint:'PE, contacto y defecto.'},{name:'Reparto de corriente',hint:'I tierra e I persona.'},{name:'Cálculo de resistencias',hint:'Relación de corrientes.'},{name:'Casos prácticos de sonido',hint:'Compara dos situaciones.'}];
 const TM_Q=[
- ['¿Por qué la toma de tierra tiene que tener una resistencia baja?','Para que la corriente de fuga vaya por la tierra y no por la persona',['Para que el equipo consuma menos','Para que suene mejor','Para que no salte el diferencial'],'La corriente se reparte: por el camino de menor resistencia pasa mucha más.'],
- ['Con una tierra de 20 Ω y una persona de 1.000 Ω, por la tierra pasa…','50 veces más corriente que por la persona',['La misma corriente','20 veces menos corriente','1.000 veces más corriente'],'I tierra / I persona = 1.000 / 20 = 50.'],
- ['Si la toma de tierra está desconectada y alguien toca un chasis con un defecto…','Toda la corriente de fuga pasa por la persona',['No pasa nada','La corriente va por el neutro','Salta el magnetotérmico seguro'],'Sin el camino de la tierra, el único camino hacia el suelo es el cuerpo.'],
- ['¿Qué resistencia se toma para una persona en estos cálculos?','1.000 Ω',['20 Ω','50 Ω','100.000 Ω'],'Es el valor que usamos en clase para el cuerpo humano.'],
- ['El límite R tierra ≤ R persona / 20, con R persona = 1.000 Ω, da una tierra máxima de…','50 Ω',['20 Ω','100 Ω','1.000 Ω'],'1.000 / 20 = 50 Ω.']];
-function tmGen(i){const Rp=1000,Rmax=Rp/20;
- if(i===0){const ctx=rnd(['Vas a montar el sonido de un concierto al aire libre y mides la toma de tierra de la instalación provisional.','En la nave donde se ensaya hay que comprobar la toma de tierra antes de conectar el backline.','El técnico de la sala te pide que revises si la toma de tierra del escenario cumple.']);
-  return{st:`${ctx} ¿Cuál es la resistencia máxima que puede tener la toma de tierra? Toma R persona = 1.000 Ω.`,a:[['R tierra máxima','Ω',Rmax]],sol:`R tierra ≤ R persona / 20 = 1.000 / 20 = ${Rmax} Ω`,tip:'Divide la resistencia de la persona entre 20.'}}
- if(i===1){const Rt=rnd([10,15,20,25,30,40,45,60,80,100,150,200]);const ok=Rt<=Rmax;return{st:`Mides la toma de tierra del escenario y da ${Rt} Ω. ¿Es suficiente?`,opts:shuf([`Sí: ${Rt} Ω es menor o igual que el máximo de 50 Ω`,`No: ${Rt} Ω es mayor que el máximo de 50 Ω`,`Sí: cualquier tierra por debajo de 1.000 Ω vale`,`No hace falta comprobarlo si hay diferencial`]),ans:ok?`Sí: ${Rt} Ω es menor o igual que el máximo de 50 Ω`:`No: ${Rt} Ω es mayor que el máximo de 50 Ω`,why:`R tierra máxima = 1.000 / 20 = 50 Ω. ${ok?`${Rt} ≤ 50: cumple.`:`${Rt} > 50: no cumple, hay que mejorar la toma de tierra.`}`}}
- return mcq(TM_Q)}
+ ['¿Qué función tiene el PE?','Conectar las masas al sistema de protección',['Transportar normalmente la corriente de carga','Sustituir el neutro','Evitar cualquier defecto de aislamiento'],'El PE forma parte de la protección eléctrica.'],
+ ['En el modelo de dos ramas en paralelo, ¿por dónde circula más corriente?','Por la rama de menor resistencia',['Por la rama de mayor resistencia','Siempre la misma por ambas','Depende solo del color del conductor'],'Las dos ramas tienen la misma tensión y la corriente es inversamente proporcional a su resistencia.'],
+ ['¿Una toma de tierra de resistencia baja garantiza que tocar un chasis sea seguro?','No, es parte de un sistema de protección',['Sí, en todos los casos','Sí, si vale menos de 50 Ω','Sí, aunque el PE esté desconectado'],'La protección depende del conjunto de la instalación y de sus dispositivos.'],
+ ['En el modelo, si se abre el PE y la persona sigue tocando el chasis con defecto, ¿qué ocurre con la corriente impuesta?','Circula por la persona',['Desaparece siempre','Circula por el PE','Se reparte por igual'],'Es el único camino cerrado considerado en este modelo.'],
+ ['¿La resistencia de una persona es siempre de 1.000 Ω?','No, depende de las condiciones de contacto',['Sí, es un valor universal','Sí, excepto en corriente continua','No, siempre es 50 Ω'],'1.000 Ω es solo un valor de ejemplo para los cálculos.']
+];
+function tmGen(i){
+ const Rp=rnd([500,800,1000,1200,1500,2000]),Rt=rnd([10,20,25,40,50,100,200]),If=rnd([50,100,200,300,500]),Ip=If*Rt/(Rt+Rp),It=If-Ip,ratio=Rp/Rt,ctx=rnd(['Una etapa de potencia del escenario','Un amplificador del backline','Un rack de monitores','Un procesador de la FOH']);
+ if(i===0)return mcq(TM_Q);
+ if(i===1)return{st:ctx+' presenta un defecto de aislamiento. En el modelo circulan '+If+' mA hacia dos caminos en paralelo: tierra de '+Rt+' Ω y persona de '+Rp+' Ω. Calcula ambas corrientes en mA.',a:[['I persona','mA',Ip],['I tierra','mA',It]],sol:'I persona = '+If+' × '+Rt+' / ('+Rt+' + '+Rp+') = '+fmt(Ip,3)+' mA\nI tierra = '+If+' − '+fmt(Ip,3)+' = '+fmt(It,3)+' mA',tip:'Usa el divisor de corriente y conserva las unidades en mA.'};
+ if(i===2){const n=rnd([10,20,25,40,50]);return{st:'En un ejercicio de reparto de corriente se quiere que por la rama de tierra circule '+n+' veces la corriente de la persona ('+Rp+' Ω). ¿Qué resistencia de tierra proporciona esa relación? No es un criterio de seguridad.',a:[['R tierra','Ω',Rp/n]],sol:'I tierra / I persona = R persona / R tierra\nR tierra = '+Rp+' / '+n+' = '+fmt(Rp/n,3)+' Ω',tip:'Despeja R tierra de la relación entre corrientes.'}}
+ const Rt2=Rt*2,Ip2=If*Rt2/(Rt2+Rp);
+ return{st:ctx+' tiene un defecto. Con una corriente total impuesta de '+If+' mA y una persona de '+Rp+' Ω, compara una tierra de '+Rt+' Ω con otra de '+Rt2+' Ω. Calcula la corriente por la persona en cada caso.',a:[['I persona con '+Rt+' Ω','mA',Ip],['I persona con '+Rt2+' Ω','mA',Ip2]],sol:'I persona A = '+If+' × '+Rt+' / ('+Rt+' + '+Rp+') = '+fmt(Ip,3)+' mA\nI persona B = '+If+' × '+Rt2+' / ('+Rt2+' + '+Rp+') = '+fmt(Ip2,3)+' mA\nAl aumentar la resistencia de tierra, aumenta la fracción de corriente por la persona.',tip:'Aplica el mismo divisor de corriente a cada resistencia de tierra.'}
+}
 
 /* =================================================================
    MAGNETOTÉRMICO Y DIFERENCIAL
