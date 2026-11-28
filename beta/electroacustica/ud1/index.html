@@ -278,6 +278,7 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 .tasks li.cur{border-color:var(--electro);box-shadow:0 0 0 1px var(--electro) inset}
 .tasks li .now{display:inline-block;margin-left:8px;padding:1px 7px;border-radius:6px;background:var(--electro);color:#06262b;font:800 10px var(--mono);vertical-align:2px}
 .seg{flex-wrap:wrap}
+.rp-checkline{list-style:none;margin:8px 0 0;padding:10px 12px;background:var(--inset);border:1px solid var(--line);border-radius:10px;display:grid;gap:4px;font-size:13px;line-height:1.45}.rp-checkline li span{display:inline-block;width:18px;font-weight:800}.rp-checkline li.ok span{color:var(--ok)}.rp-checkline li.bad span{color:var(--bad)}.rp-checkline li.warn span{color:var(--warn)}.rp-checkline b{margin-right:3px}
 </style>
 </head>
 <body>
@@ -582,21 +583,21 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 #lab-reparto .rp-phaseguide .rp-limitbad{color:var(--bad)}
 #lab-reparto .rp-scheme .scheme{min-width:540px}
 </style>
-<details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Fundamentos y fórmulas · Cómo se hace un reparto de cargas</summary>
+<details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Cómo se hace un reparto de cargas</summary>
 <div class="in">
 <div class="box2"><h4>Los pasos</h4><ol>
 <li>Calcula la corriente de cada equipo con su potencia.</li>
 <li>Suma todas las corrientes: es la corriente total del evento.</li>
 <li>Divide entre 3: es lo que debería llevar cada fase si el reparto está equilibrado.</li>
+<li>Divide el objetivo de cada fase entre sus Schukos: es lo ideal por Schuko (no tiene por qué salir exacto).</li>
 <li>Coloca primero los equipos más grandes, uno en cada fase.</li>
 <li>Rellena con los pequeños hasta que cada fase llegue al objetivo.</li>
 <li>Comprueba que ningún Schuko pasa de 16 A.</li></ol></div>
 <div class="box2"><h4>La corriente de cada equipo</h4>
-<p style="margin:0 0 6px">Cada equipo va enchufado a una fase y al neutro, a 230 V. En estos ejercicios simplificados, con factor de potencia unitario, usamos la relación:</p>
+<p style="margin:0 0 6px">Cada equipo va enchufado a una fase y al neutro, a 230 V. Para el reparto usamos:</p>
 <p class="f" style="margin:0 0 8px">I = P / V = P / 230</p>
 <p style="margin:0">Ejemplo: un subwoofer de 1.840 W → I = 1.840 / 230 = 8 A.</p></div>
-<div class="box2"><h4>¿Por qué equilibrar las fases?</h4>
-<p style="margin:0">El cable y la protección de la acometida se eligen para la fase más cargada. Si una fase lleva mucho más que las otras, habría que sobredimensionar toda la instalación, y además esa fase puede hacer saltar la protección aunque el total sea correcto.</p></div>
+
 </div></details>
 <div class="labhead"><span class="kicker">PRÁCTICA</span><h3 style="margin:4px 0">EJERCICIOS</h3><p>Organiza el montaje en tres pasos. Puedes avanzar o retroceder libremente y verificar el conjunto al terminar.</p></div>
 <div class="panel"><div class="levels" id="rlevels" role="list"></div></div>
@@ -612,11 +613,11 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 <div class="row" style="margin-top:8px"><button class="btn primary" id="rCheck1">Comprobar corrientes</button><button class="btn alt" id="rShow1">Ver cálculo</button></div><div id="rMsg1" aria-live="polite"></div><div class="rp-stagefooter"><span class="rp-count" id="rpVerified"></span><button class="btn primary" id="rpToTotal">Continuar al paso 2 →</button></div></div></div></div>
 <div id="rpTotal" class="rp-stage" hidden><div class="panel"><h3 style="font-size:16px">2 · Previsión de cargas</h3><div id="rpCalculated" class="rp-guide-note"></div><p class="rp-help">Suma las corrientes calculadas y divide el total entre las tres fases.</p>
 <div class="mini"><label for="rTot">Corriente total (A)<input id="rTot" inputmode="decimal"></label><label for="rPer">Objetivo por fase (A)<input id="rPer" inputmode="decimal"></label><button class="btn primary" id="rCheck2">Comprobar</button></div>
-<div id="rMsg2" aria-live="polite"></div><div id="rpPlan" hidden><h4 style="margin:12px 0 0">Referencia orientativa por Schuko</h4><div class="rp-plan" id="rpPlanValues"></div><p class="rp-guide-note">Es el objetivo de fase dividido entre sus bases. No es obligatorio que todas las bases lleven lo mismo; ninguna puede superar 16 A.</p></div><div class="box2" style="margin-top:14px"><h4>Recuerda</h4><p class="rp-help" style="margin:0">Un Schuko admite como máximo 16 A. Si se permiten regletas, la suma de las corrientes de los equipos de cada base no puede superar ese valor.</p></div>
+<div id="rMsg2" aria-live="polite"></div><div id="rpPlan" hidden><h4 style="margin:12px 0 0">Ideal por Schuko</h4><div class="rp-plan" id="rpPlanValues"></div><p class="rp-guide-note">Es el objetivo de la fase dividido entre sus Schukos: lo ideal que buscamos. No tiene por qué salir exacto, pero ningún Schuko puede pasar de 16 A.</p></div><div class="box2" style="margin-top:14px"><h4>Recuerda</h4><p class="rp-help" style="margin:0">Un Schuko admite como máximo 16 A. Si se permiten regletas, la suma de las corrientes de los equipos de cada base no puede superar ese valor.</p></div>
 <div class="rp-stagefooter"><button class="btn ghost" id="rpBackToCalc">← Paso 1</button><button class="btn primary" id="rpToBoard">Continuar al reparto →</button></div></div></div>
 <div id="rpBoard" class="rp-stage" hidden><div class="panel">
 <div class="row" style="justify-content:space-between"><h3 style="margin:0;font-size:16px">3 · Reparte los equipos</h3><button class="btn ghost" id="rpToCalc">← Volver a la previsión</button></div>
-<div class="rp-summary" id="rpSummary" aria-live="polite"></div><p class="rp-guide-note">Las intensidades del tablero se calculan automáticamente a partir de las cargas conectadas. Las previsiones del alumno se trasladan desde el paso 2; la media por Schuko es orientativa.</p><p class="rp-help">Arrastra la miniatura de un equipo directamente sobre un Schuko del esquema o sobre su columna. También puedes pulsar el equipo y después la base. Para devolverlo, pulsa dos veces sobre el equipo conectado.</p>
+<div class="rp-summary" id="rpSummary" aria-live="polite"></div><p class="rp-help">Arrastra cada equipo a un Schuko, o tócalo y después toca el Schuko. Doble toque para devolverlo.</p>
 <div class="rp-board"><div class="rp-bank"><div class="row" style="justify-content:space-between"><h4 style="margin:0;font-size:14px">Equipos disponibles</h4><span class="rp-count" id="rpCount" aria-live="polite"></span></div><div class="tray" id="rTray" aria-label="Equipos sin conectar"></div></div><div class="rp-scheme" id="rpSchemeDetails"><svg class="scheme" id="rScheme" viewBox="0 0 960 350" role="group" aria-label="Cuadro interactivo: selecciona un Schuko para conectar un equipo"></svg></div><div class="phases" id="rPhases"></div></div>
 <div class="rp-stagefooter"><div class="row"><button class="btn primary" id="rCheck3">Verificar ejercicio completo</button><button class="btn alt" id="rSol">Ver una solución</button></div><button class="btn ghost" id="rEmpty">Vaciar</button></div>
 <div id="rMsg3" aria-live="polite"></div>
@@ -1466,12 +1467,12 @@ function rpBoard(){$('rMsg3').innerHTML='';const L=RL[rp.lvl];const placed=new S
  $('rTray').innerHTML=rp.loads.filter(l=>!placed.has(l.id)).map(l=>chipHTML(l)).join('')||'<span style="color:var(--dim);font-size:14px">Todos los equipos están conectados.</span>';
  const totI=rp.loads.reduce((a,l)=>a+l.I,0),target=totI/3,maxBar=Math.max(target*1.6,...[0,1,2].map(p=>phaseI(p))),ac=L.acom||(rp.T<=32?32:63);
  const f=rpForecast(),entered=v=>isFinite(v)&&v>=0?fmt(v)+' A':'—';
- $('rpSummary').innerHTML=[['Suma prevista',entered(f.a),f.totalOK?'Correcta':'Paso 2 · '+(isFinite(f.a)?'revisar':'sin introducir')],['Objetivo previsto por fase',entered(f.b),f.phaseOK?'Correcto':'Paso 2 · '+(isFinite(f.b)?'revisar':'sin introducir')],['Media prevista por Schuko',entered(f.a/rp.slots.length),'Referencia · máx. 16 A'],['Acometida',ac+' A','Límite por fase']].map(([label,value,note])=>'<div class="rp-stat"><span>'+label+'</span><b>'+value+'</b><small>'+note+'</small></div>').join('');
+ $('rpSummary').innerHTML=[['Suma prevista',entered(f.a),f.totalOK?'Correcta':'Paso 2 · '+(isFinite(f.a)?'revisar':'sin introducir')],['Objetivo previsto por fase',entered(f.b),f.phaseOK?'Correcto':'Paso 2 · '+(isFinite(f.b)?'revisar':'sin introducir')],['Ideal por Schuko',new Set(RL[rp.lvl].ph).size===1?entered(f.b/RL[rp.lvl].ph[0]):(isFinite(f.b)?'<span style="font-size:15px">'+RL[rp.lvl].ph.map((n,i)=>'L'+(i+1)+' '+fmt(f.b/n)).join(' · ')+' A</span>':entered(f.b)),'Lo que buscamos · máx. 16 A'],['Acometida',ac+' A','Límite por fase']].map(([label,value,note])=>'<div class="rp-stat"><span>'+label+'</span><b>'+value+'</b><small>'+note+'</small></div>').join('');
  $('rPhases').innerHTML=PHN.map(([n,c,cn],pi)=>{const I=phaseI(pi),W=phaseW(pi);
   return `<div class="phase-col"><h4><span class="dot" style="background:${c}"></span>${n} <span style="font-size:12px;color:var(--dim);font-weight:600">(${cn})</span></h4>
   <div class="ptot"><span>${W.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')} W</span><span style="color:var(--accent)">${fmt(I)+' A'}</span></div>
   <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,W/(target*230*L.cos*1.6)*100)}%"></i><span class="tg" style="left:${100/1.6}%"></span></div>
-  <div class="rp-phaseguide"><b class="${I>ac+1e-9?'rp-limitbad':''}">${I>ac+1e-9?'Sobrecarga: '+fmt(I-ac)+' A por encima del límite':'Dentro del límite de '+ac+' A'}</b><br>Objetivo previsto: <b>${entered(f.b)}</b> · Media por base: <b>${entered(f.b/L.ph[pi])}</b><br>${f.phaseOK?(Math.abs(I-target)<1e-6?'Objetivo alcanzado':I>target?'Sobran '+fmt(I-target)+' A':'Faltan '+fmt(target-I)+' A'):'Comprueba la previsión en el paso 2.'}</div>
+  <div class="rp-phaseguide"><b class="${I>ac+1e-9?'rp-limitbad':''}">${I>ac+1e-9?'Sobrecarga: '+fmt(I-ac)+' A por encima del límite':'Dentro del límite de '+ac+' A'}</b><br>Objetivo previsto: <b>${entered(f.b)}</b> · Ideal por Schuko: <b>${entered(f.b/L.ph[pi])}</b><br>${f.phaseOK?(Math.abs(I-target)<1e-6?'Objetivo alcanzado':I>target?'Sobran '+fmt(I-target)+' A':'Faltan '+fmt(target-I)+' A'):'Comprueba la previsión en el paso 2.'}</div>
   ${rp.slots.filter(s=>s.ph===pi).map(s=>{const si=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0);const over=si>16+1e-9;
    return `<div class="slot${over?' over':''}" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${rp.slots.indexOf(s)+1} de ${n}"><div class="sh"><span>SCHUKO S${rp.slots.indexOf(s)+1}</span><b>${fmt(si)+' / 16 A'}</b></div><span class="rp-socketstatus">${over?'Sobrecarga · +'+fmt(si-16)+' A':s.items.length?'Dentro del límite':'Libre'}</span>${s.items.map(id=>chipHTML(rp.loads.find(l=>l.id===id),true)).join('')}</div>`}).join('')}</div>`}).join('');
  // eventos
@@ -1536,7 +1537,7 @@ $('rCheck3').onclick=()=>{document.querySelectorAll('#rBody input').forEach(inp=
  [v.balanced?'ok':'warn','Equilibrio entre fases',v.phases.map((I,i)=>'L'+(i+1)+': '+fmt(I)+' A').join(' · ')+'. Objetivo: '+fmt(f.target)+' A por fase. '+(v.balanced?'Equilibrio conseguido.':'Diferencia entre fases extremas: '+fmt(Math.max(...v.phases)-Math.min(...v.phases))+' A. En este ejercicio existe un reparto equilibrado; prueba a redistribuir.')]
  ];
  const ok=v.safe&&v.balanced&&n===all&&f.totalOK&&f.phaseOK;const title=ok?'¡Ejercicio correcto! Cualquier distribución que cumpla estos criterios es válida.':v.safe&&!v.balanced?'Reparto dentro de límites, pero mejorable: falta equilibrar las fases.':v.safe?'Reparto equilibrado dentro de límites; revisa los cálculos pendientes.':'Ejercicio todavía no válido: revisa las comprobaciones.';
- $('rMsg3').innerHTML='<p class="msg '+(ok?'ok':v.safe?'info':'bad')+'">'+title+'</p><div class="rp-checklist">'+items.map(([state,name,detail])=>'<div class="rp-checkrow '+state+'"><span class="rp-checkicon" aria-hidden="true">'+(state==='ok'?'✓':state==='warn'?'!':'×')+'</span><div><b>'+name+'</b><p>'+detail+'</p></div></div>').join('')+'</div>';
+ $('rMsg3').innerHTML='<p class="msg '+(ok?'ok':v.safe?'info':'bad')+'">'+title+'</p><ul class="rp-checkline">'+items.map(([state,name,detail])=>'<li class="'+state+'"><span aria-hidden="true">'+(state==='ok'?'✓':state==='warn'?'!':'✗')+'</span><b>'+name+':</b> '+detail+'</li>').join('')+'</ul>';
  if(ok){rp.done.add(rp.lvl);rpLevels();$('rMsg3').insertAdjacentHTML('beforeend','<div class="row" style="margin-top:8px"><button class="btn" id="rAgain">Otro ejercicio de este nivel</button>'+(rp.lvl<RL.length-1?'<button class="btn primary" id="rNext">Siguiente nivel →</button>':'')+'</div>');$('rAgain').onclick=()=>{rpGen(rp.lvl);rpDraw(true)};if($('rNext'))$('rNext').onclick=()=>{rpGen(rp.lvl+1);rpDraw(true)}}};
 $('rSol').onclick=()=>{rp.slots.forEach(s=>s.items=[]);rp.sol.forEach(x=>rp.slots.find(s=>s.ph===x.ph&&s.sk===x.sk).items.push(x.lid));rp.sel=null;rpBoard();
  const tot=rp.loads.reduce((a,l)=>a+l.I,0);const big=[...rp.loads].sort((a,b)=>b.I-a.I).slice(0,3);
