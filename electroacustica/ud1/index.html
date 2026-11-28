@@ -278,6 +278,7 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 .tasks li.cur{border-color:var(--electro);box-shadow:0 0 0 1px var(--electro) inset}
 .tasks li .now{display:inline-block;margin-left:8px;padding:1px 7px;border-radius:6px;background:var(--electro);color:#06262b;font:800 10px var(--mono);vertical-align:2px}
 .seg{flex-wrap:wrap}
+.rp-checkline{list-style:none;margin:8px 0 0;padding:10px 12px;background:var(--inset);border:1px solid var(--line);border-radius:10px;display:grid;gap:4px;font-size:13px;line-height:1.45}.rp-checkline li span{display:inline-block;width:18px;font-weight:800}.rp-checkline li.ok span{color:var(--ok)}.rp-checkline li.bad span{color:var(--bad)}.rp-checkline li.warn span{color:var(--warn)}.rp-checkline b{margin-right:3px}
 </style>
 </head>
 <body>
@@ -498,48 +499,147 @@ table.eq input.bad,.mini input.bad{border-color:var(--bad);background:#ff7a7a14}
 
 <!-- ================= REPARTO ================= -->
 <section class="lab" id="lab-reparto" aria-labelledby="rt">
-<div class="labhead"><span class="kicker">PARTE 03 · CÁLCULO</span><h2 id="rt">Reparto de cargas</h2><p>Un evento con acometida trifásica 230/400 V y bases Schuko en cada fase. Calcula la corriente de cada equipo, el objetivo por fase y reparte los equipos para que las tres fases queden equilibradas.</p></div>
-<div class="panel"><div class="levels" id="rlevels" role="list"></div></div>
+<div class="labhead"><span class="kicker">PARTE 03 · CÁLCULO</span><h2 id="rt">Reparto de cargas</h2><p>Un evento con acometida trifásica 230/400 V y bases Schuko en cada fase. Calcula la corriente de los equipos y distribúyelos para equilibrar las tres fases.</p></div>
+<style>
+#lab-reparto .rp-worknav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+#lab-reparto .rp-worknav button{background:var(--inset);border:1px solid var(--line2);border-radius:11px;padding:12px 14px;text-align:left;color:var(--text);font:700 14px var(--ui);cursor:pointer}
+#lab-reparto .rp-worknav button small{display:block;color:var(--muted);font:600 11px var(--mono);margin-bottom:4px}
+#lab-reparto .rp-worknav button[aria-pressed=true]{border-color:var(--accent);background:#173942;color:var(--accent)}
+#lab-reparto .rp-stage[hidden]{display:none!important}
+#lab-reparto .rp-calc{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:14px;align-items:start}
+#lab-reparto .rp-calc .panel,#lab-reparto .rp-board .phase-col{min-width:0}
+#lab-reparto .rp-calc .mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#lab-reparto .rp-calc .mini input{width:100%;min-width:0;box-sizing:border-box}
+#lab-reparto .rp-calc .mini button{grid-column:1/-1;justify-self:start}
+#lab-reparto .rp-table{max-height:460px;overflow:auto}
+#lab-reparto .rp-table thead{position:sticky;top:0;background:var(--panel);z-index:1}
+#lab-reparto .rp-table td:first-child{width:55%;line-height:1.3}
+#lab-reparto .rp-table td:last-child{width:23%}
+#lab-reparto .rp-board{display:grid;grid-template-columns:minmax(170px,.68fr) minmax(0,2.4fr);gap:12px;align-items:start;margin-top:12px}
+#lab-reparto .rp-bank{min-width:0;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--inset)}
+#lab-reparto .rp-bank .tray{padding:7px;gap:6px;border:0;background:transparent;max-height:570px;overflow:auto;margin-top:8px}
+#lab-reparto .rp-bank .chip{width:100%;padding:8px 9px;border-radius:8px}
+#lab-reparto .rp-board .phases{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#lab-reparto .rp-board .phase-col{padding:9px;gap:8px;border-radius:12px}
+#lab-reparto .rp-board .slot{padding:6px;min-height:62px;border-radius:9px}
+#lab-reparto .rp-board .slot .sh{flex-wrap:wrap;gap:3px;letter-spacing:0;font-size:10px}
+#lab-reparto .rp-board .slot .chip{padding:7px 8px;border-radius:8px;font-size:12px;overflow-wrap:anywhere}
+#lab-reparto .rp-board .ptot{flex-wrap:wrap;gap:3px;font-size:12px}
+#lab-reparto .rp-board h4{font-size:15px;flex-wrap:wrap}
+#lab-reparto .rp-scheme{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:var(--inset);padding:10px 12px}
+#lab-reparto .rp-scheme summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--muted)}
+#lab-reparto .rp-scheme .scheme{margin-top:10px}
+#lab-reparto .rp-stagefooter{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+#lab-reparto .rp-help{font-size:13px;line-height:1.5;color:var(--muted);margin:8px 0}
+#lab-reparto .rp-count{font:700 12px var(--mono);color:var(--accent)}
+@media(max-width:1050px){#lab-reparto .rp-board{grid-template-columns:1fr}#lab-reparto .rp-bank .tray{max-height:none;display:flex;flex-wrap:wrap}#lab-reparto .rp-bank .chip{width:auto;max-width:100%}}
+@media(max-width:730px){#lab-reparto .rp-calc{grid-template-columns:1fr}#lab-reparto .rp-board .phases{grid-template-columns:1fr}#lab-reparto .rp-table{max-height:390px}#lab-reparto .rp-worknav button{padding:10px}}
+
+#lab-reparto .rp-board{display:flex;flex-direction:column;gap:12px}
+#lab-reparto .rp-board>div{width:100%;box-sizing:border-box}
+#lab-reparto .rp-bank .tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(137px,1fr));gap:7px;max-height:205px;overflow:auto;padding:2px}
+#lab-reparto .rp-bank .chip,#lab-reparto .rp-board .slot .chip{display:grid;grid-template-columns:36px minmax(0,1fr);align-items:center;gap:7px;width:100%;max-width:none;min-height:48px}
+#lab-reparto .rp-chiptext{min-width:0;display:block;overflow-wrap:anywhere;line-height:1.2}
+#lab-reparto .rp-chiptext small{display:block;margin-top:3px;font-size:11px}
+#lab-reparto .rp-miniature{width:36px;height:36px;display:block;flex:none;pointer-events:none}
+#lab-reparto .rp-scheme{padding:0;margin:0;overflow:auto;background:#08141c;border-radius:14px}
+#lab-reparto .rp-scheme .scheme{margin:0;border:0;border-radius:0;min-width:620px}
+#lab-reparto .scheme .sk.hot .rp-hit{fill:#36e2e81b;stroke:#36e2e8;stroke-dasharray:4 3}
+#lab-reparto .scheme .sk:focus-visible .rp-hit{stroke:#36e2e8}
+#lab-reparto .rp-board .phase-col{padding:12px}
+@media(max-width:730px){#lab-reparto .rp-bank .tray{grid-template-columns:repeat(auto-fill,minmax(125px,1fr));max-height:225px}}
+
+#lab-reparto .rp-worknav{grid-template-columns:repeat(3,minmax(0,1fr))}
+#lab-reparto .rp-worknav button:disabled{opacity:.55;cursor:not-allowed}
+#lab-reparto .rp-worknav button.rp-done small{color:var(--ok)}
+#lab-reparto .rp-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+#lab-reparto .rp-stat{background:var(--inset);border:1px solid var(--line);border-radius:11px;padding:10px 12px;min-width:0}
+#lab-reparto .rp-stat span{display:block;color:var(--muted);font-size:11px;line-height:1.35}
+#lab-reparto .rp-stat b{display:block;font:800 clamp(16px,2.2vw,24px) var(--mono);color:var(--accent);margin-top:5px}
+#lab-reparto .rp-stat small{display:block;font-size:10px;color:var(--muted);margin-top:4px}
+#lab-reparto .rp-plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+#lab-reparto .rp-plan>div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--inset);font-size:12px}
+#lab-reparto .rp-plan b{color:var(--accent);font-family:var(--mono)}
+#lab-reparto .rp-board{display:grid;grid-template-columns:minmax(155px,.75fr) minmax(0,2.6fr);align-items:start;gap:12px}
+#lab-reparto .rp-bank .tray{grid-template-columns:1fr;max-height:300px}
+#lab-reparto .rp-board .rp-scheme{max-width:820px;justify-self:center}
+#lab-reparto .rp-scheme .scheme{min-width:540px}
+#lab-reparto .rp-board #rPhases{grid-column:1/-1}
+#lab-reparto .rp-phaseguide{font-size:11px;line-height:1.4;color:var(--muted)}
+#lab-reparto .rp-phaseguide b{color:var(--accent)}
+#lab-reparto .rp-calc{display:block}
+#lab-reparto .rp-table{max-height:460px}
+#lab-reparto .rp-guide-note{font-size:12px;color:var(--muted);margin:8px 0 0}
+@media(max-width:850px){#lab-reparto .rp-board{grid-template-columns:1fr}#lab-reparto .rp-bank .tray{grid-template-columns:repeat(auto-fill,minmax(135px,1fr));max-height:180px}#lab-reparto .rp-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){#lab-reparto .rp-worknav button{padding:9px 7px;font-size:11px}#lab-reparto .rp-plan{grid-template-columns:1fr}}
+
+#lab-reparto .rp-checklist{display:grid;gap:7px;margin-top:12px}
+#lab-reparto .rp-checkrow{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--inset)}
+#lab-reparto .rp-checkrow .rp-checkicon{font:800 16px var(--mono);color:var(--ok)}
+#lab-reparto .rp-checkrow.bad .rp-checkicon{color:var(--bad)}#lab-reparto .rp-checkrow.warn .rp-checkicon{color:var(--warn)}
+#lab-reparto .rp-checkrow b{font-size:13px}#lab-reparto .rp-checkrow p{font-size:12px;color:var(--muted);margin:4px 0 0;line-height:1.45}
+#lab-reparto .rp-board .slot .rp-socketstatus{font-size:11px;color:var(--muted)}
+#lab-reparto .rp-board .slot.over .rp-socketstatus{color:var(--bad)}
+#lab-reparto .rp-phaseguide .rp-limitbad{color:var(--bad)}
+#lab-reparto .rp-scheme .scheme{min-width:540px}
+#lab-reparto .rp-board #rPhases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#lab-reparto .rp-board #rPhases .phase-col{padding:8px;gap:6px;border-radius:10px}
+#lab-reparto .rp-ph-h{display:flex;align-items:center;gap:6px;font-size:14px;flex-wrap:wrap}#lab-reparto .rp-ph-h .dot{width:12px;height:12px;border-radius:50%;border:1px solid #ffffff55}
+#lab-reparto .rp-ph-cn{font-size:11px;color:var(--dim)}#lab-reparto .rp-ph-i{margin-left:auto;font:700 13px var(--mono);color:var(--accent)}#lab-reparto .rp-ph-i.bad,#lab-reparto .rp-ph-s.bad{color:var(--bad)}
+#lab-reparto .rp-ph-s{font-size:11px;color:var(--muted)}
+#lab-reparto .rp-sks{display:flex;gap:5px;align-items:stretch}
+#lab-reparto .rp-board .rp-sks .slot{flex:1 1 0;min-width:0;min-height:54px;padding:5px;gap:4px}
+#lab-reparto .rp-board .rp-sks .slot .chip{display:block;min-height:0;width:100%;padding:5px 6px;font-size:11px;line-height:1.25}
+#lab-reparto .rp-board .rp-sks .slot .chip .rp-miniature{display:none}#lab-reparto .rp-board .rp-sks .slot .chip small{font-size:10px;margin-top:2px}
+#lab-reparto .rp-free{font-size:10px;color:var(--dim)}
+@media(max-width:730px){#lab-reparto .rp-board #rPhases{grid-template-columns:1fr}}
+#lab-reparto .rp-board{display:flex!important;flex-direction:column;gap:10px}
+#lab-reparto .rp-board>.rp-bank{padding:10px 12px}
+#lab-reparto .rp-board .rp-bank .tray{display:flex!important;flex-wrap:wrap;gap:6px;max-height:none;margin-top:6px;padding:0}
+#lab-reparto .rp-board .rp-bank .tray .chip{width:auto;max-width:250px;min-height:44px}
+#lab-reparto .rp-board .rp-scheme{max-width:none;width:100%;justify-self:stretch}
+#lab-reparto .rp-board .rp-scheme .scheme{width:100%;min-width:0}
+</style>
 <details class="how"><summary><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Cómo se hace un reparto de cargas</summary>
 <div class="in">
 <div class="box2"><h4>Los pasos</h4><ol>
 <li>Calcula la corriente de cada equipo con su potencia.</li>
 <li>Suma todas las corrientes: es la corriente total del evento.</li>
 <li>Divide entre 3: es lo que debería llevar cada fase si el reparto está equilibrado.</li>
+<li>Divide el objetivo de cada fase entre sus Schukos: es lo ideal por Schuko (no tiene por qué salir exacto).</li>
 <li>Coloca primero los equipos más grandes, uno en cada fase.</li>
 <li>Rellena con los pequeños hasta que cada fase llegue al objetivo.</li>
 <li>Comprueba que ningún Schuko pasa de 16 A.</li></ol></div>
 <div class="box2"><h4>La corriente de cada equipo</h4>
-<p style="margin:0 0 6px">Cada equipo va enchufado a una fase y al neutro, a 230 V. Para el reparto usamos la relación:</p>
+<p style="margin:0 0 6px">Cada equipo va enchufado a una fase y al neutro, a 230 V. Para el reparto usamos:</p>
 <p class="f" style="margin:0 0 8px">I = P / V = P / 230</p>
 <p style="margin:0">Ejemplo: un subwoofer de 1.840 W → I = 1.840 / 230 = 8 A.</p></div>
-<div class="box2"><h4>¿Por qué equilibrar las fases?</h4>
-<p style="margin:0">El cable y la protección de la acometida se eligen para la fase más cargada. Si una fase lleva mucho más que las otras, habría que sobredimensionar toda la instalación, y además esa fase puede hacer saltar la protección aunque el total sea correcto.</p></div>
+
 </div></details>
-<div class="grid2">
+<div class="labhead"><span class="kicker">PRÁCTICA</span><h3 style="margin:4px 0">EJERCICIOS</h3><p>Organiza el montaje en tres pasos. Puedes avanzar o retroceder libremente y verificar el conjunto al terminar.</p></div>
+<div class="panel"><div class="levels" id="rlevels" role="list"></div></div>
 <div class="panel">
-<div class="row" style="justify-content:space-between;margin-bottom:6px"><h3 id="rTitle" style="margin:0"></h3><button class="btn ghost" id="rNew">Nuevo ejercicio</button></div>
-<p class="statement" id="rStatement" style="margin-bottom:6px"></p>
-<h3 style="font-size:16px;margin-top:10px">1 · Corriente de cada equipo</h3>
-<table class="eq"><thead><tr><th>Equipo</th><th>P (W)</th><th>I (A)</th></tr></thead><tbody id="rBody"></tbody></table>
-<div class="row" style="margin-top:8px"><button class="btn primary" id="rCheck1">Comprobar corrientes</button><button class="btn alt" id="rShow1">Ver cálculo</button></div>
-<div id="rMsg1"></div>
+<div class="row" style="justify-content:space-between"><h3 id="rTitle" style="margin:0"></h3><button class="btn ghost" id="rNew">Otro ejercicio</button></div>
+<p class="statement" id="rStatement" style="margin:10px 0 0"></p>
+<div class="rp-worknav" role="group" aria-label="Pasos del ejercicio"><button type="button" data-rp-stage="calc" aria-pressed="true" aria-controls="rpCalc"><small>PASO 1</small>Corrientes de equipos</button><button type="button" data-rp-stage="total" aria-pressed="false" aria-controls="rpTotal"><small>PASO 2</small>Previsión de cargas</button><button type="button" data-rp-stage="board" aria-pressed="false" aria-controls="rpBoard"><small>PASO 3</small>Reparte las cargas</button></div><p class="rp-guide-note" id="rpProgress" aria-live="polite"></p>
 </div>
-<div class="panel">
-<h3 style="font-size:16px">2 · Total y objetivo por fase</h3>
+<div id="rpCalc" class="rp-stage">
+<div class="rp-calc">
+<div class="panel"><h3 style="font-size:16px">1 · Corriente de cada equipo</h3>
+<div class="rp-table"><table class="eq"><thead><tr><th>Equipo</th><th>P (W)</th><th>I (A)</th></tr></thead><tbody id="rBody"></tbody></table></div>
+<div class="row" style="margin-top:8px"><button class="btn primary" id="rCheck1">Comprobar corrientes</button><button class="btn alt" id="rShow1">Ver cálculo</button></div><div id="rMsg1" aria-live="polite"></div><div class="rp-stagefooter"><span class="rp-count" id="rpVerified"></span><button class="btn primary" id="rpToTotal">Continuar al paso 2 →</button></div></div></div></div>
+<div id="rpTotal" class="rp-stage" hidden><div class="panel"><h3 style="font-size:16px">2 · Previsión de cargas</h3><div id="rpCalculated" class="rp-guide-note"></div><p class="rp-help">Suma las corrientes calculadas y divide el total entre las tres fases.</p>
 <div class="mini"><label for="rTot">Corriente total (A)<input id="rTot" inputmode="decimal"></label><label for="rPer">Objetivo por fase (A)<input id="rPer" inputmode="decimal"></label><button class="btn primary" id="rCheck2">Comprobar</button></div>
-<div id="rMsg2"></div>
-<div class="box2" style="margin-top:14px"><h4>Recuerda</h4><p style="margin:0;font-size:14px;color:var(--muted)">Un Schuko admite como máximo 16 A. Si un ejercicio permite regletas, en un mismo Schuko puede haber varios equipos, pero la suma de sus corrientes no puede pasar de 16 A.</p></div>
-</div>
-</div>
-<div class="panel">
-<div class="row" style="justify-content:space-between"><h3 style="margin:0;font-size:16px">3 · Reparte los equipos</h3><span style="font-size:13px;color:var(--muted)">Toca un equipo y después un Schuko, en el esquema o en las columnas (o arrástralo). Tócalo otra vez para devolverlo.</span></div>
-<svg class="scheme" id="rScheme" viewBox="0 0 960 350" role="img" aria-label="Esquema del cuadro de distribución con las fases y sus bases Schuko"></svg>
-<div class="tray" id="rTray" aria-label="Equipos sin conectar" style="margin:12px 0"></div>
-<div class="phases" id="rPhases"></div>
-<div class="row" style="margin-top:14px"><button class="btn primary" id="rCheck3">Comprobar reparto</button><button class="btn alt" id="rSol">Ver una solución</button><button class="btn ghost" id="rEmpty">Vaciar</button></div>
-<div id="rMsg3"></div>
-</div>
+<div id="rMsg2" aria-live="polite"></div><div id="rpPlan" hidden><h4 style="margin:12px 0 0">Ideal por Schuko</h4><div class="rp-plan" id="rpPlanValues"></div><p class="rp-guide-note">Es el objetivo de la fase dividido entre sus Schukos: lo ideal que buscamos. No tiene por qué salir exacto, pero ningún Schuko puede pasar de 16 A.</p></div><div class="box2" style="margin-top:14px"><h4>Recuerda</h4><p class="rp-help" style="margin:0">Un Schuko admite como máximo 16 A. Si se permiten regletas, la suma de las corrientes de los equipos de cada base no puede superar ese valor.</p></div>
+<div class="rp-stagefooter"><button class="btn ghost" id="rpBackToCalc">← Paso 1</button><button class="btn primary" id="rpToBoard">Continuar al reparto →</button></div></div></div>
+<div id="rpBoard" class="rp-stage" hidden><div class="panel">
+<div class="row" style="justify-content:space-between"><h3 style="margin:0;font-size:16px">3 · Reparte los equipos</h3><button class="btn ghost" id="rpToCalc">← Volver a la previsión</button></div>
+<div class="rp-summary" id="rpSummary" aria-live="polite"></div><p class="rp-help">Arrastra cada equipo a un Schuko, o tócalo y después toca el Schuko. Doble toque para devolverlo.</p>
+<div class="rp-board"><div class="rp-bank"><div class="row" style="justify-content:space-between"><h4 style="margin:0;font-size:14px">Equipos disponibles</h4><span class="rp-count" id="rpCount" aria-live="polite"></span></div><div class="tray" id="rTray" aria-label="Equipos sin conectar"></div></div><div class="rp-scheme" id="rpSchemeDetails"><svg class="scheme" id="rScheme" viewBox="0 0 960 350" role="group" aria-label="Cuadro interactivo: selecciona un Schuko para conectar un equipo"></svg></div><div class="phases" id="rPhases"></div></div>
+<div class="rp-stagefooter"><div class="row"><button class="btn primary" id="rCheck3">Verificar ejercicio completo</button><button class="btn alt" id="rSol">Ver una solución</button></div><button class="btn ghost" id="rEmpty">Vaciar</button></div>
+<div id="rMsg3" aria-live="polite"></div>
+
+</div></div>
 </section>
 
 
@@ -998,7 +1098,7 @@ document.querySelectorAll('.card[data-lab]').forEach(b=>b.onclick=()=>{location.
 /* ---------- acceso de los alumnos ----------
    En la web publicada solo se abren los laboratorios de SL_OPEN; el resto aparece «En preparación».
    En la vista previa (/beta/) y en local se ve todo. Para abrir un laboratorio, añade su clave aquí. */
-const SL_OPEN=['ohm','circuitos','polimetro','cuadro','colores','tierra','ipik'];
+const SL_OPEN=['ohm','circuitos','polimetro','cuadro','colores','tierra','ipik','reparto'];
 const SL_ALL=location.protocol==='file:'||/\/beta\//.test(location.pathname);
 const slOk=k=>SL_ALL||SL_OPEN.includes(k);
 function slGate(){if(SL_ALL)return;
@@ -1321,8 +1421,8 @@ const RL=[
  {name:'Dos por fase',hint:'Seis equipos, uno por Schuko.',ph:[2,2,2],cos:1,multi:false,T:[20,15,25]},
  {name:'Fases desiguales',hint:'Siete Schukos repartidos 2, 2 y 3.',ph:[2,2,3],cos:1,multi:false,T:[20,15,25]},
  {name:'Tres por fase',hint:'Nueve equipos, uno por Schuko.',ph:[3,3,3],cos:1,multi:false,T:[25,30,20]},
- {name:'Ejercicio 1 de clase',hint:'14 equipos de un bolo, 2 Schukos por fase.',ph:[2,2,2],cos:1,multi:true,acom:32,fixed:[['Subwoofer activo',1840,2],['Caja activa',1380,2],['Sidefill activo',1150,2],['Monitor activo',920,4],['Mesa digital',460,1],['Rack de inalámbricos',460,1],['Ordenador',230,1],['DSP / red',230,1]]},
- {name:'Ejercicio 2 de clase',hint:'Versión completa: 16 equipos, 3 Schukos por fase.',ph:[3,3,3],cos:1,multi:true,acom:32,fixed:[['Subwoofer activo',2300,2],['Etapa de potencia',1840,2],['Caja principal activa',1380,2],['Sidefill activo',1150,2],['Monitor activo',920,4],['Mesa digital + stagebox',690,1],['Rack de inalámbricos',460,1],['Ordenador + interfaz',230,1],['DSP / red',230,1]]},
+ {name:'Montaje de 14 equipos',hint:'14 equipos de un bolo, 2 Schukos por fase.',ph:[2,2,2],cos:1,multi:true,acom:32,fixed:[['Subwoofer activo',1840,2],['Caja activa',1380,2],['Sidefill activo',1150,2],['Monitor activo',920,4],['Mesa digital',460,1],['Rack de inalámbricos',460,1],['Ordenador',230,1],['DSP / red',230,1]]},
+ {name:'Montaje de 16 equipos',hint:'Versión completa: 16 equipos, 3 Schukos por fase.',ph:[3,3,3],cos:1,multi:true,acom:32,fixed:[['Subwoofer activo',2300,2],['Etapa de potencia',1840,2],['Caja principal activa',1380,2],['Sidefill activo',1150,2],['Monitor activo',920,4],['Mesa digital + stagebox',690,1],['Rack de inalámbricos',460,1],['Ordenador + interfaz',230,1],['DSP / red',230,1]]},
  {name:'Regletas',hint:'Varios equipos por Schuko, máximo 16 A.',ph:[2,2,2],cos:1,multi:true,T:[24,30,28]},
  {name:'Regletas · tres por fase',hint:'Más equipos y más bases, máximo 16 A por Schuko.',ph:[3,3,3],cos:1,multi:true,T:[27,30,32]},
  {name:'Reto',hint:'Muchos equipos y Schukos repartidos 2, 3 y 3.',ph:[2,3,3],cos:1,multi:true,T:[30,32,28]}
@@ -1330,7 +1430,7 @@ const RL=[
 const ISET={1:[2,3,4,5,6,8,10,12,15],0.8:[2.5,5,7.5,10,12.5,15]};
 const NAMES=[[12,['Etapa de potencia PA','Amplificador de subgraves','Etapa de line array','Rack de amplificación','Subwoofer activo doble']],[7.5,['Subwoofer activo','Caja principal activa','Amplificador de monitores','Backline de bajo','Sidefill activo']],[4,['Caja activa','Monitor activo','Backline de guitarra','Teclados y sintes','Mesa de mezclas FOH','Batería electrónica']],[0,['Procesador de altavoces','Rack de inalámbricos','Mesa de monitores','Rack de efectos','Grabación multipista','Intercom','Ordenador + interfaz','DSP / red']]];
 const PHN=[['L1','#a0603a','marrón'],['L2','#1a1a1a','negro'],['L3','#8a8f96','gris']];
-let rp={lvl:0,done:new Set(),loads:[],slots:[],sol:[],sel:null,ok1:false,T:0};
+let rp={lvl:0,done:new Set(),loads:[],slots:[],sol:[],sel:null,ok1:false,ok2:false,verified:new Set(),T:0};
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function splitInto(T,k,set,maxEach){for(let t=0;t<600;t++){const parts=[];let sum=0;for(let i=0;i<k-1;i++){const v=rnd(set.filter(x=>x<=maxEach));parts.push(v);sum+=v}const last=T-sum;if(set.includes(last)&&last<=maxEach)return[...parts,last].sort(()=>Math.random()-.5)}return null}
 function splitSchuko(T,k,set){ // regletas: k Schukos, 1-3 equipos en cada uno, suma <=16 A por Schuko
@@ -1354,22 +1454,44 @@ function rpGen(i){const L=RL[i];const set=ISET[L.cos];let T,phases;
 function rpLevels(){$('rlevels').innerHTML=RL.map((l,i)=>`<button class="lvl${rp.done.has(i)?' done':''}" role="listitem" data-i="${i}" aria-current="${i===rp.lvl}"><b>NIVEL ${i+1}</b><span>${l.name}</span><i>${l.hint}</i></button>`).join('');
  $('rlevels').querySelectorAll('.lvl').forEach(b=>b.onclick=()=>{rpGen(+b.dataset.i);rpDraw(true)})}
 const cosTxt=c=>c===1?'1':'0,8';
+function rpStage(stage){rp.stage=stage;['calc','total','board'].forEach((s,i)=>$(['rpCalc','rpTotal','rpBoard'][i]).hidden=s!==stage);document.querySelectorAll('#lab-reparto [data-rp-stage]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.rpStage===stage)));rpGuide();if(stage==='board')rpBoard()}
+function rpForecast(){const tot=rp.loads.reduce((a,l)=>a+l.I,0),a=parse($('rTot').value),b=parse($('rPer').value);return {tot,target:tot/3,a,b,totalOK:near(a,tot),phaseOK:near(b,tot/3)}}
+function rpGuide(){const n=rp.verified.size,all=rp.loads.length;rp.ok1=n===all&&all>0;const f=rpForecast();rp.ok2=f.totalOK&&f.phaseOK;
+ $('rpVerified').textContent=n+' / '+all+' corrientes verificadas';$('rpToTotal').disabled=false;$('rpToBoard').disabled=false;
+ document.querySelectorAll('#lab-reparto [data-rp-stage]').forEach(b=>{const s=b.dataset.rpStage;b.disabled=false;b.classList.toggle('rp-done',s==='calc'?rp.ok1:s==='total'?rp.ok2:false)});
+ $('rpProgress').textContent='Navegación libre · '+n+'/'+all+' intensidades correctas · Previsión '+(rp.ok2?'correcta':'pendiente de comprobar o corregir')+'.';
+ $('rpCalculated').textContent='Intensidades introducidas: '+rp.loads.map(l=>{const inp=document.querySelector('#rBody input[data-l="'+l.id+'"]');const v=inp?parse(inp.value):NaN;return isFinite(v)?fmt(v)+' A':'—'}).join(' + ')+'.';
+ $('rpPlan').hidden=!isFinite(f.b)||f.b<0;$('rpPlanValues').innerHTML=!$('rpPlan').hidden?RL[rp.lvl].ph.map((n,p)=>'<div>L'+(p+1)+' · '+n+' base'+(n===1?'':'s')+'<br><b>'+fmt(f.b/n)+' A / Schuko</b></div>').join(''):'';
+}
+document.querySelectorAll('#lab-reparto [data-rp-stage]').forEach(b=>b.onclick=()=>rpStage(b.dataset.rpStage));$('rpToTotal').onclick=()=>rpStage('total');$('rpToBoard').onclick=()=>rpStage('board');$('rpToCalc').onclick=()=>rpStage('total');$('rpBackToCalc').onclick=()=>rpStage('calc');
 function rpDraw(full){const L=RL[rp.lvl];rpLevels();
  $('rTitle').textContent=`Nivel ${rp.lvl+1} · ${L.name}`;
  const nS=rp.slots.length;const ac=L.acom||(rp.T<=32?32:63);$('rStatement').textContent=`Acometida trifásica 3F + N + PE de 230/400 V y ${ac} A: ninguna fase puede superar ${ac} A. ${rp.loads.length} equipos monofásicos a 230 V. Hay ${nS} bases Schuko: ${L.ph.join(', ').replace(/, (\d)$/,' y $1')} en las fases L1, L2 y L3.${L.multi?' Puedes usar regletas: varios equipos en un mismo Schuko, sin pasar de 16 A.':' Un equipo por Schuko.'} Usa I = P / 230.`;
- if(full){$('rBody').innerHTML=rp.loads.map(l=>`<tr><td>${l.name}</td><td class="num">${l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}</td><td><input inputmode="decimal" data-l="${l.id}" aria-label="Corriente de ${l.name}"></td></tr>`).join('');
-  ['rMsg1','rMsg2','rMsg3'].forEach(x=>$(x).innerHTML='');$('rTot').value='';$('rPer').value='';$('rTot').className='';$('rPer').className=''}
+ if(full){rp.verified=new Set();rp.ok1=false;rp.ok2=false;$('rBody').innerHTML=rp.loads.map(l=>`<tr><td>${l.name}</td><td class="num">${l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}</td><td><input inputmode="decimal" data-l="${l.id}" aria-label="Corriente de ${l.name}"></td></tr>`).join('');
+  ['rMsg1','rMsg2','rMsg3'].forEach(x=>$(x).innerHTML='');$('rTot').value='';$('rPer').value='';$('rTot').className='';$('rPer').className='';
+  document.querySelectorAll('#rBody input').forEach(inp=>{inp.oninput=()=>{rpValidateInput(inp,false);rpGuide();rpBoard()};inp.onblur=()=>{rpValidateInput(inp,true);rpGuide();rpBoard()}});rpStage('calc')}
+
  rpBoard()}
-function chipHTML(l,placed){const sel=rp.sel===l.id;return `<button class="chip" draggable="true" data-c="${l.id}" aria-pressed="${sel}">${l.name}<small>${l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')} W${rp.ok1?` · <span class="ia">${fmt(l.I)} A</span>`:''}</small></button>`}
-function rpBoard(){const L=RL[rp.lvl];const placed=new Set(rp.slots.flatMap(s=>s.items));
+function rpMini(l){const n=l.name.toLowerCase();let body;
+ if(/subwoofer|caja|sidefill|monitor activo|line array/.test(n)&&!/etapa|amplificador/.test(n)) {const sub=/subwoofer/.test(n);body='<path d="M7 5L13 2H30L35 6V30L29 34H7Z" fill="#222e37" stroke="#71838e"/><path d="M29 5L35 6V30L29 34Z" fill="#101a22"/><rect x="7" y="5" width="22" height="29" rx="3" fill="#121b22" stroke="#536570"/>'+ (sub?'':'<path d="M11 8H25L22 14H14Z" fill="#788890" stroke="#283b47"/>')+'<circle cx="18" cy="'+(sub?19:23)+'" r="'+(sub?9:7)+'" fill="#344550" stroke="#83949e"/><circle cx="18" cy="'+(sub?19:23)+'" r="3" fill="#17242d"/><path d="M10 10H26M10 12H26M10 28H26M10 30H26" stroke="#8495a0" opacity=".25"/>'}
+ else if(/mesa|teclado/.test(n)){body='<path d="M5 8H32L37 29H2Z" fill="#283a46" stroke="#8195a3"/><path d="M8 11H29V16H8Z" fill="#11242b" stroke="#5b7f90"/><g stroke="#91a2ac" stroke-width="1"><path d="M8 19V26M13 19V26M18 19V26M23 19V26M28 19V26M33 19V26"/></g><g stroke="#36e2e8" stroke-width="2.5"><path d="M6 22H10M11 25H15M16 21H20M21 24H25M26 20H30"/></g>'}
+ else if(/ordenador|grabación/.test(n)){body='<rect x="6" y="5" width="27" height="19" rx="2" fill="#263d4c" stroke="#9eacb4"/><rect x="9" y="8" width="21" height="13" fill="#102b37"/><path d="M11 17l5-4 4 3 6-5" fill="none" stroke="#36e2e8"/><path d="M6 24H33L38 30H1Z" fill="#53636c" stroke="#98a6ae"/><path d="M12 27H28" stroke="#192830"/>'}
+ else if(/guitarra|bajo|batería/.test(n)){body='<rect x="5" y="7" width="30" height="26" rx="3" fill="#202c34" stroke="#74858f"/><rect x="8" y="10" width="24" height="5" rx="1" fill="#465660"/><circle cx="12" cy="12.5" r="1" fill="#36e2e8"/><rect x="9" y="17" width="22" height="13" rx="1" fill="#37434b" stroke="#101c23"/><path d="M10 20H30M10 23H30M10 26H30" stroke="#7d8b91" opacity=".4"/>'}
+ else{body='<rect x="3" y="8" width="34" height="24" rx="3" fill="#263740" stroke="#85959e"/><rect x="6" y="11" width="28" height="8" rx="1" fill="#15232d"/><rect x="8" y="13" width="13" height="4" rx="1" fill="#3ba7b0"/><circle cx="29" cy="15" r="2" fill="#b9c9d0"/><path d="M7 23H21M7 26H21M7 29H21" stroke="#8a9ba4" opacity=".5"/><circle cx="29" cy="26" r="4" fill="#4a5963" stroke="#a2b1b8"/>'}
+ return '<svg class="rp-miniature" viewBox="0 0 40 36" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'+body+'</svg>'}
+function chipHTML(l,placed){const sel=rp.sel===l.id;return '<button class="chip" draggable="true" data-c="'+l.id+'" aria-pressed="'+sel+'">'+rpMini(l)+'<span class="rp-chiptext">'+l.name+'<small>'+l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' W'+(rp.verified.has(l.id)?' · <span class="ia">'+fmt(l.I)+' A ✓</span>':' · I pendiente')+'</small></span></button>'}
+function rpBoard(){$('rMsg3').innerHTML='';const L=RL[rp.lvl];const placed=new Set(rp.slots.flatMap(s=>s.items));$('rpCount').textContent=(rp.loads.length-placed.size)+' / '+rp.loads.length;
  $('rTray').innerHTML=rp.loads.filter(l=>!placed.has(l.id)).map(l=>chipHTML(l)).join('')||'<span style="color:var(--dim);font-size:14px">Todos los equipos están conectados.</span>';
- const totI=rp.loads.reduce((a,l)=>a+l.I,0),target=totI/3,maxBar=Math.max(target*1.6,...[0,1,2].map(p=>phaseI(p)));
- $('rPhases').innerHTML=PHN.map(([n,c,cn],pi)=>{const I=phaseI(pi),W=phaseW(pi);
-  return `<div class="phase-col"><h4><span class="dot" style="background:${c}"></span>${n} <span style="font-size:12px;color:var(--dim);font-weight:600">(${cn})</span></h4>
-  <div class="ptot"><span>${W.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')} W</span><span style="color:var(--accent)">${rp.ok1?fmt(I)+' A':'? A'}</span></div>
-  <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,W/(target*230*L.cos*1.6)*100)}%"></i><span class="tg" style="left:${100/1.6}%"></span></div>
-  ${rp.slots.filter(s=>s.ph===pi).map(s=>{const si=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0);const over=si>16+1e-9;
-   return `<div class="slot${over?' over':''}" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${rp.slots.indexOf(s)+1} de ${n}"><div class="sh"><span>SCHUKO S${rp.slots.indexOf(s)+1}</span><b>${rp.ok1||over?fmt(si)+' / 16 A':'máx. 16 A'}</b></div>${s.items.map(id=>chipHTML(rp.loads.find(l=>l.id===id),true)).join('')}</div>`}).join('')}</div>`}).join('');
+ const totI=rp.loads.reduce((a,l)=>a+l.I,0),target=totI/3,maxBar=Math.max(target*1.6,...[0,1,2].map(p=>phaseI(p))),ac=L.acom||(rp.T<=32?32:63);
+ const f=rpForecast(),entered=v=>isFinite(v)&&v>=0?fmt(v)+' A':'—';
+ $('rpSummary').innerHTML=[['Suma prevista',entered(f.a),f.totalOK?'Correcta':'Paso 2 · '+(isFinite(f.a)?'revisar':'sin introducir')],['Objetivo previsto por fase',entered(f.b),f.phaseOK?'Correcto':'Paso 2 · '+(isFinite(f.b)?'revisar':'sin introducir')],['Ideal por Schuko',new Set(RL[rp.lvl].ph).size===1?entered(f.b/RL[rp.lvl].ph[0]):(isFinite(f.b)?'<span style="font-size:15px">'+RL[rp.lvl].ph.map((n,i)=>'L'+(i+1)+' '+fmt(f.b/n)).join(' · ')+' A</span>':entered(f.b)),'Lo que buscamos · máx. 16 A'],['Acometida',ac+' A','Límite por fase']].map(([label,value,note])=>'<div class="rp-stat"><span>'+label+'</span><b>'+value+'</b><small>'+note+'</small></div>').join('');
+ $('rPhases').innerHTML=PHN.map(([n,c,cn],pi)=>{const I=phaseI(pi),over=I>ac+1e-9;
+  const st=over?'Pasa de '+ac+' A: sobran '+fmt(I-ac)+' A':f.phaseOK?(Math.abs(I-target)<1e-6?'Objetivo '+fmt(target)+' A ✓':I>target?'Objetivo '+fmt(target)+' A · sobran '+fmt(I-target)+' A':'Objetivo '+fmt(target)+' A · faltan '+fmt(target-I)+' A'):'Completa la previsión (paso 2)';
+  return `<div class="phase-col"><div class="rp-ph-h"><span class="dot" style="background:${c}"></span><b>${n}</b><span class="rp-ph-cn">${cn}</span><span class="rp-ph-i${over?' bad':''}">${fmt(I)} / ${ac} A</span></div>
+  <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,I/(target*1.6)*100)}%"></i><span class="tg" style="left:${100/1.6}%"></span></div>
+  <div class="rp-ph-s${over?' bad':''}">${st}</div>
+  <div class="rp-sks">${rp.slots.filter(s=>s.ph===pi).map(s=>{const si=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0);const ov=si>16+1e-9;
+   return `<div class="slot${ov?' over':''}" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${rp.slots.indexOf(s)+1} de ${n}"><div class="sh"><span>S${rp.slots.indexOf(s)+1}</span><b>${fmt(si)}/16 A</b></div>${s.items.map(id=>chipHTML(rp.loads.find(l=>l.id===id),true)).join('')||'<span class="rp-free">Libre</span>'}</div>`}).join('')}</div></div>`}).join('');
  // eventos
  document.querySelectorAll('#lab-reparto .chip').forEach(ch=>{ch.onclick=e=>{e.stopPropagation();const id=ch.dataset.c;const inSlot=ch.closest('.slot');if(rp.sel===id){if(inSlot){rp.slots.forEach(s=>s.items=s.items.filter(x=>x!==id))}rp.sel=null}else rp.sel=id;rpBoard()};
   ch.ondragstart=e=>{e.dataTransfer.setData('text/plain',ch.dataset.c);rp.sel=ch.dataset.c}});
@@ -1380,49 +1502,61 @@ function rpBoard(){const L=RL[rp.lvl];const placed=new Set(rp.slots.flatMap(s=>s
  $('rTray').ondragover=e=>e.preventDefault();$('rTray').ondrop=e=>{e.preventDefault();const id=e.dataTransfer.getData('text/plain');rp.slots.forEach(s=>s.items=s.items.filter(x=>x!==id));rp.sel=null;rpBoard()}}
 
 function rpScheme(){const L=RL[rp.lvl];const ac=L.acom||(rp.T<=32?32:63);const cols=[160,480,800],PC=['#a0603a','#1b1b1b','#9a9a9a'],PCl=['#c98a62','#9aa3ad','#c2c6cb'];
- const tot=rp.loads.reduce((a,l)=>a+l.I,0),tg=tot/3;let g='',n=0;
- g+=`<text x="40" y="44" fill="#a9c6cc" font-size="14" font-weight="700">Acometida 3F + N + PE · 230/400 V · ${ac} A</text>`;
- [0,1,2,3,4].forEach(k=>{const col=['#a0603a','#2b2b2b','#9a9a9a','#3d7bff','#9acd32'][k];g+=`<path d="M40 ${62+k*6}H380" stroke="${col}" stroke-width="3"/>`});
- g+=`<rect x="380" y="52" width="200" height="56" rx="10" fill="#132a36" stroke="#36e2e8" stroke-width="2"/><text x="480" y="78" text-anchor="middle" fill="#eaf4f6" font-size="14" font-weight="800">CUADRO</text><text x="480" y="98" text-anchor="middle" fill="#a9c6cc" font-size="12">de distribución</text>`;
+ const tot=rp.loads.reduce((a,l)=>a+l.I,0),tg=tot/3;let g=`<defs>
+<linearGradient id="rpMetal" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#64737d"/><stop offset=".18" stop-color="#3e4c56"/><stop offset="1" stop-color="#1b262f"/></linearGradient>
+<linearGradient id="rpRack" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#364650"/><stop offset=".12" stop-color="#202b34"/><stop offset=".9" stop-color="#121b22"/><stop offset="1" stop-color="#475660"/></linearGradient>
+<radialGradient id="rpSocket"><stop stop-color="#34414b"/><stop offset=".7" stop-color="#18232c"/><stop offset=".9" stop-color="#111a21"/><stop offset="1" stop-color="#65727b"/></radialGradient>
+<linearGradient id="rpPlate" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4c5961"/><stop offset=".45" stop-color="#303b43"/><stop offset="1" stop-color="#19252e"/></linearGradient>
+<linearGradient id="rpContact" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#74818a"/><stop offset=".5" stop-color="#e0e7e9"/><stop offset="1" stop-color="#84909a"/></linearGradient>
+<pattern id="rpGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#7191a4" stroke-opacity=".075"/></pattern>
+</defs><rect width="960" height="350" rx="14" fill="#0c1821"/><rect width="960" height="350" rx="14" fill="url(#rpGrid)"/>`,n=0;
+ g+=`<text x="26" y="24" fill="#8ca7b5" font-size="11" font-weight="700" letter-spacing="1.3">DISTRIBUCIÓN TRIFÁSICA · MODELO DIDÁCTICO</text><text x="26" y="42" fill="#d0dee5" font-size="13" font-weight="700">230/400 V · ${ac} A por fase</text><rect x="24" y="53" width="112" height="52" rx="8" fill="url(#rpPlate)" stroke="#697c88"/><rect x="31" y="59" width="98" height="40" rx="5" fill="#111e28" stroke="#82929d" stroke-width=".7"/><text x="80" y="76" text-anchor="middle" fill="#e1edf0" font-size="10" font-weight="700">ENTRADA</text><text x="80" y="91" text-anchor="middle" fill="#8cb7c9" font-size="11">3F + N + PE</text>`;
+ [0,1,2,3,4].forEach(k=>{const col=['#a0603a','#11151a','#9a9a9a','#3d7bff','#5baf55'][k];g+=`<path d="M136 ${64+k*7}H366" stroke="#050b10" stroke-width="6"/><path d="M136 ${64+k*7}H366" stroke="${col}" stroke-width="3.5"/>${k===1?`<path d="M136 ${64+k*7}H366" stroke="#78818a" stroke-width=".8"/>`:''}${k===4?`<path d="M136 ${64+k*7}H366" stroke="#e8d447" stroke-width="2" stroke-dasharray="6 6"/>`:''}`});
+ g+=`<rect x="363" y="37" width="234" height="79" rx="8" fill="#050b10" opacity=".8"/><path d="M366 44L380 34H585L597 44V105L583 114H366Z" fill="url(#rpMetal)" stroke="#71838e"/><rect x="366" y="44" width="228" height="68" rx="5" fill="url(#rpRack)" stroke="#8998a1"/><rect x="380" y="51" width="200" height="53" rx="3" fill="#141e26" stroke="#596b76"/><g fill="#a0a9ad" stroke="#131d24" stroke-width="1"><circle cx="373" cy="51" r="3"/><circle cx="587" cy="51" r="3"/><circle cx="373" cy="105" r="3"/><circle cx="587" cy="105" r="3"/></g><text x="480" y="65" text-anchor="middle" fill="#d8e6eb" font-size="11" font-weight="800" letter-spacing="1">DISTRIBUIDOR 3F</text><g>${[0,1,2].map((p)=>`<rect x="${405+p*50}" y="73" width="45" height="24" rx="3" fill="#a5b0b6" stroke="#53616a"/><rect x="${413+p*50}" y="79" width="29" height="12" rx="2" fill="#26353e"/><rect x="${416+p*50}" y="80" width="23" height="5" rx="1" fill="#71828e"/><text x="${427+p*50}" y="103" font-size="8" text-anchor="middle" fill="#a9b9c3">L${p+1}</text>`).join('')}</g>`;
  cols.forEach((cx,pi)=>{const sl=rp.slots.filter(s=>s.ph===pi);const k=sl.length;const xs=sl.map((_,j)=>cx+(j-(k-1)/2)*92);const sx=440+pi*40;
-  g+=`<path d="M${sx} 108V140H${cx}V172" fill="none" stroke="${PC[pi]}" stroke-width="5" ${pi===1?'stroke-opacity="1"':''}/>`;if(pi===1)g+=`<path d="M${sx} 108V140H${cx}V172" fill="none" stroke="#5c6670" stroke-width="1.5"/>`;
+  if(pi===1)g+=`<path d="M${sx} 108V140H${cx}V172" fill="none" stroke="#6b7782" stroke-width="7"/>`;g+=`<path d="M${sx} 108V140H${cx}V172" fill="none" stroke="${PC[pi]}" stroke-width="5"/>`;
   g+=`<text x="${cx+12}" y="160" fill="${PCl[pi]}" font-size="15" font-weight="800">${PHN[pi][0]}</text>`;
-  g+=`<path d="M${xs[0]} 172H${xs[k-1]}" stroke="${PC[pi]}" stroke-width="5"/>`+(pi===1?`<path d="M${xs[0]} 172H${xs[k-1]}" stroke="#5c6670" stroke-width="1.5"/>`:'');
+  g+=(pi===1?`<path d="M${xs[0]} 172H${xs[k-1]}" stroke="#6b7782" stroke-width="7"/>`:'')+`<path d="M${xs[0]} 172H${xs[k-1]}" stroke="${PC[pi]}" stroke-width="5"/>`;
   sl.forEach((s,j)=>{n++;const x=xs[j];const I=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0),W=s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).P,0);const over=I>16+1e-9;const has=s.items.length>0;
    const names=s.items.map(id=>rp.loads.find(l=>l.id===id).name).join(', ')||'vacío';
-   g+=`<g class="sk" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${n} de ${PHN[pi][0]}: ${names}"><title>S${n}: ${names}</title>`;
+   g+=`<g class="sk" data-s="${pi}-${s.sk}" role="button" tabindex="0" aria-label="Schuko S${n} de ${PHN[pi][0]}: ${names}"><title>S${n}: ${names}</title><rect class="rp-hit" x="${x-43}" y="186" width="86" height="120" rx="9" fill="transparent" stroke="transparent"/>`;
    g+=`<path d="M${x} 172V196" stroke="${PC[pi]}" stroke-width="4"/>${pi===1?`<path d="M${x} 172V196" stroke="#5c6670" stroke-width="1.2"/>`:''}`;
-   g+=`<circle cx="${x}" cy="222" r="26" fill="#eaf4f6" stroke="${over?'#ff7a7a':has?'#36e2e8':'#5c6680'}" stroke-width="3"/><circle cx="${x-9}" cy="222" r="4" fill="#0b1a24"/><circle cx="${x+9}" cy="222" r="4" fill="#0b1a24"/><rect x="${x-4}" y="196" width="8" height="5" fill="#9aa3ad"/><rect x="${x-4}" y="243" width="8" height="5" fill="#9aa3ad"/>`;
-   g+=`<text x="${x}" y="182" text-anchor="end" dx="-30" fill="#a9c6cc" font-size="11" font-weight="700">S${n}</text>`;
-   const txt=!has?'—':rp.ok1||over?fmt(I)+' A':W.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' W';
+   g+=`<rect x="${x-32}" y="191" width="64" height="65" rx="8" fill="#070e14"/><rect x="${x-31}" y="189" width="62" height="64" rx="7" fill="url(#rpPlate)" stroke="${over?'#ff7a7a':has?'#36e2e8':'#647985'}" stroke-width="1.8"/><path d="M${x-26} 195H${x+24}" stroke="#a8b6bd" stroke-opacity=".35"/><circle cx="${x}" cy="221" r="25" fill="#111b22" stroke="#8a979f" stroke-width="1.3"/><circle cx="${x}" cy="221" r="22.5" fill="url(#rpSocket)" stroke="#10171d" stroke-width="1.8"/><circle cx="${x-9.5}" cy="221" r="4.3" fill="#050a0d" stroke="#73818b" stroke-width="1"/><circle cx="${x+9.5}" cy="221" r="4.3" fill="#050a0d" stroke="#73818b" stroke-width="1"/><rect x="${x-4}" y="198" width="8" height="7" rx="1.8" fill="url(#rpContact)" stroke="#64717a"/><rect x="${x-4}" y="237" width="8" height="7" rx="1.8" fill="url(#rpContact)" stroke="#64717a"/><g fill="#89949b"><circle cx="${x-25}" cy="195" r="1.7"/><circle cx="${x+25}" cy="247" r="1.7"/></g>`;
+   g+=`<text x="${x}" y="184" text-anchor="middle" fill="#a9c6cc" font-size="11" font-weight="800">S${n}</text>`;
+   const txt=fmt(I)+' A';
    g+=`<rect x="${x-40}" y="258" width="80" height="30" rx="7" fill="${over?'#3a1414':'#0b1a24'}" stroke="${over?'#ff7a7a':has?'#36e2e8':'#3c4960'}" stroke-width="1.5"/><text x="${x}" y="278" text-anchor="middle" fill="${over?'#ff9a9a':has?'#eaf4f6':'#7d8aa6'}" font-size="14" font-weight="700" font-family="JetBrains Mono,monospace">${txt}</text>`;
    g+=`<text x="${x}" y="301" text-anchor="middle" fill="#7d8aa6" font-size="11">${s.items.length?s.items.length+(s.items.length>1?' equipos':' equipo'):''}</text></g>`});
   const I=phaseI(pi),W=phaseW(pi);const st=I>ac+1e-9?'over':Math.abs(I-tg)<1e-6&&I>0?'ok':'';const col=st==='over'?'#ff7a7a':st==='ok'?'#36e2e8':'#ff9f43';
-  g+=`<rect x="${cx-95}" y="312" width="190" height="32" rx="8" fill="#0b1a24" stroke="${W?col:'#3c4960'}" stroke-width="2"/><text x="${cx}" y="333" text-anchor="middle" fill="${W?col:'#7d8aa6'}" font-size="14" font-weight="800" font-family="JetBrains Mono,monospace">${PHN[pi][0]} · ${rp.ok1?fmt(I)+' A':W.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' W'}${rp.ok1?' / '+fmt(tg):''}</text>`});
+  g+=`<rect x="${cx-95}" y="312" width="190" height="32" rx="8" fill="#0b1a24" stroke="${W?col:'#3c4960'}" stroke-width="2"/><text x="${cx}" y="333" text-anchor="middle" fill="${W?col:'#7d8aa6'}" font-size="14" font-weight="800" font-family="JetBrains Mono,monospace">${PHN[pi][0]} · ${fmt(I)+' A / '+ac+' A'}</text>`});
  const svg=$('rScheme');svg.innerHTML=g;
  svg.querySelectorAll('.sk').forEach(el=>{const [pi,sk]=el.dataset.s.split('-').map(Number);const put=()=>{if(!rp.sel)return;rpPlace(rp.sel,pi,sk);rp.sel=null;rpBoard()};el.onclick=put;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();put()}};
-  el.ondragover=e=>e.preventDefault();el.ondrop=e=>{e.preventDefault();rp.sel=e.dataTransfer.getData('text/plain');put()}})}
-function rpPlace(id,pi,sk){const L=RL[rp.lvl];const slot=rp.slots.find(s=>s.ph===pi&&s.sk===sk);const from=rp.slots.find(s=>s.items.includes(id));
+  el.ondragover=e=>{e.preventDefault();el.classList.add('hot')};el.ondragleave=e=>{if(!el.contains(e.relatedTarget))el.classList.remove('hot')};el.ondrop=e=>{e.preventDefault();el.classList.remove('hot');const id=e.dataTransfer.getData('text/plain');if(!rp.loads.some(l=>l.id===id))return;rp.sel=id;put()}})}
+function rpPlace(id,pi,sk){const L=RL[rp.lvl];const slot=rp.slots.find(s=>s.ph===pi&&s.sk===sk);if(!slot||!rp.loads.some(l=>l.id===id))return;const from=rp.slots.find(s=>s.items.includes(id));
  if(!L.multi&&slot.items.length&&slot.items[0]!==id){const other=slot.items[0];slot.items=[];if(from){from.items=from.items.filter(x=>x!==id);from.items.push(other)}}
  rp.slots.forEach(s=>s.items=s.items.filter(x=>x!==id));slot.items.push(id)}
 function phaseI(pi){return rp.slots.filter(s=>s.ph===pi).flatMap(s=>s.items).reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0)}
 function phaseW(pi){return rp.slots.filter(s=>s.ph===pi).flatMap(s=>s.items).reduce((a,id)=>a+rp.loads.find(l=>l.id===id).P,0)}
-$('rCheck1').onclick=()=>{let ok=0,n=0;document.querySelectorAll('#rBody input').forEach(inp=>{n++;const l=rp.loads.find(x=>x.id===inp.dataset.l);const v=parse(inp.value);inp.classList.remove('ok','bad');if(!isFinite(v))return;if(near(v,l.I)){ok++;inp.classList.add('ok')}else inp.classList.add('bad')});
- if(ok===n){rp.ok1=true;$('rMsg1').innerHTML='<p class="msg ok">Corrientes correctas. Ya las ves en el tablero de reparto.</p>';rpBoard()}else $('rMsg1').innerHTML=`<p class="msg ${ok?'info':'bad'}">${ok} de ${n} correctas. Recuerda: I = P / 230.</p>`};
+function rpValidateInput(inp,markWrong){const l=rp.loads.find(x=>x.id===inp.dataset.l),v=parse(inp.value),ok=inp.value.trim()!==''&&isFinite(v)&&near(v,l.I);inp.classList.remove('ok','bad');if(ok){rp.verified.add(l.id);inp.classList.add('ok')}else{rp.verified.delete(l.id);if(markWrong&&inp.value.trim()!=='')inp.classList.add('bad');}return ok}
+$('rCheck1').onclick=()=>{document.querySelectorAll('#rBody input').forEach(inp=>rpValidateInput(inp,true));rpGuide();rpBoard();const n=rp.verified.size,all=rp.loads.length;$('rMsg1').innerHTML='<p class="msg '+(n===all?'ok':n?'info':'bad')+'">'+(n===all?'Todas las corrientes correctas. Continúa al paso 2.':n+' de '+all+' correctas. Recuerda: I = P / 230.')+'</p>'};
 $('rShow1').onclick=()=>{const l=rp.loads[0];$('rMsg1').innerHTML=`<div class="formula">I = P / 230\n${l.name}: I = ${l.P.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')} / 230 = ${fmt(l.I)} A\n\nHaz lo mismo con el resto de equipos.</div>`};
-$('rCheck2').onclick=()=>{if(!rp.ok1){$('rMsg2').innerHTML='<p class="msg info">Primero calcula bien las corrientes del paso 1.</p>';return}const tot=rp.loads.reduce((a,l)=>a+l.I,0);const a=parse($('rTot').value),b=parse($('rPer').value);
- $('rTot').className=near(a,tot)?'ok':'bad';$('rPer').className=near(b,tot/3)?'ok':'bad';
+$('rCheck2').onclick=()=>{const tot=rp.loads.reduce((a,l)=>a+l.I,0);const a=parse($('rTot').value),b=parse($('rPer').value);
+ $('rTot').className=near(a,tot)?'ok':'bad';$('rPer').className=near(b,tot/3)?'ok':'bad';rp.ok2=near(a,tot)&&near(b,tot/3);rpGuide();rpBoard();
  $('rMsg2').innerHTML=near(a,tot)&&near(b,tot/3)?`<p class="msg ok">Bien: ${fmt(tot)} A en total, ${fmt(tot/3)} A por fase. Ahora reparte los equipos para que cada fase llegue a ${fmt(tot/3)} A.</p>`:`<p class="msg bad">Suma las corrientes de todos los equipos y divide el total entre las 3 fases.</p>`};
-$('rCheck3').onclick=()=>{const L=RL[rp.lvl];const placed=rp.slots.flatMap(s=>s.items).length;const tot=rp.loads.reduce((a,l)=>a+l.I,0),tg=tot/3;
- if(placed<rp.loads.length){$('rMsg3').innerHTML=`<p class="msg info">Faltan ${rp.loads.length-placed} equipos por conectar.</p>`;return}
- const over=rp.slots.filter(s=>s.items.reduce((a,id)=>a+rp.loads.find(l=>l.id===id).I,0)>16+1e-9);
- const Is=[0,1,2].map(phaseI);const bal=Is.every(I=>Math.abs(I-tg)<1e-6);const ac=L.acom||(rp.T<=32?32:63);const ovP=Is.findIndex(I=>I>ac+1e-9);
- if(ovP>=0){$('rMsg3').innerHTML=`<p class="msg bad">La fase ${PHN[ovP][0]} lleva ${fmt(Is[ovP])} A y la acometida es de ${ac} A: saltaría la protección general. Pasa equipos a las otras fases.</p>`;return}
- if(over.length){$('rMsg3').innerHTML=`<p class="msg bad">Hay ${over.length} Schuko${over.length>1?'s':''} por encima de 16 A (en rojo). Reparte esos equipos en otras bases.</p>`;return}
- if(!bal){const mx=Math.max(...Is),mn=Math.min(...Is);$('rMsg3').innerHTML=`<p class="msg bad">Las fases no están equilibradas: L1 ${fmt(Is[0])} A · L2 ${fmt(Is[1])} A · L3 ${fmt(Is[2])} A. El objetivo es ${fmt(tg)} A en cada una. La fase más cargada lleva ${fmt(mx-mn)} A más que la menos cargada: prueba a intercambiar equipos entre ellas.</p>`;return}
- rp.done.add(rp.lvl);rpLevels();$('rMsg3').innerHTML=`<p class="msg ok">¡Reparto equilibrado! ${fmt(tg)} A en cada fase y ningún Schuko pasa de 16 A.</p><div class="row" style="margin-top:8px"><button class="btn" id="rAgain">Otro ejercicio de este nivel</button>${rp.lvl<RL.length-1?'<button class="btn primary" id="rNext">Siguiente nivel →</button>':''}</div>`;
- $('rAgain').onclick=()=>{rpGen(rp.lvl);rpDraw(true)};if($('rNext'))$('rNext').onclick=()=>{rpGen(rp.lvl+1);rpDraw(true)}};
-$('rSol').onclick=()=>{rp.ok1=true;rp.slots.forEach(s=>s.items=[]);rp.sol.forEach(x=>rp.slots.find(s=>s.ph===x.ph&&s.sk===x.sk).items.push(x.lid));rp.sel=null;rpBoard();
+['rTot','rPer'].forEach(id=>$(id).oninput=()=>{$(id).className='';$('rMsg2').innerHTML='';$('rMsg3').innerHTML='';rpGuide()});
+function rpAssess(loads,slots,limit,target,multi){const byId=new Map(loads.map(l=>[l.id,l.I])),ids=slots.flatMap(s=>s.items),seen=new Set(ids),missing=loads.filter(l=>!seen.has(l.id)),unique=ids.length===seen.size&&ids.every(id=>byId.has(id)),currents=slots.map(s=>s.items.reduce((a,id)=>a+(byId.get(id)||0),0)),phases=[0,1,2].map(p=>slots.reduce((a,s,i)=>a+(s.ph===p?currents[i]:0),0)),over=currents.map((I,i)=>({I,i})).filter(x=>x.I>16+1e-9),overPhase=phases.map((I,i)=>({I,i})).filter(x=>x.I>limit+1e-9),occupancy=multi||slots.every(s=>s.items.length<=1),balanced=phases.every(I=>Math.abs(I-target)<1e-6);return {missing,unique,currents,phases,over,overPhase,occupancy,balanced,safe:!missing.length&&unique&&occupancy&&!over.length&&!overPhase.length}}
+$('rCheck3').onclick=()=>{document.querySelectorAll('#rBody input').forEach(inp=>rpValidateInput(inp,true));rpGuide();const f=rpForecast(),L=RL[rp.lvl],ac=L.acom||(rp.T<=32?32:63),v=rpAssess(rp.loads,rp.slots,ac,f.target,L.multi),n=rp.verified.size,all=rp.loads.length;
+ const items=[
+ [n===all?'ok':'bad','Intensidades individuales',n+' / '+all+' correctas. '+(n===all?'Todos los cálculos son válidos.':'Revisa los valores pendientes o incorrectos del paso 1.')],
+ [f.totalOK&&f.phaseOK?'ok':'bad','Previsión de cargas',(f.totalOK?'Suma correcta.':'Revisa la suma de intensidades.')+' '+(f.phaseOK?'Objetivo por fase correcto.':'Revisa la división entre tres.')],
+ [!v.missing.length&&v.unique?'ok':'bad','Equipos conectados',v.missing.length?'Faltan: '+v.missing.map(l=>l.name).join(', ')+'.':v.unique?'Todos conectados una sola vez.':'Hay asignaciones duplicadas o inválidas.'],
+ [!v.over.length&&v.occupancy?'ok':'bad','Protección de los Schukos',v.over.length?v.over.map(x=>'S'+(x.i+1)+': '+fmt(x.I)+' A (exceso de '+fmt(x.I-16)+' A)').join(' · '):v.occupancy?'Ninguna base supera 16 A.':'Este nivel admite un equipo por base.'],
+ [!v.overPhase.length?'ok':'bad','Límite de la acometida',v.overPhase.length?v.overPhase.map(x=>'L'+(x.i+1)+': '+fmt(x.I)+' A; límite '+ac+' A').join(' · '):'Ninguna fase supera '+ac+' A.'],
+ [v.balanced?'ok':'warn','Equilibrio entre fases',v.phases.map((I,i)=>'L'+(i+1)+': '+fmt(I)+' A').join(' · ')+'. Objetivo: '+fmt(f.target)+' A por fase. '+(v.balanced?'Equilibrio conseguido.':'Diferencia entre fases extremas: '+fmt(Math.max(...v.phases)-Math.min(...v.phases))+' A. En este ejercicio existe un reparto equilibrado; prueba a redistribuir.')]
+ ];
+ const ok=v.safe&&v.balanced&&n===all&&f.totalOK&&f.phaseOK;const title=ok?'¡Ejercicio correcto! Cualquier distribución que cumpla estos criterios es válida.':v.safe&&!v.balanced?'Reparto dentro de límites, pero mejorable: falta equilibrar las fases.':v.safe?'Reparto equilibrado dentro de límites; revisa los cálculos pendientes.':'Ejercicio todavía no válido: revisa las comprobaciones.';
+ $('rMsg3').innerHTML='<p class="msg '+(ok?'ok':v.safe?'info':'bad')+'">'+title+'</p><ul class="rp-checkline">'+items.map(([state,name,detail])=>'<li class="'+state+'"><span aria-hidden="true">'+(state==='ok'?'✓':state==='warn'?'!':'✗')+'</span><b>'+name+':</b> '+detail+'</li>').join('')+'</ul>';
+ if(ok){rp.done.add(rp.lvl);rpLevels();$('rMsg3').insertAdjacentHTML('beforeend','<div class="row" style="margin-top:8px"><button class="btn" id="rAgain">Otro ejercicio de este nivel</button>'+(rp.lvl<RL.length-1?'<button class="btn primary" id="rNext">Siguiente nivel →</button>':'')+'</div>');$('rAgain').onclick=()=>{rpGen(rp.lvl);rpDraw(true)};if($('rNext'))$('rNext').onclick=()=>{rpGen(rp.lvl+1);rpDraw(true)}}};
+$('rSol').onclick=()=>{rp.slots.forEach(s=>s.items=[]);rp.sol.forEach(x=>rp.slots.find(s=>s.ph===x.ph&&s.sk===x.sk).items.push(x.lid));rp.sel=null;rpBoard();
  const tot=rp.loads.reduce((a,l)=>a+l.I,0);const big=[...rp.loads].sort((a,b)=>b.I-a.I).slice(0,3);
  $('rMsg3').innerHTML=`<div class="formula">1. Corriente total: ${rp.loads.map(l=>fmt(l.I)).join(' + ')} = ${fmt(tot)} A\n2. Objetivo por fase: ${fmt(tot)} / 3 = ${fmt(tot/3)} A\n3. Los más grandes primero (${big.map(l=>l.name+' '+fmt(l.I)+' A').join(', ')}), repartidos entre fases.\n4. Se completa cada fase hasta ${fmt(tot/3)} A:\n${PHN.map(([n],pi)=>`   ${n}: ${rp.slots.filter(s=>s.ph===pi).map(s=>s.items.map(id=>fmt(rp.loads.find(l=>l.id===id).I)).join(' + ')).join(' | ')} = ${fmt(phaseI(pi))} A`).join('\n')}\n\nHay otras soluciones válidas: lo que importa es que las tres fases sumen lo mismo y ningún Schuko pase de 16 A.</div>`};
 $('rEmpty').onclick=()=>{rp.slots.forEach(s=>s.items=[]);rp.sel=null;$('rMsg3').innerHTML='';rpBoard()};
